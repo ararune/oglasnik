@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moji oglasi</title>
+    <style>
+        .oglas-image {
+            max-width: 200px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="http://localhost:3000/">Natrag na početnu</a>
+    <h2 className="text-xl mb-4">Moji oglasi</h2>
+    <p><strong>Broj oglasa:</strong> {{ oglasi|length }}</p>
+    <ul>
+        {% for oglas in oglasi %}
+        <li>
+            <strong>Naziv:</strong> <a href="{% url 'uredi_oglas' kategorija_url=oglas.kategorija.url oglas_naziv=oglas.naziv sifra=oglas.sifra %}">{{ oglas.naziv }}</a><br>
+            <strong>Cijena:</strong> {{ oglas.cijena }} €<br>
+            <strong>Opis:</strong> {{ oglas.opis }}<br>
+            <strong>Datum:</strong> {{ oglas.datum|date:"d/m/Y H:i" }}<br>
+            <strong>Trajanje:</strong> {{ oglas.get_trajanje_display }}<br>
+            <strong>Županija:</strong> {{ oglas.zupanija.naziv }}<br>
+            <strong>Grad:</strong> {{ oglas.grad.naziv }}<br>
+            <strong>Kategorija:</strong>
+            {% if oglas.kategorija %}
+            {{ oglas.kategorija.naziv }}
+            {% if oglas.kategorija.roditelj %}
+            ({{ oglas.kategorija.roditelj.naziv }})
+            {% endif %}
+            {% else %}
+            N/A
+            {% endif %}<br>
+            {% if oglas.slike.exists %}
+            {% for slika in oglas.slike.all %}
+            <img src="data:image/jpeg;base64,{{ slika.slika }}" alt="Slika oglasa" class="oglas-image">
+            {% endfor %}
+            {% else %}
+            Nema slika.
+            {% endif %}
+            <form action="{% url 'izbrisi_oglas' oglas_id=oglas.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Izbriši oglas</button>
+            </form>
+        </li>
+        {% empty %}
+        <li>Nema oglasa.</li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>

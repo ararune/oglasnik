@@ -1,0 +1,233 @@
+{
+  "Glazbala": {
+    "url": "glazbala",
+    "Trzalački instrumenti i oprema": {
+      "url": "trzalacki-instrumenti-i-oprema",
+      "Električne gitare": {
+        "url": "elektricne-gitare"
+      },
+      "Akustične gitare": {
+        "url": "akusticne-gitare"
+      },
+      "Klasične gitare": {
+        "url": "klasicne-gitare"
+      },
+      "Drugi trzalački instrumenti": {
+        "url": "drugi-trzalacki-instrumenti"
+      }
+    },
+    "Gudački instrumenti i oprema": {
+      "url": "gudacki-instrumenti-i-oprema",
+      "Violina": {
+        "url": "violina"
+      },
+      "Viola": {
+        "url": "viola"
+      },
+      "Violončelo": {
+        "url": "violoncelo"
+      },
+      "Kontrabas": {
+        "url": "kontrabas"
+      },
+      "Ostali gudački instrumenti i oprema": {
+        "url": "ostali-gudacki-instrumenti-i-oprema"
+      }
+    },
+    "Puhački instrumenti i oprema": {
+      "url": "puhacki-instrumenti-i-oprema",
+      "Flauta": {
+        "url": "flauta"
+      },
+      "Klarinet": {
+        "url": "klarinet"
+      },
+      "Saksofon": {
+        "url": "saksofon"
+      },
+      "Trombon": {
+        "url": "trombon"
+      },
+      "Truba": {
+        "url": "truba"
+      },
+      "Ostali puhački instrumenti i oprema": {
+        "url": "ostali-puhacki-instrumenti-i-oprema"
+      }
+    },
+    "Udaraljke i oprema": {
+      "url": "udaraljke-i-oprema",
+      "Bubnjevi": {
+        "url": "bubnjevi"
+      },
+      "Timpani": {
+        "url": "timpani"
+      },
+      "Tamburine": {
+        "url": "tamburine"
+      },
+      "Cajon": {
+        "url": "cajon"
+      },
+      "Ostale udaraljke i oprema": {
+        "url": "ostale-udaraljke-i-oprema"
+      }
+    },
+    "Klavijature i oprema": {
+      "url": "klavijature-i-oprema",
+      "Klasični klaviri": {
+        "url": "klasicni-klaviri"
+      },
+      "Digitalni klaviri": {
+        "url": "digitalni-klaviri"
+      },
+      "Električne klavijature": {
+        "url": "elektricne-klavijature"
+      },
+      "Akordeon": {
+        "url": "akordeon"
+      },
+      "Harmonika": {
+        "url": "harmonika"
+      },
+      "Ostale klavijature i oprema": {
+        "url": "ostale-klavijature-i-oprema"
+      }
+    },
+    "Razglasi i studio oprema": {
+      "url": "razglasi-i-studio-oprema",
+      "Mikrofoni": {
+        "url": "mikrofoni"
+      },
+      "Miksete": {
+        "url": "miksete"
+      },
+      "Pojačala": {
+        "url": "pojacala"
+      },
+      "Zvučnici": {
+        "url": "zvucnici"
+      },
+      "Ostala oprema za razglase i studio": {
+        "url": "ostala-oprema-za-razglase-i-studio"
+      }
+    },
+    "Ostali glazbeni instrumenti": {
+      "url": "ostali-glazbeni-instrumenti"
+    },
+    "Ostala glazbena oprema": {
+      "url": "ostala-glazbena-oprema"
+    }
+  },
+  "Nekretnine": {
+    "url": "nekretnine",
+    "Stanovi": {
+      "url": "stanovi"
+    },
+    "Kuće": {
+      "url": "kuce"
+    },
+    "Poslovni prostori": {
+      "url": "poslovni-prostori"
+    },
+    "Zemljišta": {
+      "url": "zemljista"
+    }
+  },
+  "Vozila": {
+    "url": "vozila",
+    "Automobili": {
+      "url": "automobili"
+    },
+    "Motocikli": {
+      "url": "motocikli"
+    },
+    "Kamioni": {
+      "url": "kamioni"
+    },
+    "Plovila": {
+      "url": "plovila"
+    }
+  },
+  "Elektronika": {
+    "url": "elektronika",
+    "Mobilni telefoni": {
+      "url": "mobilni-telefoni"
+    },
+    "Laptopi": {
+      "url": "laptopi"
+    },
+    "Televizori": {
+      "url": "televizori"
+    },
+    "Kamere": {
+      "url": "kamere"
+    },
+    "Gaming oprema": {
+      "url": "gaming-oprema"
+    }
+  },
+  "Odjeća i obuća": {
+    "url": "odjeca-i-obuca",
+    "Muška odjeća": {
+      "url": "muska-odjeca"
+    },
+    "Ženska odjeća": {
+      "url": "zenska-odjeca"
+    },
+    "Dječja odjeća": {
+      "url": "djecja-odjeca"
+    },
+    "Obuća": {
+      "url": "obuca"
+    },
+    "Modni dodaci": {
+      "url": "modni-dodaci"
+    }
+  },
+  "Sport i rekreacija": {
+    "url": "sport-i-rekreacija",
+    "Fitnes oprema": {
+      "url": "fitnes-oprema"
+    },
+    "Sportska odjeća": {
+      "url": "sportska-odjeca"
+    },
+    "Bicikli": {
+      "url": "bicikli"
+    },
+    "Sportska obuća": {
+      "url": "sportska-obuca"
+    },
+    "Sportski rekviziti": {
+      "url": "sportski-rekviziti"
+    }
+  },
+  "Literatura": {
+    "url": "literatura",
+    "Knjige": {
+      "url": "knjige"
+    },
+    "Časopisi": {
+      "url": "casopisi"
+    },
+    "Stripovi": {
+      "url": "stripovi"
+    }
+  },
+  "Kućni ljubimci": {
+    "url": "kucni-ljubimci",
+    "Psi": {
+      "url": "psi"
+    },
+    "Mačke": {
+      "url": "macke"
+    },
+    "Ptice": {
+      "url": "ptice"
+    },
+    "Ribe": {
+      "url": "ribe"
+    }
+  }
+}

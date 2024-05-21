@@ -1,0 +1,38 @@
+<!-- kreiraj_oglas.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kreiraj Oglas</title>
+    <!-- Include jQuery library -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/dropdown.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            // Multiple file upload handling
+            $('#id_slike').on('change', function(){
+                var files = $(this).get(0).files;
+                var fileNames = '';
+                for (var i = 0; i < files.length; i++) {
+                    fileNames += files[i].name + ', ';
+                }
+                // Display selected file names
+                $('#selected-files').text(fileNames);
+            });
+        });
+    </script>
+    
+</head>
+<body>
+    <a href="http://localhost:3000/">Natrag na početnu</a>
+    <h2>Kreiraj Oglas</h2>
+    <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Kreiraj Oglas</button>
+</form>
+
+</body>
+</html>

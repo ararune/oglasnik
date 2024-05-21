@@ -1,0 +1,2116 @@
+[
+  {
+    "id": 0,
+    "zupanija": "Grad Zagreb",
+    "gradovi": [
+      {
+        "id": 0,
+        "grad": "Zagreb"
+      },
+      {
+        "id": 4,
+        "grad": "Sesvete"
+      },
+      {
+        "id": 222,
+        "grad": "Lučko"
+      },
+      {
+        "id": 253,
+        "grad": "Hrvatski Leskovac"
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "zupanija": "Splitsko-Dalmatinska Županija",
+    "gradovi": [
+      {
+        "id": 1,
+        "grad": "Split"
+      },
+      {
+        "id": 14,
+        "grad": "Kaštel Stari"
+      },
+      {
+        "id": 21,
+        "grad": "Solin"
+      },
+      {
+        "id": 23,
+        "grad": "Sinj"
+      },
+      {
+        "id": 37,
+        "grad": "Omiš"
+      },
+      {
+        "id": 38,
+        "grad": "Makarska"
+      },
+      {
+        "id": 44,
+        "grad": "Trogir"
+      },
+      {
+        "id": 58,
+        "grad": "Podstrana"
+      },
+      {
+        "id": 68,
+        "grad": "Imotski"
+      },
+      {
+        "id": 79,
+        "grad": "Trilj"
+      },
+      {
+        "id": 95,
+        "grad": "Dugi Rat"
+      },
+      {
+        "id": 98,
+        "grad": "Kaštel Sućurac"
+      },
+      {
+        "id": 100,
+        "grad": "Kaštel Novi"
+      },
+      {
+        "id": 113,
+        "grad": "Vrgorac"
+      },
+      {
+        "id": 130,
+        "grad": "Klis"
+      },
+      {
+        "id": 131,
+        "grad": "Kaštel Lukšić"
+      },
+      {
+        "id": 135,
+        "grad": "Kaštel Kambelovac"
+      },
+      {
+        "id": 145,
+        "grad": "Kaštel Gomilica"
+      },
+      {
+        "id": 161,
+        "grad": "Supetar"
+      },
+      {
+        "id": 162,
+        "grad": "Marina"
+      },
+      {
+        "id": 171,
+        "grad": "Podbablje"
+      },
+      {
+        "id": 172,
+        "grad": "Hvar"
+      },
+      {
+        "id": 182,
+        "grad": "Dugopolje"
+      },
+      {
+        "id": 189,
+        "grad": "Glavice"
+      },
+      {
+        "id": 196,
+        "grad": "Jelsa"
+      },
+      {
+        "id": 210,
+        "grad": "Žrnovnica"
+      },
+      {
+        "id": 216,
+        "grad": "Donji Proložac"
+      },
+      {
+        "id": 220,
+        "grad": "Okrug Gornji"
+      },
+      {
+        "id": 229,
+        "grad": "Stobreč"
+      },
+      {
+        "id": 234,
+        "grad": "Kaštel Štafilić"
+      },
+      {
+        "id": 240,
+        "grad": "Starigrad"
+      },
+      {
+        "id": 260,
+        "grad": "Baška Voda"
+      },
+      {
+        "id": 273,
+        "grad": "Gradac"
+      },
+      {
+        "id": 320,
+        "grad": "Runović"
+      },
+      {
+        "id": 328,
+        "grad": "Vis"
+      },
+      {
+        "id": 338,
+        "grad": "Tučepi"
+      },
+      {
+        "id": 341,
+        "grad": "Cista Provo"
+      },
+      {
+        "id": 357,
+        "grad": "Bol"
+      },
+      {
+        "id": 359,
+        "grad": "Šestanovac"
+      },
+      {
+        "id": 363,
+        "grad": "Zmijavci"
+      },
+      {
+        "id": 365,
+        "grad": "Brela"
+      },
+      {
+        "id": 367,
+        "grad": "Selca"
+      },
+      {
+        "id": 381,
+        "grad": "Postire"
+      },
+      {
+        "id": 395,
+        "grad": "Komiža"
+      },
+      {
+        "id": 399,
+        "grad": "Pučišće"
+      },
+      {
+        "id": 436,
+        "grad": "Sutivan"
+      },
+      {
+        "id": 437,
+        "grad": "Milna"
+      },
+      {
+        "id": 452,
+        "grad": "Primorski Dolac"
+      },
+      {
+        "id": 455,
+        "grad": "Lokvičič"
+      },
+      {
+        "id": 458,
+        "grad": "Donji Muć"
+      },
+      {
+        "id": 460,
+        "grad": "Lećevica"
+      },
+      {
+        "id": 462,
+        "grad": "Grohote"
+      },
+      {
+        "id": 464,
+        "grad": "Zadvarje"
+      },
+      {
+        "id": 467,
+        "grad": "Donji Seget"
+      },
+      {
+        "id": 479,
+        "grad": "Otok"
+      },
+      {
+        "id": 484,
+        "grad": "Kraj"
+      },
+      {
+        "id": 491,
+        "grad": "Podgora"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "zupanija": "Primorsko-Goranska Županija",
+    "gradovi": [
+      {
+        "id": 2,
+        "grad": "Rijeka"
+      },
+      {
+        "id": 32,
+        "grad": "Viškovo"
+      },
+      {
+        "id": 54,
+        "grad": "Matulji"
+      },
+      {
+        "id": 56,
+        "grad": "Opatija"
+      },
+      {
+        "id": 61,
+        "grad": "Kastav"
+      },
+      {
+        "id": 63,
+        "grad": "Crikvenica"
+      },
+      {
+        "id": 82,
+        "grad": "Drenova"
+      },
+      {
+        "id": 83,
+        "grad": "Bakar"
+      },
+      {
+        "id": 84,
+        "grad": "Mali Lošinj"
+      },
+      {
+        "id": 87,
+        "grad": "Rab"
+      },
+      {
+        "id": 91,
+        "grad": "Čavle"
+      },
+      {
+        "id": 96,
+        "grad": "Krk"
+      },
+      {
+        "id": 132,
+        "grad": "Delnice"
+      },
+      {
+        "id": 134,
+        "grad": "Jelenje"
+      },
+      {
+        "id": 157,
+        "grad": "Kostrena"
+      },
+      {
+        "id": 160,
+        "grad": "Novi Vinodolski"
+      },
+      {
+        "id": 169,
+        "grad": "Kraljevica"
+      },
+      {
+        "id": 193,
+        "grad": "Lovran"
+      },
+      {
+        "id": 221,
+        "grad": "Omišalj"
+      },
+      {
+        "id": 264,
+        "grad": "Marčelji"
+      },
+      {
+        "id": 298,
+        "grad": "Dobrinj"
+      },
+      {
+        "id": 312,
+        "grad": "Ravna Gora"
+      },
+      {
+        "id": 331,
+        "grad": "Punat"
+      },
+      {
+        "id": 335,
+        "grad": "Klana"
+      },
+      {
+        "id": 362,
+        "grad": "Baška"
+      },
+      {
+        "id": 396,
+        "grad": "Fužine"
+      },
+      {
+        "id": 408,
+        "grad": "Mošćenička Draga"
+      },
+      {
+        "id": 417,
+        "grad": "Vrbnik"
+      },
+      {
+        "id": 426,
+        "grad": "Lopar"
+      },
+      {
+        "id": 443,
+        "grad": "Skrad"
+      },
+      {
+        "id": 444,
+        "grad": "Lokve"
+      },
+      {
+        "id": 447,
+        "grad": "Malinska"
+      },
+      {
+        "id": 492,
+        "grad": "Bribir"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "zupanija": "Osječko-Baranjska Županija",
+    "gradovi": [
+      {
+        "id": 3,
+        "grad": "Osijek"
+      },
+      {
+        "id": 22,
+        "grad": "Ðakovo"
+      },
+      {
+        "id": 36,
+        "grad": "Našice"
+      },
+      {
+        "id": 64,
+        "grad": "Valpovo"
+      },
+      {
+        "id": 66,
+        "grad": "Čepin"
+      },
+      {
+        "id": 70,
+        "grad": "Belišće"
+      },
+      {
+        "id": 80,
+        "grad": "Donji Miholjac"
+      },
+      {
+        "id": 81,
+        "grad": "Beli Manastir"
+      },
+      {
+        "id": 121,
+        "grad": "Erdut"
+      },
+      {
+        "id": 122,
+        "grad": "Darda"
+      },
+      {
+        "id": 127,
+        "grad": "Ðurđenovac"
+      },
+      {
+        "id": 143,
+        "grad": "Bilje"
+      },
+      {
+        "id": 183,
+        "grad": "Bizovac"
+      },
+      {
+        "id": 188,
+        "grad": "Josipovac"
+      },
+      {
+        "id": 190,
+        "grad": "Semeljci"
+      },
+      {
+        "id": 202,
+        "grad": "Antunovac"
+      },
+      {
+        "id": 215,
+        "grad": "Koška"
+      },
+      {
+        "id": 268,
+        "grad": "Petrijevci"
+      },
+      {
+        "id": 269,
+        "grad": "Čeminac"
+      },
+      {
+        "id": 270,
+        "grad": "Podgorač"
+      },
+      {
+        "id": 301,
+        "grad": "Drenje"
+      },
+      {
+        "id": 313,
+        "grad": "Strizivojna"
+      },
+      {
+        "id": 322,
+        "grad": "Marjanci"
+      },
+      {
+        "id": 323,
+        "grad": "Draž"
+      },
+      {
+        "id": 324,
+        "grad": "Ernestinovo"
+      },
+      {
+        "id": 334,
+        "grad": "Petlovac"
+      },
+      {
+        "id": 344,
+        "grad": "Satnica Ðakovačka"
+      },
+      {
+        "id": 351,
+        "grad": "Feričanci"
+      },
+      {
+        "id": 366,
+        "grad": "Viljevo"
+      },
+      {
+        "id": 374,
+        "grad": "Punitovci"
+      },
+      {
+        "id": 378,
+        "grad": "Vladislavci"
+      },
+      {
+        "id": 385,
+        "grad": "Viškovci"
+      },
+      {
+        "id": 387,
+        "grad": "Popovac"
+      },
+      {
+        "id": 402,
+        "grad": "Donja Motičina"
+      },
+      {
+        "id": 413,
+        "grad": "Gorjani"
+      },
+      {
+        "id": 414,
+        "grad": "Šodolovci"
+      },
+      {
+        "id": 435,
+        "grad": "Podravska Moslavina"
+      },
+      {
+        "id": 481,
+        "grad": "Vuka"
+      },
+      {
+        "id": 494,
+        "grad": "Trnava"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "zupanija": "Zadarska Županija",
+    "gradovi": [
+      {
+        "id": 5,
+        "grad": "Zadar"
+      },
+      {
+        "id": 65,
+        "grad": "Benkovac"
+      },
+      {
+        "id": 116,
+        "grad": "Biograd na Moru"
+      },
+      {
+        "id": 147,
+        "grad": "Poličnik"
+      },
+      {
+        "id": 148,
+        "grad": "Sukošan"
+      },
+      {
+        "id": 154,
+        "grad": "Sveti Filip i Jakov"
+      },
+      {
+        "id": 167,
+        "grad": "Pakoštane"
+      },
+      {
+        "id": 173,
+        "grad": "Bibinje"
+      },
+      {
+        "id": 191,
+        "grad": "Preko"
+      },
+      {
+        "id": 200,
+        "grad": "Posedarje"
+      },
+      {
+        "id": 214,
+        "grad": "Pag"
+      },
+      {
+        "id": 219,
+        "grad": "Vir"
+      },
+      {
+        "id": 245,
+        "grad": "Ražanac"
+      },
+      {
+        "id": 250,
+        "grad": "Nin"
+      },
+      {
+        "id": 296,
+        "grad": "Novigrad"
+      },
+      {
+        "id": 297,
+        "grad": "Zemunik Donji"
+      },
+      {
+        "id": 299,
+        "grad": "Pašman"
+      },
+      {
+        "id": 300,
+        "grad": "Privlaka"
+      },
+      {
+        "id": 308,
+        "grad": "Vrsi"
+      },
+      {
+        "id": 336,
+        "grad": "Stankovci"
+      },
+      {
+        "id": 353,
+        "grad": "Starigrad"
+      },
+      {
+        "id": 360,
+        "grad": "Škabrnje"
+      },
+      {
+        "id": 372,
+        "grad": "Kali"
+      },
+      {
+        "id": 397,
+        "grad": "Polača"
+      },
+      {
+        "id": 400,
+        "grad": "Jesenice"
+      },
+      {
+        "id": 448,
+        "grad": "Kolan"
+      },
+      {
+        "id": 454,
+        "grad": "Povljana"
+      },
+      {
+        "id": 457,
+        "grad": "Kukljica"
+      },
+      {
+        "id": 469,
+        "grad": "Galovac"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "zupanija": "Zagrebačka Županija",
+    "gradovi": [
+      {
+        "id": 6,
+        "grad": "Velika Gorica"
+      },
+      {
+        "id": 15,
+        "grad": "Samobor"
+      },
+      {
+        "id": 20,
+        "grad": "Zaprešić"
+      },
+      {
+        "id": 30,
+        "grad": "Dugo Selo"
+      },
+      {
+        "id": 34,
+        "grad": "Sveti Ivan Zelina"
+      },
+      {
+        "id": 35,
+        "grad": "Jastrebarsko"
+      },
+      {
+        "id": 39,
+        "grad": "Ivanić-Grad"
+      },
+      {
+        "id": 40,
+        "grad": "Vrbovec"
+      },
+      {
+        "id": 55,
+        "grad": "Brdovec"
+      },
+      {
+        "id": 88,
+        "grad": "Rugvica"
+      },
+      {
+        "id": 101,
+        "grad": "Donja Bistra"
+      },
+      {
+        "id": 104,
+        "grad": "Križ"
+      },
+      {
+        "id": 107,
+        "grad": "Brckovljani"
+      },
+      {
+        "id": 120,
+        "grad": "Kloštar Ivanić"
+      },
+      {
+        "id": 137,
+        "grad": "Klinča Sela"
+      },
+      {
+        "id": 179,
+        "grad": "Jakovlje"
+      },
+      {
+        "id": 197,
+        "grad": "Pisarovina"
+      },
+      {
+        "id": 261,
+        "grad": "Donja Pušća"
+      },
+      {
+        "id": 287,
+        "grad": "Krašić"
+      },
+      {
+        "id": 304,
+        "grad": "Marija Gorica"
+      },
+      {
+        "id": 305,
+        "grad": "Gornji Stupnik"
+      },
+      {
+        "id": 325,
+        "grad": "Pokupsko"
+      },
+      {
+        "id": 337,
+        "grad": "Kravarsko"
+      },
+      {
+        "id": 347,
+        "grad": "Orle"
+      },
+      {
+        "id": 375,
+        "grad": "Farkaševac"
+      },
+      {
+        "id": 404,
+        "grad": "Lasinja"
+      },
+      {
+        "id": 411,
+        "grad": "Bedenica"
+      },
+      {
+        "id": 412,
+        "grad": "Luka"
+      },
+      {
+        "id": 422,
+        "grad": "Rakovec"
+      },
+      {
+        "id": 424,
+        "grad": "Preseka"
+      },
+      {
+        "id": 466,
+        "grad": "Sveta Nedjelja"
+      },
+      {
+        "id": 470,
+        "grad": "Poljanica Bistranska"
+      },
+      {
+        "id": 476,
+        "grad": "Dubravica"
+      },
+      {
+        "id": 482,
+        "grad": "Dubrava"
+      },
+      {
+        "id": 483,
+        "grad": "Gradec"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "zupanija": "Istarska Županija",
+    "gradovi": [
+      {
+        "id": 7,
+        "grad": "Pula"
+      },
+      {
+        "id": 31,
+        "grad": "Poreč"
+      },
+      {
+        "id": 41,
+        "grad": "Rovinj"
+      },
+      {
+        "id": 43,
+        "grad": "Umag"
+      },
+      {
+        "id": 57,
+        "grad": "Labin"
+      },
+      {
+        "id": 77,
+        "grad": "Pazin"
+      },
+      {
+        "id": 97,
+        "grad": "Medulin"
+      },
+      {
+        "id": 105,
+        "grad": "Buzet"
+      },
+      {
+        "id": 109,
+        "grad": "Vodnjan"
+      },
+      {
+        "id": 156,
+        "grad": "Buje"
+      },
+      {
+        "id": 163,
+        "grad": "Marčana"
+      },
+      {
+        "id": 168,
+        "grad": "Ližnjan"
+      },
+      {
+        "id": 176,
+        "grad": "Novigrad"
+      },
+      {
+        "id": 198,
+        "grad": "Fažana"
+      },
+      {
+        "id": 205,
+        "grad": "Žminj"
+      },
+      {
+        "id": 228,
+        "grad": "Nedeščina"
+      },
+      {
+        "id": 233,
+        "grad": "Kršan"
+      },
+      {
+        "id": 237,
+        "grad": "Raša"
+      },
+      {
+        "id": 267,
+        "grad": "Barban"
+      },
+      {
+        "id": 293,
+        "grad": "Svetvinčenat"
+      },
+      {
+        "id": 303,
+        "grad": "Višnjan"
+      },
+      {
+        "id": 327,
+        "grad": "Vrsar"
+      },
+      {
+        "id": 350,
+        "grad": "Tinjan"
+      },
+      {
+        "id": 352,
+        "grad": "Pićan"
+      },
+      {
+        "id": 383,
+        "grad": "Brtonigla"
+      },
+      {
+        "id": 384,
+        "grad": "Kanfanar"
+      },
+      {
+        "id": 394,
+        "grad": "Karojba"
+      },
+      {
+        "id": 406,
+        "grad": "Gračišće"
+      },
+      {
+        "id": 420,
+        "grad": "Tar"
+      },
+      {
+        "id": 421,
+        "grad": "Vižinada"
+      },
+      {
+        "id": 430,
+        "grad": "Sveti Petar u Šumi"
+      },
+      {
+        "id": 434,
+        "grad": "Sveti Lovreč Pazenatički"
+      },
+      {
+        "id": 438,
+        "grad": "Motovun"
+      },
+      {
+        "id": 439,
+        "grad": "Funtana"
+      },
+      {
+        "id": 463,
+        "grad": "Kaštelir"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "zupanija": "Karlovačka Županija",
+    "gradovi": [
+      {
+        "id": 8,
+        "grad": "Karlovac"
+      },
+      {
+        "id": 45,
+        "grad": "Ogulin"
+      },
+      {
+        "id": 60,
+        "grad": "Duga Resa"
+      },
+      {
+        "id": 110,
+        "grad": "Ozalj"
+      },
+      {
+        "id": 201,
+        "grad": "Josipdol"
+      },
+      {
+        "id": 252,
+        "grad": "Barilović"
+      },
+      {
+        "id": 263,
+        "grad": "Draganići"
+      },
+      {
+        "id": 271,
+        "grad": "Netretić"
+      },
+      {
+        "id": 294,
+        "grad": "Generalski Stol"
+      },
+      {
+        "id": 349,
+        "grad": "Žakanje"
+      },
+      {
+        "id": 445,
+        "grad": "Kamanje"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "zupanija": "Brodsko-Posavska Županija",
+    "gradovi": [
+      {
+        "id": 9,
+        "grad": "Slavonski Brod"
+      },
+      {
+        "id": 47,
+        "grad": "Nova Gradiška"
+      },
+      {
+        "id": 112,
+        "grad": "Sibinj"
+      },
+      {
+        "id": 144,
+        "grad": "Oriovac"
+      },
+      {
+        "id": 166,
+        "grad": "Staro Petrovo Selo"
+      },
+      {
+        "id": 174,
+        "grad": "Garčin"
+      },
+      {
+        "id": 177,
+        "grad": "Rešetari"
+      },
+      {
+        "id": 217,
+        "grad": "Donji Andrijevci"
+      },
+      {
+        "id": 218,
+        "grad": "Podvinje"
+      },
+      {
+        "id": 224,
+        "grad": "Cernik"
+      },
+      {
+        "id": 235,
+        "grad": "Vrpolje"
+      },
+      {
+        "id": 236,
+        "grad": "Bebrina"
+      },
+      {
+        "id": 247,
+        "grad": "Bukovlje"
+      },
+      {
+        "id": 257,
+        "grad": "Velika Kopanica"
+      },
+      {
+        "id": 266,
+        "grad": "Davor"
+      },
+      {
+        "id": 277,
+        "grad": "Brodski Stupnik"
+      },
+      {
+        "id": 289,
+        "grad": "Podcrkavlje"
+      },
+      {
+        "id": 295,
+        "grad": "Gornja Vrba"
+      },
+      {
+        "id": 311,
+        "grad": "Sikirevci"
+      },
+      {
+        "id": 314,
+        "grad": "Klakar"
+      },
+      {
+        "id": 321,
+        "grad": "Oprisavci"
+      },
+      {
+        "id": 354,
+        "grad": "Vrbje"
+      },
+      {
+        "id": 368,
+        "grad": "Gundinci"
+      },
+      {
+        "id": 373,
+        "grad": "Slavonski Šamac"
+      },
+      {
+        "id": 389,
+        "grad": "Gornji Bogičevci"
+      },
+      {
+        "id": 429,
+        "grad": "Dragalić"
+      },
+      {
+        "id": 489,
+        "grad": "Nova Kapela"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "zupanija": "Varaždinska Županija",
+    "gradovi": [
+      {
+        "id": 10,
+        "grad": "Varaždin"
+      },
+      {
+        "id": 42,
+        "grad": "Ivanec"
+      },
+      {
+        "id": 46,
+        "grad": "Novi Marof"
+      },
+      {
+        "id": 74,
+        "grad": "Ludbreg"
+      },
+      {
+        "id": 93,
+        "grad": "Lepoglava"
+      },
+      {
+        "id": 103,
+        "grad": "Trnovec Bartolovečki"
+      },
+      {
+        "id": 114,
+        "grad": "Maruševec"
+      },
+      {
+        "id": 119,
+        "grad": "Varaždinske Toplice"
+      },
+      {
+        "id": 123,
+        "grad": "Cestica"
+      },
+      {
+        "id": 138,
+        "grad": "Vidovec"
+      },
+      {
+        "id": 139,
+        "grad": "Gornji Kneginec"
+      },
+      {
+        "id": 146,
+        "grad": "Sračinec"
+      },
+      {
+        "id": 151,
+        "grad": "Petrijanec"
+      },
+      {
+        "id": 203,
+        "grad": "Bednja"
+      },
+      {
+        "id": 207,
+        "grad": "Sveti Ðurđ"
+      },
+      {
+        "id": 212,
+        "grad": "Sveti Ilija"
+      },
+      {
+        "id": 213,
+        "grad": "Jalžabet"
+      },
+      {
+        "id": 254,
+        "grad": "Martijanec"
+      },
+      {
+        "id": 307,
+        "grad": "Beretinec"
+      },
+      {
+        "id": 310,
+        "grad": "Donja Voća"
+      },
+      {
+        "id": 318,
+        "grad": "Breznica"
+      },
+      {
+        "id": 339,
+        "grad": "Mali Bukovec"
+      },
+      {
+        "id": 343,
+        "grad": "Klenovnik"
+      },
+      {
+        "id": 355,
+        "grad": "Ljubešćica"
+      },
+      {
+        "id": 401,
+        "grad": "Visoko"
+      },
+      {
+        "id": 403,
+        "grad": "Veliki Bukovec"
+      },
+      {
+        "id": 423,
+        "grad": "Breznički Hum"
+      },
+      {
+        "id": 474,
+        "grad": "Vinica"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "zupanija": "Šibensko-Kninska Županija",
+    "gradovi": [
+      {
+        "id": 11,
+        "grad": "Šibenik"
+      },
+      {
+        "id": 48,
+        "grad": "Knin"
+      },
+      {
+        "id": 72,
+        "grad": "Vodice"
+      },
+      {
+        "id": 102,
+        "grad": "Drniš"
+      },
+      {
+        "id": 206,
+        "grad": "Skradin"
+      },
+      {
+        "id": 227,
+        "grad": "Tisno"
+      },
+      {
+        "id": 256,
+        "grad": "Primošten"
+      },
+      {
+        "id": 302,
+        "grad": "Rogoznica"
+      },
+      {
+        "id": 369,
+        "grad": "Pirovac"
+      },
+      {
+        "id": 370,
+        "grad": "Tribunj"
+      },
+      {
+        "id": 472,
+        "grad": "Bilice"
+      },
+      {
+        "id": 477,
+        "grad": "Murter"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "zupanija": "Dubrovačko-Neretvanska Županija",
+    "gradovi": [
+      {
+        "id": 12,
+        "grad": "Dubrovnik"
+      },
+      {
+        "id": 33,
+        "grad": "Metković"
+      },
+      {
+        "id": 78,
+        "grad": "Ploče"
+      },
+      {
+        "id": 124,
+        "grad": "Korčula"
+      },
+      {
+        "id": 181,
+        "grad": "Vela Luka"
+      },
+      {
+        "id": 185,
+        "grad": "Orebić"
+      },
+      {
+        "id": 232,
+        "grad": "Opuzen"
+      },
+      {
+        "id": 291,
+        "grad": "Cavtat"
+      },
+      {
+        "id": 391,
+        "grad": "Kula Norinska"
+      },
+      {
+        "id": 415,
+        "grad": "Lumbarda"
+      },
+      {
+        "id": 442,
+        "grad": "Smokvica"
+      },
+      {
+        "id": 453,
+        "grad": "Trpanj"
+      },
+      {
+        "id": 459,
+        "grad": "Janjina"
+      },
+      {
+        "id": 461,
+        "grad": "Vlaka"
+      },
+      {
+        "id": 465,
+        "grad": "Mlinište"
+      },
+      {
+        "id": 468,
+        "grad": "Srebreno"
+      },
+      {
+        "id": 486,
+        "grad": "Blato"
+      },
+      {
+        "id": 493,
+        "grad": "Otrić-Seoci"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "zupanija": "Sisačko-Moslavačka Županija",
+    "gradovi": [
+      {
+        "id": 13,
+        "grad": "Sisak"
+      },
+      {
+        "id": 26,
+        "grad": "Petrinja"
+      },
+      {
+        "id": 27,
+        "grad": "Kutina"
+      },
+      {
+        "id": 52,
+        "grad": "Novska"
+      },
+      {
+        "id": 59,
+        "grad": "Popovača"
+      },
+      {
+        "id": 89,
+        "grad": "Glina"
+      },
+      {
+        "id": 126,
+        "grad": "Lekenik"
+      },
+      {
+        "id": 231,
+        "grad": "Martinska Ves"
+      },
+      {
+        "id": 238,
+        "grad": "Lipovljani"
+      },
+      {
+        "id": 283,
+        "grad": "Velika Ludina"
+      },
+      {
+        "id": 333,
+        "grad": "Hrvatska Kostajnica"
+      },
+      {
+        "id": 495,
+        "grad": "Sunja"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "zupanija": "Bjelovarsko-Bilogorska Županija",
+    "gradovi": [
+      {
+        "id": 16,
+        "grad": "Bjelovar"
+      },
+      {
+        "id": 62,
+        "grad": "Daruvar"
+      },
+      {
+        "id": 73,
+        "grad": "Garešnica"
+      },
+      {
+        "id": 94,
+        "grad": "Čazma"
+      },
+      {
+        "id": 125,
+        "grad": "Grubišno Polje"
+      },
+      {
+        "id": 165,
+        "grad": "Rovišće"
+      },
+      {
+        "id": 243,
+        "grad": "Nova Rača"
+      },
+      {
+        "id": 275,
+        "grad": "Veliko Trojstvo"
+      },
+      {
+        "id": 276,
+        "grad": "Kapela"
+      },
+      {
+        "id": 286,
+        "grad": "Ivanska"
+      },
+      {
+        "id": 317,
+        "grad": "Dežanovac"
+      },
+      {
+        "id": 330,
+        "grad": "Hercegovac"
+      },
+      {
+        "id": 340,
+        "grad": "Končanica"
+      },
+      {
+        "id": 356,
+        "grad": "Štefanje"
+      },
+      {
+        "id": 393,
+        "grad": "Šandrovac"
+      },
+      {
+        "id": 405,
+        "grad": "Velika Pisanica"
+      },
+      {
+        "id": 427,
+        "grad": "Velika Trnovitica"
+      },
+      {
+        "id": 451,
+        "grad": "Severin"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "zupanija": "Vukovarsko-Srijemska Županija",
+    "gradovi": [
+      {
+        "id": 17,
+        "grad": "Vinkovci"
+      },
+      {
+        "id": 24,
+        "grad": "Vukovar"
+      },
+      {
+        "id": 67,
+        "grad": "Županja"
+      },
+      {
+        "id": 99,
+        "grad": "Ivankovo"
+      },
+      {
+        "id": 136,
+        "grad": "Ilok"
+      },
+      {
+        "id": 141,
+        "grad": "Nuštar"
+      },
+      {
+        "id": 164,
+        "grad": "Trpinja"
+      },
+      {
+        "id": 184,
+        "grad": "Cerna"
+      },
+      {
+        "id": 187,
+        "grad": "Drenovci"
+      },
+      {
+        "id": 192,
+        "grad": "Borovo"
+      },
+      {
+        "id": 194,
+        "grad": "Nijemci"
+      },
+      {
+        "id": 199,
+        "grad": "Andrijaševci"
+      },
+      {
+        "id": 211,
+        "grad": "Stari Jankovci"
+      },
+      {
+        "id": 230,
+        "grad": "Bošnjaci"
+      },
+      {
+        "id": 241,
+        "grad": "Babina Greda"
+      },
+      {
+        "id": 258,
+        "grad": "Gunja"
+      },
+      {
+        "id": 272,
+        "grad": "Stari Mikanovci"
+      },
+      {
+        "id": 288,
+        "grad": "Gradište"
+      },
+      {
+        "id": 290,
+        "grad": "Privlaka"
+      },
+      {
+        "id": 306,
+        "grad": "Tovarnik"
+      },
+      {
+        "id": 315,
+        "grad": "Jarmina"
+      },
+      {
+        "id": 345,
+        "grad": "Markušica"
+      },
+      {
+        "id": 361,
+        "grad": "Tordinci"
+      },
+      {
+        "id": 364,
+        "grad": "Vođinci"
+      },
+      {
+        "id": 379,
+        "grad": "Štitar"
+      },
+      {
+        "id": 380,
+        "grad": "Bogdanovci"
+      },
+      {
+        "id": 425,
+        "grad": "Tompojevci"
+      },
+      {
+        "id": 432,
+        "grad": "Negoslavci"
+      },
+      {
+        "id": 433,
+        "grad": "Lovas"
+      },
+      {
+        "id": 485,
+        "grad": "Otok"
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "zupanija": "Koprivničko-Križevačka Županija",
+    "gradovi": [
+      {
+        "id": 18,
+        "grad": "Koprivnica"
+      },
+      {
+        "id": 29,
+        "grad": "Križevci"
+      },
+      {
+        "id": 85,
+        "grad": "Ðurđevac"
+      },
+      {
+        "id": 159,
+        "grad": "Sveti Ivan Žabno"
+      },
+      {
+        "id": 175,
+        "grad": "Sveti Petar Orehovec"
+      },
+      {
+        "id": 178,
+        "grad": "Virje"
+      },
+      {
+        "id": 239,
+        "grad": "Sokolovac"
+      },
+      {
+        "id": 244,
+        "grad": "Kloštar Podravski"
+      },
+      {
+        "id": 255,
+        "grad": "Rasinja"
+      },
+      {
+        "id": 281,
+        "grad": "Novigrad Podravski"
+      },
+      {
+        "id": 282,
+        "grad": "Peteranec"
+      },
+      {
+        "id": 319,
+        "grad": "Koprivnički Bregi"
+      },
+      {
+        "id": 329,
+        "grad": "Legrad"
+      },
+      {
+        "id": 342,
+        "grad": "Koprivnički Ivanec"
+      },
+      {
+        "id": 346,
+        "grad": "Molve"
+      },
+      {
+        "id": 376,
+        "grad": "Gornja Rijeka"
+      },
+      {
+        "id": 382,
+        "grad": "Drnje"
+      },
+      {
+        "id": 388,
+        "grad": "Podravske Sesvete"
+      },
+      {
+        "id": 390,
+        "grad": "Ferdinandovac"
+      },
+      {
+        "id": 407,
+        "grad": "Kalinovac"
+      },
+      {
+        "id": 409,
+        "grad": "Ðelekovec"
+      },
+      {
+        "id": 418,
+        "grad": "Hlebine"
+      },
+      {
+        "id": 419,
+        "grad": "Kalnik"
+      },
+      {
+        "id": 431,
+        "grad": "Novo Virje"
+      },
+      {
+        "id": 449,
+        "grad": "Zrinski Topolovac"
+      },
+      {
+        "id": 488,
+        "grad": "Gola"
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "zupanija": "Međimurska Županija",
+    "gradovi": [
+      {
+        "id": 19,
+        "grad": "Čakovec"
+      },
+      {
+        "id": 53,
+        "grad": "Nedelišće"
+      },
+      {
+        "id": 92,
+        "grad": "Prelog"
+      },
+      {
+        "id": 108,
+        "grad": "Mursko Središće"
+      },
+      {
+        "id": 158,
+        "grad": "Mala Subotica"
+      },
+      {
+        "id": 170,
+        "grad": "Donji Kraljevec"
+      },
+      {
+        "id": 195,
+        "grad": "Podturen"
+      },
+      {
+        "id": 225,
+        "grad": "Pribislavec"
+      },
+      {
+        "id": 226,
+        "grad": "Kotoriba"
+      },
+      {
+        "id": 248,
+        "grad": "Orehovica"
+      },
+      {
+        "id": 249,
+        "grad": "Šenkovec"
+      },
+      {
+        "id": 259,
+        "grad": "Strahoninec"
+      },
+      {
+        "id": 274,
+        "grad": "Sveti Martin na Muri"
+      },
+      {
+        "id": 278,
+        "grad": "Štrigova"
+      },
+      {
+        "id": 279,
+        "grad": "Goričan"
+      },
+      {
+        "id": 316,
+        "grad": "Sveta Marija"
+      },
+      {
+        "id": 326,
+        "grad": "Domašinec"
+      },
+      {
+        "id": 348,
+        "grad": "Gornji Mihaljevec"
+      },
+      {
+        "id": 358,
+        "grad": "Vratišinec"
+      },
+      {
+        "id": 416,
+        "grad": "Donji Vidovec"
+      },
+      {
+        "id": 440,
+        "grad": "Lopatinec"
+      },
+      {
+        "id": 450,
+        "grad": "Dekanovec"
+      },
+      {
+        "id": 471,
+        "grad": "Selnica"
+      },
+      {
+        "id": 473,
+        "grad": "Belica"
+      },
+      {
+        "id": 475,
+        "grad": "Donja Dubrava"
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "zupanija": "Požeško-Slavonska Županija",
+    "gradovi": [
+      {
+        "id": 25,
+        "grad": "Požega"
+      },
+      {
+        "id": 69,
+        "grad": "Pleternica"
+      },
+      {
+        "id": 90,
+        "grad": "Pakrac"
+      },
+      {
+        "id": 133,
+        "grad": "Lipik"
+      },
+      {
+        "id": 140,
+        "grad": "Kutjevo"
+      },
+      {
+        "id": 153,
+        "grad": "Velika"
+      },
+      {
+        "id": 204,
+        "grad": "Jakšić"
+      },
+      {
+        "id": 487,
+        "grad": "Kaptol"
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "zupanija": "Virovitičko-Podravska Županija",
+    "gradovi": [
+      {
+        "id": 28,
+        "grad": "Virovitica"
+      },
+      {
+        "id": 50,
+        "grad": "Slatina"
+      },
+      {
+        "id": 75,
+        "grad": "Pitomača"
+      },
+      {
+        "id": 129,
+        "grad": "Suhopolje"
+      },
+      {
+        "id": 152,
+        "grad": "Orahovica"
+      },
+      {
+        "id": 209,
+        "grad": "Špišić-Bukovica"
+      },
+      {
+        "id": 242,
+        "grad": "Lukač"
+      },
+      {
+        "id": 332,
+        "grad": "Sopje"
+      },
+      {
+        "id": 377,
+        "grad": "Čađavica"
+      },
+      {
+        "id": 386,
+        "grad": "Zdenci"
+      },
+      {
+        "id": 410,
+        "grad": "Nova Bukovica"
+      },
+      {
+        "id": 428,
+        "grad": "Mikleuš"
+      },
+      {
+        "id": 490,
+        "grad": "Gradina"
+      },
+      {
+        "id": 496,
+        "grad": "Crnac"
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "zupanija": "Krapinsko-Zagorska Županija",
+    "gradovi": [
+      {
+        "id": 49,
+        "grad": "Krapina"
+      },
+      {
+        "id": 71,
+        "grad": "Zabok"
+      },
+      {
+        "id": 86,
+        "grad": "Bedekovčina"
+      },
+      {
+        "id": 106,
+        "grad": "Pregrada"
+      },
+      {
+        "id": 111,
+        "grad": "Oroslavje"
+      },
+      {
+        "id": 115,
+        "grad": "Sveti Križ Začretje"
+      },
+      {
+        "id": 117,
+        "grad": "Zlatar"
+      },
+      {
+        "id": 118,
+        "grad": "Marija Bistrica"
+      },
+      {
+        "id": 128,
+        "grad": "Donja Stubica"
+      },
+      {
+        "id": 142,
+        "grad": "Krapinske Toplice"
+      },
+      {
+        "id": 149,
+        "grad": "Gornja Stubica"
+      },
+      {
+        "id": 150,
+        "grad": "Hum na Sutli"
+      },
+      {
+        "id": 155,
+        "grad": "Veliko Trgovišće"
+      },
+      {
+        "id": 180,
+        "grad": "Ðurmanec"
+      },
+      {
+        "id": 208,
+        "grad": "Konjšćina"
+      },
+      {
+        "id": 223,
+        "grad": "Radoboj"
+      },
+      {
+        "id": 246,
+        "grad": "Stubičke Toplice"
+      },
+      {
+        "id": 251,
+        "grad": "Lobor"
+      },
+      {
+        "id": 262,
+        "grad": "Klanjec"
+      },
+      {
+        "id": 265,
+        "grad": "Desinić"
+      },
+      {
+        "id": 280,
+        "grad": "Zlatar Bistrica"
+      },
+      {
+        "id": 284,
+        "grad": "Petrovsko"
+      },
+      {
+        "id": 285,
+        "grad": "Mače"
+      },
+      {
+        "id": 292,
+        "grad": "Budinšćina"
+      },
+      {
+        "id": 309,
+        "grad": "Tuhelj"
+      },
+      {
+        "id": 371,
+        "grad": "Kraljevec na Sutli"
+      },
+      {
+        "id": 392,
+        "grad": "Kumrovec"
+      },
+      {
+        "id": 398,
+        "grad": "Hrašćina"
+      },
+      {
+        "id": 441,
+        "grad": "Zagorska Sela"
+      },
+      {
+        "id": 446,
+        "grad": "Novi Golubovec"
+      },
+      {
+        "id": 478,
+        "grad": "Gornje Jesenje"
+      },
+      {
+        "id": 480,
+        "grad": "Mihovljan"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "zupanija": "Ličko-Senjska Županija",
+    "gradovi": [
+      {
+        "id": 51,
+        "grad": "Gospić"
+      },
+      {
+        "id": 76,
+        "grad": "Otočac"
+      },
+      {
+        "id": 186,
+        "grad": "Novalja"
+      },
+      {
+        "id": 456,
+        "grad": "Vrhovine"
+      }
+    ]
+  }
+]

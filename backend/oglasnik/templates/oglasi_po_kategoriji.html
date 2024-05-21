@@ -1,0 +1,42 @@
+<!-- oglasi_po_kategoriji.html  -->
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oglasi po kategoriji</title>
+</head>
+<body>
+    <p>
+        <a href="http://localhost:3000/">Natrag na početnu</a>
+        {% for kat in hijerarhija %}
+            > <a href="{% url 'oglasi_po_kategoriji' kat.url %}">{{ kat.naziv }}</a>
+        {% endfor %}
+    </p>
+
+    <h2>Oglasi po kategoriji: {{ kategorija.naziv }}</h2>
+
+    <h3>Podkategorije:</h3>
+    <ul>
+        {% for kat in kategorija.children.all %}
+            <li><a href="{% url 'oglasi_po_kategoriji' kat.url %}">{{ kat.naziv }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <h3>Oglasi:</h3>
+    <ul>
+        {% for oglas in oglasi %}
+            <li>
+                <a href="{% url 'oglas_detalji' oglas.kategorija.url oglas.naziv oglas.sifra %}">
+                    <h4>{{ oglas.naziv }}</h4>
+                </a>
+                {% if oglas.slike.all %}
+                    <img src="data:image/png;base64,{{ oglas.slike.all.0.slika }}" alt="{{ oglas.naziv }}" style="max-width: 100px; max-height: 100px;">
+                {% endif %}
+                <p>{{ oglas.opis|truncatewords:20 }}</p>
+                <p>Cijena: {{ oglas.cijena }} €</p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

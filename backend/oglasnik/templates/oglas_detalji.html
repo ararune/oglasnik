@@ -1,0 +1,27 @@
+<!-- oglas_detalji.html -->
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalji oglasa</title>
+</head>
+<body>
+    <p>
+        <a href="http://localhost:3000/">Oglasnik</a>
+        {% for kat in hijerarhija %}
+            > <a href="{% url 'oglasi_po_kategoriji' kat.url %}">{{ kat.naziv }}</a>
+        {% endfor %}
+    </p>
+
+    <h2>{{ oglas.naziv }}</h2>
+    <p>{{ oglas.opis }}</p>
+
+    <h3>Slike:</h3>
+    {% for slika in slike %}
+        <img src="data:image/png;base64,{{ slika.slika }}" alt="Slika oglasa">
+    {% endfor %}
+
+    <p>Autor oglasa: {{ oglas.korisnik.username }}</p>
+</body>
+</html>

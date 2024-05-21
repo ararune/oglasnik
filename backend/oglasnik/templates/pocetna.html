@@ -1,0 +1,26 @@
+<!-- pocetna.html -->
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dobrodošli</title>
+</head>
+
+<body>
+    <h2>Dobrodošli!</h2>
+    {% if korisnik.is_authenticated %}
+    <p>Prijavljeni ste kao: {{ korisnik.username }}</p>
+    <form action="{% url 'odjava' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Odjava</button>
+    </form>
+    {% else %}
+    <a href="{% url 'prijava' %}">Prijava</a>
+    <a href="{% url 'registracija' %}">Registracija</a>
+    {% endif %}
+    </ul>
+</body>
+
+</html>
