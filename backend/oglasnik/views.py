@@ -13,6 +13,8 @@ import base64
 from rest_framework import filters
 from rest_framework import viewsets
 from django.forms.models import model_to_dict
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
 class ZupanijaViewSet(viewsets.ModelViewSet):
     queryset = Zupanija.objects.all()
@@ -62,32 +64,31 @@ def registracija(request):
         form = FormaZaRegistraciju()
     return render(request, 'registracija.html', {'form': form})
 
-@login_required
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def trenutni_korisnik(request):
     user = request.user
-    try:
-        user_info = {
-            'id': user.id,
-            'korisnicko_ime': user.username,
-            'ime': user.first_name or 'N/A',
-            'prezime': user.last_name or 'N/A',
-            'email': user.email,
-            'datum_pridruzivanja': user.date_joined.strftime("%d/%m/%Y %H:%M:%S"),
-            'grad': user.grad.naziv if hasattr(user, 'grad') and user.grad else 'N/A',
-            'zupanija': user.zupanija.naziv if hasattr(user, 'zupanija') and user.zupanija else 'N/A',
-            'is_superuser': user.is_superuser,
-            'is_staff': user.is_staff,
-            'uloga': 'Admin' if user.is_superuser else 'Staff' if user.is_staff else 'Korisnik'
-        }
-        return JsonResponse(user_info)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+    user_info = {
+        'id': user.id,
+        'korisnicko_ime': user.username,
+        'ime': user.first_name or 'N/A',
+        'prezime': user.last_name or 'N/A',
+        'email': user.email,
+        'datum_pridruzivanja': user.date_joined.strftime("%d/%m/%Y %H:%M:%S"),
+        'grad': user.grad.naziv if user.grad else 'N/A',
+        'zupanija': user.zupanija.naziv if user.zupanija else 'N/A',
+        'is_superuser': user.is_superuser,
+        'is_staff': user.is_staff,
+        'uloga': 'Admin' if user.is_superuser else 'Staff' if user.is_staff else 'Korisnik'
+    }
+    return JsonResponse(user_info)
 
 
-@login_required
-def odjava(request):
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def odjavi_korisnika(request):
     logout(request)
-    return redirect('http://localhost:3000/')
+    return JsonResponse({'message': 'Uspješno ste odjavljeni.'})
 
 @login_required
 def profil(request):

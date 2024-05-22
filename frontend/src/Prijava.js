@@ -1,68 +1,70 @@
-import React, { useState } from 'react';
+// Prijava.js
 
-function Prijava({ onLogin }) {
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+const Prijava = ({ setLoggedInUser }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        
         try {
-            const response = await fetch('http://localhost:8000/prijava/', {
-                method: 'POST',
+            const response = await axios.post('http://localhost:8000/api/token/', {
+                username,
+                password
+            }, { withCredentials: true });
+
+            const { access, refresh } = response.data;
+            localStorage.setItem('access_token', access);
+            localStorage.setItem('refresh_token', refresh);
+
+            const userResponse = await axios.get('http://localhost:8000/api/trenutni_korisnik/', {
                 headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
+                    Authorization: `Bearer ${access}`
+                }
             });
-            const data = await response.json();
-            if (response.ok) {
-                // Store token in local storage
-                localStorage.setItem('token', data.access); // Store the access token
-                // Fetch the current user
-                onLogin(); // Notify parent component of successful login
-            } else {
-                setError('Invalid username or password.');
-            }
+
+            setLoggedInUser(userResponse.data.ime);
+            navigate('/');
         } catch (error) {
             console.error('Error logging in:', error);
-            setError('An error occurred while logging in.');
+            setError('Nevaljano korisničko ime ili lozinka, pokušajte ponovno.');
         }
     };
 
     return (
-        <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4">Login</h2>
+        <div className="bg-gray-800 p-6 rounded shadow-md max-w-md w-full mb-32">
+            <h2 className="text-3xl font-bold mb-6">Prijava</h2>
             {error && <p className="text-red-500 mb-4">{error}</p>}
-            <form onSubmit={handleLogin} method="POST">
+            <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md">
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">Username:</label>
-                    <input 
-                        className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:border-blue-500"
-                        type="text" 
-                        value={username} 
-                        onChange={(e) => setUsername(e.target.value)} 
+                    <label className="block text-gray-300 mb-2">Korisničko ime:</label>
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="w-full p-2 rounded bg-gray-700 text-white"
+                        required
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">Password:</label>
-                    <input 
-                        className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:border-blue-500"
-                        type="password" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
+                    <label className="block text-gray-300 mb-2">Lozinka:</label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full p-2 rounded bg-gray-700 text-white"
+                        required
                     />
                 </div>
-                <button 
-                    className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-                    type="submit"
-                >
-                    Login
-                </button>
+                <button type="submit" className="w-full p-2 bg-blue-500 hover:bg-blue-600 rounded">Prijavi se</button>
             </form>
         </div>
     );
-}
+};
 
 export default Prijava;

@@ -1,31 +1,17 @@
-import React, { useState, useEffect } from 'react';
+// frontend/src/Profil.js
+import React from 'react';
+import useAuth from './useAuth';
 
 function Profil() {
-    const [user, setUser] = useState(null);
+    const { user, loading } = useAuth();
 
-    useEffect(() => {
-        fetchUser();
-    }, []);
-
-    const fetchUser = async () => {
-        try {
-            const response = await fetch('http://localhost:8000/api/trenutni_korisnik/', {
-                credentials: 'include',
-            });
-            if (response.ok) {
-                const userData = await response.json();
-                setUser(userData);
-            } else {
-                console.error('Error fetching user: HTTP status', response.status);
-            }
-        } catch (error) {
-            console.error('Error fetching user:', error);
-        }
-    };
+    if (loading) {
+        return <p>Loading user information...</p>;
+    }
 
     return (
-        <div className="bg-gray-800 p-6 rounded shadow-md w-full max-w-4xl">
-            {user && (
+        <div className="bg-gray-800 p-6 rounded shadow-md w-full max-w-4xl mb-32">
+            {user ? (
                 <div>
                     <p className="text-xl font-bold mb-2">{user.korisnicko_ime}</p>
                     <hr className="mb-4" />
@@ -36,6 +22,8 @@ function Profil() {
                     <p><span className="font-bold">Grad:</span> {user.grad}</p>
                     <p><span className="font-bold">Županija:</span> {user.zupanija}</p>
                 </div>
+            ) : (
+                <p>No user information available</p>
             )}
         </div>
     );
