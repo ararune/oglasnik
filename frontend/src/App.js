@@ -9,6 +9,7 @@ import Prijava from './Prijava';
 import odjavaKorisnika from './odjava'; // Import the logout function
 import './App.css';
 import logoSlika from './images/logo.png';
+import Registracija from './Registracija';
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -68,8 +69,8 @@ function App() {
           ) : (
             <div className="fixed top-0 left-1/2 transform -translate-x-1/2 bg-gray-800 p-6 rounded shadow-md text-center mb-6">
               <div className="space-x-4">
-                <Link to="http://localhost:8000/registracija" className="text-blue-500 hover:underline">Registriraj se</Link>
-                <Link to="/prijava" className="text-blue-500 hover:underline">Prijavi se</Link>
+                <Link to="/registracija" className="text-white font-bold hover:underline">Registracija</Link>
+                <Link to="/prijava" className="text-white font-bold hover:underline">Prijava</Link>
               </div>
             </div>
           )}
@@ -79,6 +80,7 @@ function App() {
             <Route path="/" element={<Kategorije />} />
             <Route path="/profil" element={<Profil />} />
             <Route path="/moji_oglasi" element={<MojiOglasi />} />
+            <Route path="/registracija" element={<Registracija />} />
             <Route path="/prijava" element={<Prijava setLoggedInUser={setLoggedInUser} />} />
           </Routes>
         </div>

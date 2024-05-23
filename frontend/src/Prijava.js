@@ -1,7 +1,7 @@
 // Prijava.js
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 const Prijava = ({ setLoggedInUser }) => {
@@ -32,15 +32,19 @@ const Prijava = ({ setLoggedInUser }) => {
             navigate('/');
         } catch (error) {
             console.error('Error logging in:', error);
-            setError('Nevaljano korisničko ime ili lozinka, pokušajte ponovno.');
+            setError('Nevaljano korisničko ime ili lozinka.');
         }
     };
 
     return (
         <div className="bg-gray-800 p-6 rounded shadow-md max-w-md w-full mb-32">
             <h2 className="text-3xl font-bold mb-6">Prijava</h2>
+            <p>
+                Niste registrirani?
+                <Link to="/registracija" className="text-blue-500 hover:text-blue-700 underline"> Registrirajte se ovdje</Link>.
+            </p>
             {error && <p className="text-red-500 mb-4">{error}</p>}
-            <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md">
+            <form onSubmit={handleSubmit} className='mt-4'>
                 <div className="mb-4">
                     <label className="block text-gray-300 mb-2">Korisničko ime:</label>
                     <input

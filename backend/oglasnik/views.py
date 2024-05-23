@@ -15,6 +15,8 @@ from rest_framework import viewsets
 from django.forms.models import model_to_dict
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 class ZupanijaViewSet(viewsets.ModelViewSet):
     queryset = Zupanija.objects.all()
@@ -49,20 +51,22 @@ class SlikaViewSet(viewsets.ModelViewSet):
     queryset = Slika.objects.all()
     serializer_class = SlikaSerializer
 
+@csrf_exempt
 def registracija(request):
     if request.method == 'POST':
-        form = FormaZaRegistraciju(request.POST)
+        data = json.loads(request.body)
+        form = FormaZaRegistraciju(data)
         if form.is_valid():
             oib = form.cleaned_data['oib']
             if Korisnik.objects.filter(oib=oib).exists():
                 form.add_error('oib', 'OIB mora biti jedinstven.')
             else:
                 form.save()
-                # Redirect to the React homepage
-                return redirect('http://localhost:3000/')
+                return JsonResponse({'success': True}, status=201)
+        return JsonResponse(form.errors, status=400)
     else:
         form = FormaZaRegistraciju()
-    return render(request, 'registracija.html', {'form': form})
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
