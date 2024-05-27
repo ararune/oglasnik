@@ -15,6 +15,7 @@ class GradAdmin(admin.ModelAdmin):
     
 class OglasAdmin(admin.ModelAdmin):
     list_display = ('naziv', 'kategorija', 'cijena', 'sifra', 'korisnik', 'zupanija', 'grad', 'trajanje')
+    
 
 
 admin.site.register(Korisnik, KorisnikAdmin)

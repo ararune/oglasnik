@@ -112,6 +112,7 @@ const Registracija = () => {
                             type="text"
                             name="username"
                             value={formData.username}
+                            placeholder="Unesite korisničko ime..."
                             onChange={handleChange}
                             className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
                             required
@@ -124,6 +125,7 @@ const Registracija = () => {
                             type="email"
                             name="email"
                             value={formData.email}
+                            placeholder="Unesite e-mail..."
                             onChange={handleChange}
                             className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
                             required
@@ -136,6 +138,7 @@ const Registracija = () => {
                             type="password"
                             name="password1"
                             value={formData.password1}
+                            placeholder="Dozvoljeni znakovi: @/./+/-/_"
                             onChange={handleChange}
                             className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
                             required
@@ -148,6 +151,7 @@ const Registracija = () => {
                             type="password"
                             name="password2"
                             value={formData.password2}
+                            placeholder="Ponovite lozinku..."
                             onChange={handleChange}
                             className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
                             required
@@ -160,6 +164,7 @@ const Registracija = () => {
                             type="text"
                             name="first_name"
                             value={formData.first_name}
+                            placeholder="Unesite ime..."
                             onChange={handleChange}
                             className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
                             required
@@ -172,6 +177,7 @@ const Registracija = () => {
                             type="text"
                             name="last_name"
                             value={formData.last_name}
+                            placeholder="Unesite prezime..."
                             onChange={handleChange}
                             className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
                             required
@@ -184,6 +190,7 @@ const Registracija = () => {
                             type="text"
                             name="oib"
                             value={formData.oib}
+                            placeholder="OIB sadrži 11 znamenki..."
                             onChange={handleChange}
                             className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
                             required

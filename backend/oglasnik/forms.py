@@ -1,4 +1,4 @@
-# oglasnik/forms.py
+# forms.py 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import Korisnik, Zupanija, Grad, Oglas, Slika
@@ -63,11 +63,11 @@ class VisestrukaDatoteka(forms.FileField):
         return rezultat
 
 class SlikaForma(forms.ModelForm):
-    slike = VisestrukaDatoteka(label='Odaberi datoteke', required=False)
+    url = forms.URLField(label='Image URL', required=True)
 
     class Meta:
         model = Slika
-        fields = ['slike', ]
+        fields = ['url']
 
 class FormaZaIzraduOglasa(forms.ModelForm):
     MAX_VELICINA_SLIKE = 5 * 1024 * 1024  # 5MB u bytovima

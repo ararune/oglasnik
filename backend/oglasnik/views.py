@@ -1,4 +1,3 @@
-# views.py
 from rest_framework import viewsets
 from .models import Zupanija, Grad, Korisnik, Kategorija, Oglas, Slika
 from .serializers import ZupanijaSerializer, GradSerializer, KorisnikSerializer, KategorijaSerializer, OglasSerializer, SlikaSerializer
@@ -17,6 +16,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.middleware.csrf import get_token
+from django.core.files.storage import default_storage
+
 
 class ZupanijaViewSet(viewsets.ModelViewSet):
     queryset = Zupanija.objects.all()
@@ -51,7 +53,6 @@ class SlikaViewSet(viewsets.ModelViewSet):
     queryset = Slika.objects.all()
     serializer_class = SlikaSerializer
 
-@csrf_exempt
 def registracija(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -81,6 +82,8 @@ def trenutni_korisnik(request):
         'datum_pridruzivanja': user.date_joined.strftime("%d/%m/%Y %H:%M:%S"),
         'grad': user.grad.naziv if user.grad else 'N/A',
         'zupanija': user.zupanija.naziv if user.zupanija else 'N/A',
+        'grad_id': user.grad.id if user.grad else None,
+        'zupanija_id': user.zupanija.id if user.zupanija else None,
         'is_superuser': user.is_superuser,
         'is_staff': user.is_staff,
         'uloga': 'Admin' if user.is_superuser else 'Staff' if user.is_staff else 'Korisnik'
@@ -99,21 +102,43 @@ def profil(request):
     user = request.user
     return render(request, 'profil.html', {'user': user})
 
+@csrf_exempt
 @login_required
 def kreiraj_oglas(request):
     if request.method == 'POST':
-        form = FormaZaIzraduOglasa(request.POST, request.FILES)
+        data = json.loads(request.body)
+        form = FormaZaIzraduOglasa(data, request.FILES)
         if form.is_valid():
             oglas = form.save(commit=False)
             oglas.korisnik = request.user
+
+            # Fetch grad and zupanija from the authenticated user
+            grad = request.user.grad
+            zupanija = request.user.zupanija
+
+            # Check if grad and zupanija are not None before assigning
+            if grad:
+                oglas.grad = grad
+            if zupanija:
+                oglas.zupanija = zupanija
+            
             oglas.save()
-            for img in request.FILES.getlist('slike'):
-                img_str = base64.b64encode(img.read()).decode('utf-8')
-                Slika.objects.create(oglas=oglas, slika=img_str)
-            return redirect('http://localhost:3000/')
+
+            for img_file in request.FILES.getlist('slike'):
+                # Save image to media folder
+                image_path = default_storage.save(img_file.name, img_file)
+
+                # Create Slika instance and save image path
+                Slika.objects.create(oglas=oglas, url=image_path)
+
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse(form.errors, status=400)
     else:
-        form = FormaZaIzraduOglasa()
-    return render(request, 'kreiraj_oglas.html', {'form': form})
+        csrf_token = get_token(request)
+        response = JsonResponse({'csrfToken': csrf_token})
+        response.set_cookie('csrftoken', csrf_token)
+        return response
 
 @login_required
 def moji_oglasi(request):
@@ -183,3 +208,24 @@ def oglas_detalji(request, kategorija_url, oglas_naziv, sifra):
 
     return render(request, 'oglas_detalji.html', {'oglas': oglas, 'slike': slike, 'hijerarhija': hijerarhija})
 
+@login_required
+def izrada_oglasa(request):
+    user = request.user
+    zupanija = user.zupanija
+    grad = user.grad
+    if request.method == 'POST':
+        form = FormaZaIzraduOglasa(request.POST, request.FILES)
+        if form.is_valid():
+            oglas = form.save(commit=False)
+            oglas.korisnik = user
+            oglas.zupanija = zupanija
+            oglas.grad = grad
+            oglas.save()
+            for img in request.FILES.getlist('slike'):
+                img_str = base64.b64encode(img.read()).decode('utf-8')
+                Slika.objects.create(oglas=oglas, slika=img_str)
+            return JsonResponse({'success': True}, status=201)
+        else:
+            return JsonResponse(form.errors, status=400)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)

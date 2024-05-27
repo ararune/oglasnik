@@ -10,6 +10,8 @@ import odjavaKorisnika from './odjava'; // Import the logout function
 import './App.css';
 import logoSlika from './images/logo.png';
 import Registracija from './Registracija';
+import IzradaOglasa from './IzradaOglasa';
+import KreirajOglas from './KreirajOglas';
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -51,34 +53,37 @@ function App() {
 
   return (
     <Router>
-      <div className="absolute top-0 left-0 p-6">
-        <Link to="/"><img src={logoSlika} alt="Logo" className="w-16 h-16 mb-4" /></Link>
-      </div>
-      <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6">
-        <div className="text-center text-white font-bold">
-          {loggedInUser ? (
-            <div className="fixed top-0 left-1/2 transform -translate-x-1/2 bg-gray-800 p-6 rounded shadow-md text-center">
-              <div className="space-x-4">
-                <button onClick={handleLogout} className="inline-block bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                  Odjavi se</button>
+      <div className="bg-gray-800">
+        <nav className="flex items-center justify-between px-6 py-4">
+          <div>
+            <Link to="/">
+              <img src={logoSlika} alt="Logo" className="w-10 h-10" />
+            </Link>
+          </div>
+          <div className="text-white font-bold">
+            {loggedInUser ? (
+              <div className="space-x-2">
+                <button onClick={handleLogout} className="inline-block bg-blue-500 hover:bg-blue-700 py-2 px-2 rounded focus:outline-none focus:shadow-outline">
+                  Odjava</button>
                 <Link to="/profil">Profil</Link>
-                <a href="http://localhost:8000/kreiraj_oglas" className="text-blue-500 hover:underline">Kreiraj Oglas</a>
+                <Link to="/kreiraj_oglas">Kreiraj Oglas</Link>
                 <Link to="/moji_oglasi">Moji Oglasi</Link>
               </div>
-            </div>
-          ) : (
-            <div className="fixed top-0 left-1/2 transform -translate-x-1/2 bg-gray-800 p-6 rounded shadow-md text-center mb-6">
+            ) : (
               <div className="space-x-4">
                 <Link to="/registracija" className="text-white font-bold hover:underline">Registracija</Link>
                 <Link to="/prijava" className="text-white font-bold hover:underline">Prijava</Link>
               </div>
-            </div>
-          )}
-        </div>
-        <div className='mt-32'>
+            )}
+          </div>
+        </nav>
+      </div>
+      <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6">
+        <div>
           <Routes>
             <Route path="/" element={<Kategorije />} />
             <Route path="/profil" element={<Profil />} />
+            <Route path="/kreiraj_oglas" element={<KreirajOglas />} />
             <Route path="/moji_oglasi" element={<MojiOglasi />} />
             <Route path="/registracija" element={<Registracija />} />
             <Route path="/prijava" element={<Prijava setLoggedInUser={setLoggedInUser} />} />
@@ -86,7 +91,7 @@ function App() {
         </div>
       </div>
     </Router>
-  );
+  ); 
 }
 
 export default App;

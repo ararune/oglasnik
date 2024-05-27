@@ -72,6 +72,7 @@ class Oglas(models.Model):
     trajanje = models.IntegerField(choices=IZBOR_TRAJANJA)
     kategorija = models.ForeignKey(Kategorija, on_delete=models.CASCADE, null=True)
     datum = models.DateTimeField(auto_now_add=True)
+    
 
     class Meta:
         verbose_name = 'Oglas'
@@ -82,7 +83,7 @@ class Oglas(models.Model):
 
 class Slika(models.Model):
     oglas = models.ForeignKey(Oglas, on_delete=models.CASCADE, related_name='slike')
-    slika = models.ImageField()
+    url = models.URLField()
 
     def __str__(self):
         return f"Slika za {self.oglas.naziv}"
