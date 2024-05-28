@@ -193,13 +193,25 @@ def dohvati_podkategorije(kategorija):
 def oglasi_po_kategoriji(request, url):
     kategorija = get_object_or_404(Kategorija, url=url)
     potkategorije = dohvati_podkategorije(kategorija)
-    oglasi = Oglas.objects.filter(kategorija__in=potkategorije).values()
+    oglasi = Oglas.objects.filter(kategorija__in=potkategorije).select_related('korisnik__zupanija', 'korisnik__grad')
 
     oglasi_with_images = []
     for oglas in oglasi:
-        slike = Slika.objects.filter(oglas=oglas['id']).values_list('slika', flat=True)
-        oglas['slike'] = [f"{settings.MEDIA_URL}{slika}" for slika in slike]
-        oglasi_with_images.append(oglas)
+        slike = Slika.objects.filter(oglas=oglas).values_list('slika', flat=True)
+        slike_urls = [f"{settings.MEDIA_URL}{slika}" for slika in slike]
+        korisnik = oglas.korisnik
+        korisnik_info = {
+            'zupanija': korisnik.zupanija.naziv if korisnik.zupanija else None,
+            'grad': korisnik.grad.naziv if korisnik.grad else None
+        }
+        oglasi_with_images.append({
+            'id': oglas.id,
+            'naziv': oglas.naziv,
+            'datum': oglas.datum,
+            'cijena': oglas.cijena,
+            'slike': slike_urls,
+            'korisnik': korisnik_info
+        })
 
     hijerarhija = []
     trenutna_kategorija = kategorija
@@ -210,6 +222,7 @@ def oglasi_po_kategoriji(request, url):
     children = kategorija.children.all().values('naziv', 'url')
 
     return JsonResponse({'kategorija': kategorija.naziv, 'oglasi': oglasi_with_images, 'hijerarhija': hijerarhija, 'children': list(children)})
+
 
 
 

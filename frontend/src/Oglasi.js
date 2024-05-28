@@ -17,18 +17,24 @@ function Oglasi() {
             })
             .catch(error => console.error('Error fetching ads:', error));
     }, [category]);
-
+    const formatDatum = (datum) => {
+        const date = new Date(datum);
+        const dan = String(date.getDate()).padStart(2, '0');
+        const mjesec = String(date.getMonth() + 1).padStart(2, '0');
+        const godina = date.getFullYear();
+        return `${dan}/${mjesec}/${godina}`;
+    };
     return (
         <div className="container mx-auto p-4 mb-32">
-            <nav className="bg-gray-800 p-2 rounded shadow-md w-full md:max-w-4xl text-white">
-                <Link to="/" className="text-blue-400 hover:underline">Natrag na početnu</Link>
+            <nav className="bg-gray-800 p-3 rounded shadow-md w-full md:max-w-4xl text-white">
+                <Link to="/" className="text-blue-400 hover:underline">Oglasnik</Link>
                 {hijerarhija.map((kat, index) => (
                     <span key={index} className="mx-1"> {'>'} <Link to={`/oglasi/${kat.url}`} className="text-blue-400 hover:underline">{kat.naziv}</Link></span>
                 ))}
             </nav>
-    
+
             <h2 className="text-white text-2xl my-4">Oglasi po kategoriji: {category}</h2>
-            
+
             <h3 className="text-white text-xl mb-2">Podkategorije:</h3>
             <ul className="list-disc list-inside text-white mb-4">
                 {children.map((child, index) => (
@@ -37,7 +43,7 @@ function Oglasi() {
                     </li>
                 ))}
             </ul>
-    
+
             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {oglasi.map(oglas => (
                     <li key={oglas.id} className="bg-gray-800 p-4 rounded shadow-md">
@@ -45,10 +51,17 @@ function Oglasi() {
                             <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-full h-48 object-cover rounded mb-4" />
                         )}
                         <h4 className="text-white text-xl mb-2">{oglas.naziv}</h4>
-                        <p className="text-gray-300 mb-2">{oglas.opis}</p>
+                        {oglas.korisnik && (
+                            <div>
+                                <p>{oglas.korisnik.zupanija}, {oglas.korisnik.grad}</p>
+                            </div>
+                        )}
+                        <p className="text-gray-300 mb-2">{formatDatum(oglas.datum)}</p>
                         <p className="text-yellow-500 font-bold">Cijena: {oglas.cijena} €</p>
+
                     </li>
                 ))}
+
             </ul>
         </div>
     );

@@ -79,7 +79,7 @@ function App() {
           </div>
         </nav>
       </div>
-      <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6">
+      <div className="min-h-screen bg-gray-900 text-white flex flex-col p-6">
         <div>
           <Routes>
             <Route path="/" element={<Kategorije />} />
