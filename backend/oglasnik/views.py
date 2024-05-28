@@ -16,14 +16,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 import json
-from django.middleware.csrf import get_token
-from django.core.files.storage import default_storage
-from django.contrib.sites.shortcuts import get_current_site
+
 import os
-from django.utils.decorators import method_decorator
 from rest_framework.response import Response
-from django.contrib.auth.models import AnonymousUser
 from rest_framework import status
+from django.conf import settings
 
 class ZupanijaViewSet(viewsets.ModelViewSet):
     queryset = Zupanija.objects.all()
@@ -114,11 +111,6 @@ def kreiraj_oglas(request):
         oglas_form = FormaZaIzraduOglasa(request.POST)
         slike = request.FILES.getlist('slike')
 
-        # Debugging statements
-        print("Received form data:", request.POST)
-        print("Received files:", slike)
-        print("Oglas form errors:", oglas_form.errors)
-
         if oglas_form.is_valid() and slike:
             oglas = oglas_form.save(commit=False)
             oglas.korisnik = request.user
@@ -148,7 +140,7 @@ def moji_oglasi(request):
 
         return Response({'oglasi': oglasi_data})
     else:
-        return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'error': 'Korisnik nije autenticiran'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 
@@ -174,14 +166,23 @@ def uredi_oglas(request, kategorija_url, oglas_naziv, sifra):
 
     return render(request, 'uredi_oglas.html', {'form': form})
 
-@login_required
-def izbrisi_oglas(request, oglas_id):
-    oglas = get_object_or_404(Oglas, id=oglas_id)
-    if request.method == 'POST':
-        oglas.delete()
-        return redirect('moji_oglasi')
-    return redirect('moji_oglasi')
+@api_view(['DELETE'])
+def izbrisi_oglas(request, pk):
+    try:
+        oglas = Oglas.objects.get(pk=pk, korisnik=request.user)
+    except Oglas.DoesNotExist:
+        return Response({'error': 'Oglas nije pronaden ili nije autoriziran'}, status=status.HTTP_404_NOT_FOUND)
 
+    slike = Slika.objects.filter(oglas=oglas)
+    for slika in slike:
+        if slika.slika:
+            file_path = os.path.join(settings.MEDIA_ROOT, slika.slika.path)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        slika.delete()
+
+    oglas.delete()
+    return Response({'success': 'Oglas izbrisan'}, status=status.HTTP_204_NO_CONTENT)
 def oglasi_po_kategoriji(request, url):
     kategorija = get_object_or_404(Kategorija, url=url)
 
@@ -215,24 +216,3 @@ def oglas_detalji(request, kategorija_url, oglas_naziv, sifra):
 
     return render(request, 'oglas_detalji.html', {'oglas': oglas, 'slike': slike, 'hijerarhija': hijerarhija})
 
-@login_required
-def izrada_oglasa(request):
-    user = request.user
-    zupanija = user.zupanija
-    grad = user.grad
-    if request.method == 'POST':
-        form = FormaZaIzraduOglasa(request.POST, request.FILES)
-        if form.is_valid():
-            oglas = form.save(commit=False)
-            oglas.korisnik = user
-            oglas.zupanija = zupanija
-            oglas.grad = grad
-            oglas.save()
-            for img in request.FILES.getlist('slike'):
-                img_str = base64.b64encode(img.read()).decode('utf-8')
-                Slika.objects.create(oglas=oglas, slika=img_str)
-            return JsonResponse({'success': True}, status=201)
-        else:
-            return JsonResponse(form.errors, status=400)
-    else:
-        return JsonResponse({'error': 'Method not allowed'}, status=405)

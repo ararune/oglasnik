@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import useAuth from './useAuth';
 
+const MAX_BROJ_SLIKA = 4;
+
 const KreirajOglas = () => {
     const { user, loading } = useAuth();
     const [podaciForme, setPodaciForme] = useState({
@@ -15,6 +17,7 @@ const KreirajOglas = () => {
         zupanija: user ? user.zupanija_id : '',
         grad: user ? user.grad_id : '',
     });
+    const [errors, setErrors] = useState({});
     const [kategorije, setKategorije] = useState([]);
     const [podkategorije, setPodkategorije] = useState([]);
     const [unukKategorije, setUnukKategorije] = useState([]);
@@ -49,6 +52,10 @@ const KreirajOglas = () => {
         setPodaciForme((prevPodaci) => ({
             ...prevPodaci,
             [name]: value,
+        }));
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: ''
         }));
     };
 
@@ -93,20 +100,47 @@ const KreirajOglas = () => {
         setUnukKategorije(unuci);
     };
 
+    const validateInputs = () => {
+        const newErrors = {};
+        if (!podaciForme.cijena || isNaN(podaciForme.cijena)) {
+            newErrors.cijena = 'Cijena mora biti broj.';
+        }
+        if (!podaciForme.naziv) {
+            newErrors.naziv = 'Naziv je obavezan.';
+        }
+        if (!podaciForme.opis) {
+            newErrors.opis = 'Opis je obavezan.';
+        }
+        if (!podaciForme.kategorija) {
+            newErrors.kategorija = 'Kategorija je obavezna.';
+        }
+        if (podaciForme.slike.length === 0) {
+            newErrors.slike = 'Morate dodati barem jednu sliku.';
+        } else if (podaciForme.slike.length > MAX_BROJ_SLIKA) {
+            newErrors.slike = `Možete odabrati maksimalno ${MAX_BROJ_SLIKA} slike.`;
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
     const slanjeForme = async (e) => {
         e.preventDefault();
+
+        if (!validateInputs()) {
+            return;
+        }
+
         const csrfToken = document.cookie
             .split('; ')
             .find((row) => row.startsWith('csrftoken='))
             ?.split('=')[1];
-    
+
         let lastSelectedKategorija = '';
         if (unukKategorije.length > 0) {
             lastSelectedKategorija = podaciForme.unukKategorija || podaciForme.podkategorija || podaciForme.kategorija;
         } else {
             lastSelectedKategorija = podaciForme.podkategorija || podaciForme.kategorija;
         }
-    
+
         try {
             const formData = new FormData();
             formData.append('cijena', podaciForme.cijena);
@@ -119,7 +153,7 @@ const KreirajOglas = () => {
             podaciForme.slike.forEach(file => {
                 formData.append('slike', file);
             });
-    
+
             const response = await fetch('http://localhost:8000/api/kreiraj_oglas/', {
                 method: 'POST',
                 headers: {
@@ -129,10 +163,10 @@ const KreirajOglas = () => {
                 body: formData,
                 credentials: 'include',
             });
-    
+
             if (response.ok) {
                 toast.success('Oglas kreiran!', {
-                    autoClose: 3000,
+                    autoClose: 2000,
                     onClose: () => navigate('/'),
                 });
             } else {
@@ -144,9 +178,20 @@ const KreirajOglas = () => {
         }
     };
 
+    const removeImage = (index) => {
+        const newImages = [...podaciForme.slike];
+        newImages.splice(index, 1);
+        setPodaciForme((prevPodaci) => ({
+            ...prevPodaci,
+            slike: newImages,
+        }));
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
+
+
     return (
         <div className="bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
             <ToastContainer />
@@ -163,6 +208,7 @@ const KreirajOglas = () => {
                         className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
                         required
                     />
+                    {errors.cijena && <span className="text-red-500">{errors.cijena}</span>}
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-300 mb-2">Naziv:</label>
@@ -175,18 +221,9 @@ const KreirajOglas = () => {
                         className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
                         required
                     />
+                    {errors.naziv && <span className="text-red-500">{errors.naziv}</span>}
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-300 mb-2">Opis:</label>
-                    <textarea
-                        name="opis"
-                        value={podaciForme.opis}
-                        placeholder="Unesite opis..."
-                        onChange={promjenaUnosa}
-                        className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
-                        required
-                    ></textarea>
-                </div>
+
                 <div className="mb-4">
                     <label className="block text-gray-300 mb-2">Trajanje:</label>
                     <select
@@ -217,6 +254,7 @@ const KreirajOglas = () => {
                             </option>
                         ))}
                     </select>
+                    {errors.kategorija && <span className="text-red-500">{errors.kategorija}</span>}
                 </div>
                 {podkategorije.length > 0 && (
                     <div className="mb-4">
@@ -256,16 +294,65 @@ const KreirajOglas = () => {
                         </select>
                     </div>
                 )}
+
                 <div className="mb-4">
-                    <label className="block text-gray-300 mb-2">Slike:</label>
-                    <input
-                        type="file"
-                        name="slike"
-                        onChange={promjenaDatoteka}
-                        multiple
+                    <label className="block text-gray-300 mb-2">Opis:</label>
+                    <textarea
+                        name="opis"
+                        value={podaciForme.opis}
+                        placeholder="Unesite opis..."
+                        onChange={promjenaUnosa}
                         className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
                         required
-                    />
+                    ></textarea>
+                    {errors.opis && <span className="text-red-500">{errors.opis}</span>}
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-300 mb-2">Slike:</label>
+                    <div className="mb-2">
+                        <input
+                            type="file"
+                            name="slike"
+                            onChange={promjenaDatoteka}
+                            multiple
+                            className="hidden"
+                            id="fileInput"
+                            accept="image/*"
+                        />
+                        <label htmlFor="fileInput" className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900 cursor-pointer">
+                            Odaberite slike
+                        </label>
+                    </div>
+                    {errors.slike && <span className="text-red-500">{errors.slike}</span>}
+                    <div className="flex flex-wrap -mx-2">
+                        {podaciForme.slike.map((image, index) => (
+                            <div key={index} className="relative w-24 h-24 mx-2 mb-2">
+                                <img
+                                    src={URL.createObjectURL(image)}
+                                    alt={`Slika ${index + 1}`}
+                                    className="w-full h-full object-cover rounded"
+                                />
+                                <button
+                                    type="button"
+                                    className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+                                    onClick={() => removeImage(index)}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M10 1a9 9 0 100 18 9 9 0 000-18zm5.293 5.293a1 1 0 00-1.414-1.414L10 8.586 5.121 3.707a1 1 0 00-1.414 1.414L8.586 10l-4.879 4.879a1 1 0 001.414 1.414L10 11.414l4.879 4.879a1 1 0 001.414-1.414L11.414 10l4.879-4.879z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
                 <div className="col-span-2">
                     <button type="submit" className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded focus:outline-none focus:bg-blue-600 transition-colors">Kreiraj</button>
