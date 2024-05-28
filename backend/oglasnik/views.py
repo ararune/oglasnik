@@ -183,25 +183,34 @@ def izbrisi_oglas(request, pk):
 
     oglas.delete()
     return Response({'success': 'Oglas izbrisan'}, status=status.HTTP_204_NO_CONTENT)
+
+def dohvati_podkategorije(kategorija):
+    potkategorije = [kategorija]
+    for dijete in kategorija.children.all():
+        potkategorije.extend(dohvati_podkategorije(dijete))
+    return potkategorije
+
 def oglasi_po_kategoriji(request, url):
     kategorija = get_object_or_404(Kategorija, url=url)
-
-    def dohvati_podkategorije(kategorija):
-        potkategorije = [kategorija]
-        for dijete in kategorija.children.all():
-            potkategorije.extend(dohvati_podkategorije(dijete))
-        return potkategorije
-
     potkategorije = dohvati_podkategorije(kategorija)
-    oglasi = Oglas.objects.filter(kategorija__in=potkategorije)
+    oglasi = Oglas.objects.filter(kategorija__in=potkategorije).values()
+
+    oglasi_with_images = []
+    for oglas in oglasi:
+        slike = Slika.objects.filter(oglas=oglas['id']).values_list('slika', flat=True)
+        oglas['slike'] = [f"{settings.MEDIA_URL}{slika}" for slika in slike]
+        oglasi_with_images.append(oglas)
 
     hijerarhija = []
     trenutna_kategorija = kategorija
     while trenutna_kategorija:
-        hijerarhija.insert(0, trenutna_kategorija)
+        hijerarhija.insert(0, {'naziv': trenutna_kategorija.naziv, 'url': trenutna_kategorija.url})
         trenutna_kategorija = trenutna_kategorija.roditelj
 
-    return render(request, 'oglasi_po_kategoriji.html', {'kategorija': kategorija, 'oglasi': oglasi, 'hijerarhija': hijerarhija})
+    children = kategorija.children.all().values('naziv', 'url')
+
+    return JsonResponse({'kategorija': kategorija.naziv, 'oglasi': oglasi_with_images, 'hijerarhija': hijerarhija, 'children': list(children)})
+
 
 
 def oglas_detalji(request, kategorija_url, oglas_naziv, sifra):

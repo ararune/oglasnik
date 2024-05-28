@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/trenutni_korisnik/', trenutni_korisnik, name='trenutni_korisnik'),
     path('', home, name='home'),
+    path('oglasi/<str:url>/', oglasi_po_kategoriji, name='oglasi_po_kategoriji'),
     path('api/kreiraj_oglas/', kreiraj_oglas, name='kreiraj_oglas'),
     path('api/moji_oglasi/', moji_oglasi, name='moji_oglasi'),
     path('api/oglas/<int:pk>/izbrisi/', izbrisi_oglas, name='izbrisi_oglas'),
@@ -36,7 +37,7 @@ urlpatterns = [
     path('registracija/', registracija, name='registracija'),
     path('prijava/', auth_views.LoginView.as_view(template_name='prijava.html', success_url='localhost:3000/'), name='prijava'),
     path('profil/', profil, name='profil'),
-    path('<str:url>/', oglasi_po_kategoriji, name='oglasi_po_kategoriji'),
+
     path('<str:kategorija_url>/<str:oglas_naziv>-oglas-<str:sifra>/', oglas_detalji, name='oglas_detalji'),
     path('<str:kategorija_url>/uredi/<str:oglas_naziv>-oglas-<str:sifra>/', uredi_oglas, name='uredi_oglas'),
     path('izbrisi_oglas/<int:oglas_id>/', izbrisi_oglas, name='izbrisi_oglas'),  

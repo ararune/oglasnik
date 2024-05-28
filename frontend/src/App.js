@@ -11,6 +11,7 @@ import './App.css';
 import logoSlika from './images/logo.png';
 import Registracija from './Registracija';
 import KreirajOglas from './KreirajOglas';
+import Oglasi from './Oglasi';
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -87,6 +88,7 @@ function App() {
             <Route path="/moji_oglasi" element={<MojiOglasi />} />
             <Route path="/registracija" element={<Registracija />} />
             <Route path="/prijava" element={<Prijava setLoggedInUser={setLoggedInUser} />} />
+            <Route path="/oglasi/:category" element={<Oglasi />} /> {/* Add this line */}
           </Routes>
         </div>
       </div>
