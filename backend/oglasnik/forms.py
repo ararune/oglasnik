@@ -63,29 +63,28 @@ class VisestrukaDatoteka(forms.FileField):
         return rezultat
 
 class SlikaForma(forms.ModelForm):
-    url = forms.URLField(label='Image URL', required=True)
-
     class Meta:
         model = Slika
-        fields = ['url']
+        fields = ['slika']
+
 
 class FormaZaIzraduOglasa(forms.ModelForm):
     MAX_VELICINA_SLIKE = 5 * 1024 * 1024  # 5MB u bytovima
     MAX_BROJ_SLIKA = 4
 
-    slike = VisestrukaDatoteka(label='Odaberi slike', required=False)
-
     class Meta:
         model = Oglas
-        fields = ['cijena', 'naziv', 'opis', 'zupanija', 'grad', 'trajanje', 'kategorija', 'slike']
+        fields = ['cijena', 'naziv', 'opis', 'zupanija', 'grad', 'trajanje', 'kategorija']
 
-    def clean_slike(self):
-        slike = self.cleaned_data.get('slike')
+    def clean(self):
+        cleaned_data = super().clean()
+        slike = self.files.getlist('slike')  # Get list of uploaded image files
+
         if len(slike) > self.MAX_BROJ_SLIKA:
             raise ValidationError(f'Možete odabrati maksimalno {self.MAX_BROJ_SLIKA} slike.')
 
         for img in slike:
             if img.size > self.MAX_VELICINA_SLIKE:
                 raise ValidationError('Slika ne smije biti veća od 5MB.')
-        
-        return slike
+
+        return cleaned_data

@@ -83,7 +83,10 @@ class Oglas(models.Model):
 
 class Slika(models.Model):
     oglas = models.ForeignKey(Oglas, on_delete=models.CASCADE, related_name='slike')
-    url = models.URLField()
+    slika = models.ImageField(upload_to='slike/')
 
+    class Meta:
+        verbose_name = 'Slika'
+        verbose_name_plural = 'Slike'
     def __str__(self):
         return f"Slika za {self.oglas.naziv}"

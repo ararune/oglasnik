@@ -99,31 +99,37 @@ const KreirajOglas = () => {
             .split('; ')
             .find((row) => row.startsWith('csrftoken='))
             ?.split('=')[1];
-
-        // Determine the last selected kategorija
+    
         let lastSelectedKategorija = '';
         if (unukKategorije.length > 0) {
             lastSelectedKategorija = podaciForme.unukKategorija || podaciForme.podkategorija || podaciForme.kategorija;
         } else {
             lastSelectedKategorija = podaciForme.podkategorija || podaciForme.kategorija;
         }
-
+    
         try {
-            const response = await fetch('http://localhost:8000/kreiraj_oglas/', {
+            const formData = new FormData();
+            formData.append('cijena', podaciForme.cijena);
+            formData.append('naziv', podaciForme.naziv);
+            formData.append('opis', podaciForme.opis);
+            formData.append('trajanje', podaciForme.trajanje);
+            formData.append('kategorija', lastSelectedKategorija);
+            formData.append('zupanija', podaciForme.zupanija);
+            formData.append('grad', podaciForme.grad);
+            podaciForme.slike.forEach(file => {
+                formData.append('slike', file);
+            });
+    
+            const response = await fetch('http://localhost:8000/api/kreiraj_oglas/', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'X-CSRFToken': csrfToken,
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
                 },
-                body: JSON.stringify({
-                    ...podaciForme,
-                    kategorija: lastSelectedKategorija,
-                    slike: podaciForme.slike,
-                }),
+                body: formData,
                 credentials: 'include',
             });
-
+    
             if (response.ok) {
                 toast.success('Oglas kreiran!', {
                     autoClose: 3000,

@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from .models import Zupanija, Grad, Korisnik, Kategorija, Oglas, Slika
 from .serializers import ZupanijaSerializer, GradSerializer, KorisnikSerializer, KategorijaSerializer, OglasSerializer, SlikaSerializer
-from .forms import FormaZaRegistraciju, FormaZaIzraduOglasa
+from .forms import FormaZaRegistraciju, FormaZaIzraduOglasa, SlikaForma
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login, logout
@@ -18,7 +18,12 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.middleware.csrf import get_token
 from django.core.files.storage import default_storage
-
+from django.contrib.sites.shortcuts import get_current_site
+import os
+from django.utils.decorators import method_decorator
+from rest_framework.response import Response
+from django.contrib.auth.models import AnonymousUser
+from rest_framework import status
 
 class ZupanijaViewSet(viewsets.ModelViewSet):
     queryset = Zupanija.objects.all()
@@ -102,48 +107,50 @@ def profil(request):
     user = request.user
     return render(request, 'profil.html', {'user': user})
 
-@csrf_exempt
+@api_view(['POST'])
 @login_required
 def kreiraj_oglas(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        form = FormaZaIzraduOglasa(data, request.FILES)
-        if form.is_valid():
-            oglas = form.save(commit=False)
+        oglas_form = FormaZaIzraduOglasa(request.POST)
+        slike = request.FILES.getlist('slike')
+
+        # Debugging statements
+        print("Received form data:", request.POST)
+        print("Received files:", slike)
+        print("Oglas form errors:", oglas_form.errors)
+
+        if oglas_form.is_valid() and slike:
+            oglas = oglas_form.save(commit=False)
             oglas.korisnik = request.user
-
-            # Fetch grad and zupanija from the authenticated user
-            grad = request.user.grad
-            zupanija = request.user.zupanija
-
-            # Check if grad and zupanija are not None before assigning
-            if grad:
-                oglas.grad = grad
-            if zupanija:
-                oglas.zupanija = zupanija
-            
             oglas.save()
 
-            for img_file in request.FILES.getlist('slike'):
-                # Save image to media folder
-                image_path = default_storage.save(img_file.name, img_file)
+            for slika in slike:
+                Slika.objects.create(oglas=oglas, slika=slika)
 
-                # Create Slika instance and save image path
-                Slika.objects.create(oglas=oglas, url=image_path)
-
-            return JsonResponse({'success': True})
+            return Response({'success': 'Oglas je uspješno kreiran.'}, status=201)
         else:
-            return JsonResponse(form.errors, status=400)
-    else:
-        csrf_token = get_token(request)
-        response = JsonResponse({'csrfToken': csrf_token})
-        response.set_cookie('csrftoken', csrf_token)
-        return response
+            errors = {
+                'oglas_errors': oglas_form.errors,
+                'slike_errors': [{'slika': 'This field is required.'}] if not slike else None
+            }
+            return Response(errors, status=400)
 
-@login_required
+@api_view(['GET'])
 def moji_oglasi(request):
-    oglasi = Oglas.objects.filter(korisnik=request.user).values('id', 'naziv', 'opis', 'cijena', 'datum')
-    return JsonResponse({'oglasi': list(oglasi)})
+    if request.user.is_authenticated:
+        oglasi = Oglas.objects.filter(korisnik=request.user)
+        oglasi_data = OglasSerializer(oglasi, many=True).data
+
+        for oglas in oglasi_data:
+            slike = Slika.objects.filter(oglas_id=oglas['id'])
+            slike_data = SlikaSerializer(slike, many=True).data
+            oglas['slike'] = [slika['slika'] for slika in slike_data]
+
+        return Response({'oglasi': oglasi_data})
+    else:
+        return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
 
 @login_required
 def uredi_oglas(request, kategorija_url, oglas_naziv, sifra):

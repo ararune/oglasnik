@@ -10,7 +10,6 @@ import odjavaKorisnika from './odjava'; // Import the logout function
 import './App.css';
 import logoSlika from './images/logo.png';
 import Registracija from './Registracija';
-import IzradaOglasa from './IzradaOglasa';
 import KreirajOglas from './KreirajOglas';
 
 function App() {
@@ -50,6 +49,7 @@ function App() {
     await odjavaKorisnika();
     setLoggedInUser(null);
   };
+
 
   return (
     <Router>

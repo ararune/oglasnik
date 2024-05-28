@@ -18,9 +18,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'oglasnik.Korisnik'
 # Application definition
-LOGIN_URL = 'http://localhost:3000/'
-LOGIN_REDIRECT_URL = 'http://localhost:3000/'
-LOGOUT_REDIRECT_URL = 'http://localhost:3000/'
+LOGIN_REDIRECT_URL = '/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -120,22 +118,20 @@ STATICFILES_DIRS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-    'http://localhost:8000',
-)
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'http://localhost:8000',    
+    'http://localhost:8000',
 ]
+
 CORS_ALLOW_HEADERS = [
     'authorization',
     'Authorization',
     'content-type',
     'x-csrftoken',
-    'Access-Control-Allow-Origin',
-    'Access-Control-Allow-Credentials',
 ]
+
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:8000',

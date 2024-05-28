@@ -32,4 +32,4 @@ class OglasSerializer(serializers.ModelSerializer):
 class SlikaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Slika
-        fields = ['id', 'oglas', 'url']
+        fields = ['id', 'oglas', 'slika']
