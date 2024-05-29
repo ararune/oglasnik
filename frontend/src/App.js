@@ -1,7 +1,7 @@
 // App.js
 
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, Outlet } from 'react-router-dom';
 import Profil from './Profil';
 import Kategorije from './Kategorije';
 import MojiOglasi from './MojiOglasi';
@@ -12,6 +12,7 @@ import logoSlika from './images/logo.png';
 import Registracija from './Registracija';
 import KreirajOglas from './KreirajOglas';
 import Oglasi from './Oglasi';
+
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -51,7 +52,9 @@ function App() {
     setLoggedInUser(null);
   };
 
-
+  const PrivateRoute = () => {
+    return loggedInUser ?  <Outlet/> : <Navigate to="/prijava"/>
+  }
   return (
     <Router>
       <div className="bg-gray-800">
@@ -64,8 +67,7 @@ function App() {
           <div className="text-white font-bold">
             {loggedInUser ? (
               <div className="space-x-2">
-                <button onClick={handleLogout} className="inline-block bg-blue-500 hover:bg-blue-700 py-2 px-2 rounded focus:outline-none focus:shadow-outline">
-                  Odjava</button>
+                <button type="button" onClick={handleLogout} className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-5 py-2 text-center">Odjava</button>
                 <Link to="/profil">Profil</Link>
                 <Link to="/kreiraj_oglas">Kreiraj Oglas</Link>
                 <Link to="/moji_oglasi">Moji Oglasi</Link>
@@ -83,9 +85,12 @@ function App() {
         <div>
           <Routes>
             <Route path="/" element={<Kategorije />} />
-            <Route path="/profil" element={<Profil />} />
-            <Route path="/kreiraj_oglas" element={<KreirajOglas />} />
-            <Route path="/moji_oglasi" element={<MojiOglasi />} />
+            <Route element={<PrivateRoute/>}>
+              <Route path="/profil" element={<Profil />} />
+              <Route path="/kreiraj_oglas" element={<KreirajOglas />} />
+              <Route path="/moji_oglasi" element={<MojiOglasi />} />
+            </Route>
+            
             <Route path="/registracija" element={<Registracija />} />
             <Route path="/prijava" element={<Prijava setLoggedInUser={setLoggedInUser} />} />
             <Route path="/oglasi/:category" element={<Oglasi />} /> {/* Add this line */}

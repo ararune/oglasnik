@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import useAuth from './useAuth';
-
+import xSvg from './images/x-circle.svg';
 const MAX_BROJ_SLIKA = 4;
 
 const KreirajOglas = () => {
@@ -104,6 +104,11 @@ const KreirajOglas = () => {
         const newErrors = {};
         if (!podaciForme.cijena || isNaN(podaciForme.cijena)) {
             newErrors.cijena = 'Cijena mora biti broj.';
+        } else {
+            const cijenaDecimale = podaciForme.cijena.split('.');
+            if (cijenaDecimale.length > 1 && cijenaDecimale[1].length > 2) {
+                newErrors.cijena = 'Cijena može imati najviše dvije decimale.';
+            }
         }
         if (!podaciForme.naziv) {
             newErrors.naziv = 'Naziv je obavezan.';
@@ -205,7 +210,7 @@ const KreirajOglas = () => {
                         value={podaciForme.cijena}
                         placeholder="Unesite cijenu..."
                         onChange={promjenaUnosa}
-                        className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required
                     />
                     {errors.cijena && <span className="text-red-500">{errors.cijena}</span>}
@@ -218,7 +223,7 @@ const KreirajOglas = () => {
                         value={podaciForme.naziv}
                         placeholder="Unesite naziv..."
                         onChange={promjenaUnosa}
-                        className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required
                     />
                     {errors.naziv && <span className="text-red-500">{errors.naziv}</span>}
@@ -230,7 +235,7 @@ const KreirajOglas = () => {
                         name="trajanje"
                         value={podaciForme.trajanje}
                         onChange={promjenaUnosa}
-                        className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                         required
                     >
                         <option value="1">1 dan</option>
@@ -244,7 +249,7 @@ const KreirajOglas = () => {
                         name="kategorija"
                         value={podaciForme.kategorija}
                         onChange={promjenaKategorije}
-                        className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                         required
                     >
                         <option value="">Odaberi kategoriju</option>
@@ -263,7 +268,7 @@ const KreirajOglas = () => {
                             name="podkategorija"
                             value={podaciForme.podkategorija}
                             onChange={promjenaPodkategorije}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                             required
                         >
                             <option value="">Odaberi podkategoriju</option>
@@ -282,7 +287,7 @@ const KreirajOglas = () => {
                             name="unukKategorija"
                             value={podaciForme.unukKategorija}
                             onChange={promjenaUnosa}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                             required
                         >
                             <option value="">Odaberi unuk kategoriju</option>
@@ -295,18 +300,22 @@ const KreirajOglas = () => {
                     </div>
                 )}
 
-                <div className="mb-4">
-                    <label className="block text-gray-300 mb-2">Opis:</label>
+                <div className="mb-4 col-span-2">
+                    <label htmlFor="opis" className="block text-gray-300 mb-2">Opis:</label>
                     <textarea
+                        id="opis"
                         name="opis"
                         value={podaciForme.opis}
                         placeholder="Unesite opis..."
                         onChange={promjenaUnosa}
-                        className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                        className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        rows="10"
                         required
                     ></textarea>
+
                     {errors.opis && <span className="text-red-500">{errors.opis}</span>}
                 </div>
+
                 <div className="mb-4">
                     <label className="block text-gray-300 mb-2">Slike:</label>
                     <div className="mb-2">
@@ -334,21 +343,14 @@ const KreirajOglas = () => {
                                 />
                                 <button
                                     type="button"
-                                    className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+                                    className="absolute top-0 right-0 text-white p-1 rounded-full"
                                     onClick={() => removeImage(index)}
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-4 w-4"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M10 1a9 9 0 100 18 9 9 0 000-18zm5.293 5.293a1 1 0 00-1.414-1.414L10 8.586 5.121 3.707a1 1 0 00-1.414 1.414L8.586 10l-4.879 4.879a1 1 0 001.414 1.414L10 11.414l4.879 4.879a1 1 0 001.414-1.414L11.414 10l4.879-4.879z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
+                                    <img
+                                        src={xSvg}
+                                        alt="X Circle Icon"
+                                        className="h-6 w-6"
+                                    />
                                 </button>
                             </div>
                         ))}

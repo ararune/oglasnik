@@ -9,8 +9,8 @@ function Profil() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="bg-gray-800 p-6 rounded shadow-md w-full max-w-4xl mb-32">
+        <div className="flex justify-center p-6">
+            <div className="bg-gray-800 p-6 rounded shadow-md w-full max-w-lg mb-32">
                 {user ? (
                     <div>
                         <p className="text-xl font-bold mb-2">{user.korisnicko_ime}</p>
@@ -23,7 +23,7 @@ function Profil() {
                         <p><span className="font-bold">Županija:</span> {user.zupanija}</p>
                     </div>
                 ) : (
-                    <p>No user information available</p>
+                    <p>Nema dostupnih informacija o korisniku</p>
                 )}
             </div>
         </div>

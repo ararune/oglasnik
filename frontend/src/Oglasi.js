@@ -46,22 +46,22 @@ function Oglasi() {
 
             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {oglasi.map(oglas => (
-                    <li key={oglas.id} className="bg-gray-800 p-4 rounded shadow-md">
+                    <li key={oglas.id} className="bg-gray-800 p-4 rounded shadow-md flex flex-row items-start">
                         {oglas.slike.length > 0 && (
-                            <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-full h-48 object-cover rounded mb-4" />
+                            <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-48 object-contain rounded mb-4 mr-4" />
                         )}
-                        <h4 className="text-white text-xl mb-2">{oglas.naziv}</h4>
-                        {oglas.korisnik && (
-                            <div>
-                                <p>{oglas.korisnik.zupanija}, {oglas.korisnik.grad}</p>
-                            </div>
-                        )}
-                        <p className="text-gray-300 mb-2">{formatDatum(oglas.datum)}</p>
-                        <p className="text-yellow-500 font-bold">Cijena: {oglas.cijena} €</p>
-
+                        <div className="flex-grow">
+                            <h4 className="text-white text-xl mb-2">{oglas.naziv}</h4>
+                            {oglas.korisnik && (
+                                <div>
+                                    <p>{oglas.korisnik.zupanija}, {oglas.korisnik.grad}</p>
+                                </div>
+                            )}
+                            <p className="text-gray-300 mb-2">Objavljen: {formatDatum(oglas.datum)}</p>
+                            <p className="text-yellow-500 font-bold">{oglas.cijena} €</p>
+                        </div>
                     </li>
                 ))}
-
             </ul>
         </div>
     );

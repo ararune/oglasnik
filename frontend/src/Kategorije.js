@@ -22,7 +22,7 @@ function Kategorije() {
               <img src={domSlika} alt="Nekretnine" className="h-24 mb-2 rounded" />
               <span className="font-semibold text-lg text-white">Nekretnine</span>
             </Link>
-            <Link to="/oglasi/vozila" className="bg-orange-700 p-4 rounded shadow-md hover:bg-orange-900 text-center flex flex-col items-center">
+            <Link to="/oglasi/vozila" className="bg-amber-700 p-4 rounded shadow-md hover:bg-amber-900 text-center flex flex-col items-center">
               <img src={autoSlika} alt="Vozila" className="h-24 mb-2 rounded" />
               <span className="font-semibold text-lg text-white">Vozila</span>
             </Link>
