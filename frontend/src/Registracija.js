@@ -13,7 +13,8 @@ const Registracija = () => {
         last_name: '',
         oib: '',
         zupanija: '',
-        grad: ''
+        grad: '',
+        telefon: ''
     });
 
     const [zupanije, setZupanije] = useState([]);
@@ -233,8 +234,21 @@ const Registracija = () => {
                         </select>
                         {errors.grad && <p className="text-red-500">{errors.grad}</p>}
                     </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-300 mb-2">Telefon:</label>
+                        <input
+                            type="tel"
+                            name="telefon"
+                            value={formData.telefon}
+                            placeholder="Unesite broj telefona..."
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                            required
+                        />
+                        {errors.telefon && <p className="text-red-500">{errors.telefon}</p>}
+                    </div>
                 </div>
-                <button type="submit" className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded focus:outline-none focus:bg-blue-600 transition-colors">Registriraj se</button>
+                <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Registriraj se</button>
             </form>
         </div>
     );

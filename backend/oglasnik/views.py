@@ -16,7 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 import json
-
+from django.http import JsonResponse
 import os
 from rest_framework.response import Response
 from rest_framework import status
@@ -34,9 +34,9 @@ class GradViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Grad.objects.all()
-        zupanija_id = self.request.query_params.get('zupanija')  # Get Zupanija ID from query parameters
+        zupanija_id = self.request.query_params.get('zupanija') 
         if zupanija_id:
-            queryset = queryset.filter(zupanija_id=zupanija_id)  # Filter Gradovi based on Zupanija ID
+            queryset = queryset.filter(zupanija_id=zupanija_id)  # Filtriraj gradove po ID-u zupanije
         return queryset
 
 class KorisnikViewSet(viewsets.ModelViewSet):
@@ -81,6 +81,8 @@ def trenutni_korisnik(request):
         'ime': user.first_name or 'N/A',
         'prezime': user.last_name or 'N/A',
         'email': user.email,
+        'telefon': user.telefon,
+        'oib': user.oib,
         'datum_pridruzivanja': user.date_joined.strftime("%d/%m/%Y %H:%M:%S"),
         'grad': user.grad.naziv if user.grad else 'N/A',
         'zupanija': user.zupanija.naziv if user.zupanija else 'N/A',
@@ -123,10 +125,43 @@ def kreiraj_oglas(request):
         else:
             errors = {
                 'oglas_errors': oglas_form.errors,
-                'slike_errors': [{'slika': 'This field is required.'}] if not slike else None
+                'slike_errors': [{'slika': 'Obavezno polje.'}] if not slike else None
             }
             return Response(errors, status=400)
 
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def azuriraj_oglas(request, oglas_id):
+    try:
+        oglas = Oglas.objects.get(pk=oglas_id, korisnik=request.user)
+    except Oglas.DoesNotExist:
+        return Response({'error': 'Oglas not found or you do not have permission to edit it.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = OglasSerializer(oglas)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        oglas_form = FormaZaIzraduOglasa(request.POST, instance=oglas)
+        slike = request.FILES.getlist('slike')
+
+        if oglas_form.is_valid():
+            oglas = oglas_form.save()
+
+            # Delete old images if new ones are provided
+            if slike:
+                oglas.slike.all().delete()
+                for slika in slike:
+                    Slika.objects.create(oglas=oglas, slika=slika)
+
+            return Response(OglasSerializer(oglas).data, status=status.HTTP_200_OK)
+        else:
+            errors = {
+                'oglas_errors': oglas_form.errors,
+                'slike_errors': [{'slika': 'Obavezno polje.'}] if not slike else None
+            }
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+    
 @api_view(['GET'])
 def moji_oglasi(request):
     if request.user.is_authenticated:
@@ -202,12 +237,14 @@ def oglasi_po_kategoriji(request, url):
         korisnik = oglas.korisnik
         korisnik_info = {
             'zupanija': korisnik.zupanija.naziv if korisnik.zupanija else None,
-            'grad': korisnik.grad.naziv if korisnik.grad else None
+            'grad': korisnik.grad.naziv if korisnik.grad else None,
+            'telefon': korisnik.telefon
         }
         oglasi_with_images.append({
             'id': oglas.id,
             'naziv': oglas.naziv,
             'datum': oglas.datum,
+            'sifra': oglas.sifra,
             'cijena': oglas.cijena,
             'slike': slike_urls,
             'korisnik': korisnik_info
@@ -225,16 +262,56 @@ def oglasi_po_kategoriji(request, url):
 
 
 
-
 def oglas_detalji(request, kategorija_url, oglas_naziv, sifra):
-    oglas = get_object_or_404(Oglas, sifra=sifra)
-    slike = oglas.slike.all()
+    try:
+        oglas = Oglas.objects.get(sifra=sifra)
+        slike = Slika.objects.filter(oglas=oglas).values_list('slika', flat=True)
+        slike_urls = [f"{settings.MEDIA_URL}{slika}" for slika in slike]
+        korisnik = oglas.korisnik
+        korisnik_info = {
+            'zupanija': korisnik.zupanija.naziv if korisnik.zupanija else None,
+            'grad': korisnik.grad.naziv if korisnik.grad else None,
+            'telefon': korisnik.telefon
+        }
+        oglas_details = {
+            'id': oglas.id,
+            'naziv': oglas.naziv,
+            'datum': oglas.datum,
+            'sifra': oglas.sifra,
+            'cijena': oglas.cijena,
+            'slike': slike_urls,
+            'korisnik': korisnik_info,
+            # Include other fields as needed
+        }
+        return JsonResponse(oglas_details)
+    except Oglas.DoesNotExist:
+        return JsonResponse({'error': 'Oglas not found'}, status=404)
 
-    hijerarhija = []
-    trenutna_kategorija = oglas.kategorija
-    while trenutna_kategorija:
-        hijerarhija.insert(0, trenutna_kategorija)
-        trenutna_kategorija = trenutna_kategorija.roditelj
+def pretraga_oglasi(request):
+    query = request.GET.get('q', '')
+    oglasi = Oglas.objects.filter(naziv__icontains=query) | Oglas.objects.filter(sifra__icontains=query)
+    oglasi_with_images = []
 
-    return render(request, 'oglas_detalji.html', {'oglas': oglas, 'slike': slike, 'hijerarhija': hijerarhija})
+    for oglas in oglasi:
+        slike = Slika.objects.filter(oglas=oglas).values_list('slika', flat=True)
+        slike_urls = [f"{settings.MEDIA_URL}{slika}" for slika in slike]
+        korisnik = oglas.korisnik
+        korisnik_info = {
+            'zupanija': korisnik.zupanija.naziv if korisnik.zupanija else None,
+            'grad': korisnik.grad.naziv if korisnik.grad else None,
+            'telefon': korisnik.telefon
+        }
+        oglasi_with_images.append({
+            'id': oglas.id,
+            'naziv': oglas.naziv,
+            'datum': oglas.datum,
+            'sifra': oglas.sifra,
+            'cijena': oglas.cijena,
+            'slike': slike_urls,
+            'korisnik': korisnik_info
+        })
+
+    return JsonResponse({'oglasi': oglasi_with_images})
+
+
 

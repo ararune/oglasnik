@@ -10,7 +10,7 @@ function Profil() {
 
     return (
         <div className="flex justify-center p-6">
-            <div className="bg-gray-800 p-6 rounded shadow-md w-full max-w-lg mb-32">
+            <div className="bg-gray-800 p-6 rounded shadow-md w-full max-w-lg">
                 {user ? (
                     <div>
                         <p className="text-xl font-bold mb-2">{user.korisnicko_ime}</p>
@@ -18,6 +18,8 @@ function Profil() {
                         <p><span className="font-bold">Ime:</span> {user.ime}</p>
                         <p><span className="font-bold">Prezime:</span> {user.prezime}</p>
                         <p><span className="font-bold">Email:</span> {user.email}</p>
+                        <p><span className="font-bold">Telefon:</span> {user.telefon}</p>
+                        <p><span className="font-bold">OIB:</span> {user.oib}</p>
                         <p><span className="font-bold">Datum pridruživanja:</span> {user.datum_pridruzivanja}</p>
                         <p><span className="font-bold">Grad:</span> {user.grad}</p>
                         <p><span className="font-bold">Županija:</span> {user.zupanija}</p>

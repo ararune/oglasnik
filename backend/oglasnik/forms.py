@@ -5,15 +5,16 @@ from .models import Korisnik, Zupanija, Grad, Oglas, Slika
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
-
+from django.core.validators import RegexValidator
 
 class FormaZaRegistraciju(UserCreationForm):
     zupanija = forms.ModelChoiceField(queryset=Zupanija.objects.all(), empty_label=_("Odaberi županiju"), label=_("Županija"))
     grad = forms.ModelChoiceField(queryset=Grad.objects.none(), empty_label=_("Odaberi grad"), label=_("Grad"))
-
+    telefon = forms.CharField(max_length=12, validators=[RegexValidator(r'^\d{6,12}$', message=_("Telefon mora imati između 6 i 12 znamenki"))], required=False)
+    
     class Meta(UserCreationForm.Meta):
         model = Korisnik
-        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'oib', 'zupanija', 'grad']
+        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'oib', 'zupanija', 'grad', 'telefon']
         labels = {
             'username': _('Korisničko ime'),
             'email': _('Email'),
@@ -24,18 +25,11 @@ class FormaZaRegistraciju(UserCreationForm):
             'oib': _('OIB'),
             'zupanija': _('Županija'),
             'grad': _('Grad'),
-        }
-        help_texts = {
-            'username': _('Obavezno. Najviše 150 znakova. Dozvoljeni znakovi: slova, brojevi i @/./+/-/_'),
-            'password1': _('Lozinka mora sadržavati najmanje 8 znakova.'),
-            'password2': _('Unesite istu lozinku kao i prije, za potvrdu.'),
+            'telefon': _('Telefon')
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].help_text = _('Obavezno. Najviše 150 znakova. Dozvoljeni znakovi: slova, brojevi i @/./+/-/_')
-        self.fields['password1'].help_text = _('Lozinka mora sadržavati najmanje 8 znakova.')
-        self.fields['password2'].help_text = _('Unesite istu lozinku kao i prije, za potvrdu.')
 
         if 'zupanija' in self.data:
             try:

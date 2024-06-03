@@ -16,7 +16,7 @@ const odjavaKorisnika = async () => {
             console.error('Odjava neuspješna');
         }
     } catch (error) {
-        console.error('Error pri odjavi:', error);
+        console.error('Greška pri odjavi:', error);
     }
 };
 

@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import useAuth from './useAuth';
 import xSvg from './images/x-circle.svg';
+import { useParams } from 'react-router-dom';
+
 const MAX_BROJ_SLIKA = 4;
 
-const KreirajOglas = () => {
+const AzurirajOglas = () => {
+    const { oglasId } = useParams();
     const { user, loading } = useAuth();
     const [podaciForme, setPodaciForme] = useState({
         cijena: '',
@@ -13,7 +16,6 @@ const KreirajOglas = () => {
         opis: '',
         trajanje: '1',
         kategorija: '',
-        slike: [],
         zupanija: user ? user.zupanija_id : '',
         grad: user ? user.grad_id : '',
     });
@@ -24,16 +26,41 @@ const KreirajOglas = () => {
     const [sveKategorije, setSveKategorije] = useState([]);
     const navigate = useNavigate();
 
+
     useEffect(() => {
-        if (!loading && user) {
-            setPodaciForme((prevPodaci) => ({
-                ...prevPodaci,
-                zupanija: user.zupanija_id,
-                grad: user.grad_id,
-            }));
-            dohvatiKategorije();
+        const fetchOglas = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/api/azuriraj_oglas/${oglasId}/`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                    },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Fetched oglas data:', data);
+    
+                    // Set the form data with fetched data
+                    setPodaciForme({
+                        cijena: data.cijena,
+                        naziv: data.naziv,
+                        opis: data.opis,
+                        trajanje: data.trajanje.toString(), // Ensure it's a string
+                        zupanija: user ? user.zupanija_id : '',
+                        grad: user ? user.grad_id : '',
+                    });
+                    dohvatiKategorije();
+                } else {
+                    console.error('Error fetching oglas:', await response.json());
+                }
+            } catch (error) {
+                console.error('Error fetching oglas:', error);
+            }
+        };
+    
+        if (!loading) {
+            fetchOglas();
         }
-    }, [loading, user]);
+    }, [oglasId, user, loading]);
 
     const dohvatiKategorije = async () => {
         try {
@@ -59,13 +86,6 @@ const KreirajOglas = () => {
         }));
     };
 
-    const promjenaDatoteka = (e) => {
-        const files = Array.from(e.target.files);
-        setPodaciForme((prevPodaci) => ({
-            ...prevPodaci,
-            slike: [...prevPodaci.slike, ...files],
-        }));
-    };
 
     const promjenaKategorije = (e) => {
         const odabranaKategorijaId = parseInt(e.target.value);
@@ -119,11 +139,7 @@ const KreirajOglas = () => {
         if (!podaciForme.kategorija) {
             newErrors.kategorija = 'Kategorija je obavezna.';
         }
-        if (podaciForme.slike.length === 0) {
-            newErrors.slike = 'Morate dodati barem jednu sliku.';
-        } else if (podaciForme.slike.length > MAX_BROJ_SLIKA) {
-            newErrors.slike = `Možete odabrati maksimalno ${MAX_BROJ_SLIKA} slike.`;
-        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -155,12 +171,10 @@ const KreirajOglas = () => {
             formData.append('kategorija', lastSelectedKategorija);
             formData.append('zupanija', podaciForme.zupanija);
             formData.append('grad', podaciForme.grad);
-            podaciForme.slike.forEach(file => {
-                formData.append('slike', file);
-            });
+            ;
 
-            const response = await fetch('http://localhost:8000/api/kreiraj_oglas/', {
-                method: 'POST',
+            const response = await fetch(`http://localhost:8000/api/azuriraj_oglas/${oglasId}/`, {
+                method: 'PUT',
                 headers: {
                     'X-CSRFToken': csrfToken,
                     Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -170,7 +184,7 @@ const KreirajOglas = () => {
             });
 
             if (response.ok) {
-                toast.success('Oglas kreiran!', {
+                toast.success('Oglas ažuriran!', {
                     autoClose: 2000,
                     onClose: () => navigate('/'),
                 });
@@ -183,24 +197,17 @@ const KreirajOglas = () => {
         }
     };
 
-    const removeImage = (index) => {
-        const newImages = [...podaciForme.slike];
-        newImages.splice(index, 1);
-        setPodaciForme((prevPodaci) => ({
-            ...prevPodaci,
-            slike: newImages,
-        }));
-    };
+    
 
     if (loading) {
         return <div>Loading...</div>;
     }
-
+    
 
     return (
         <div className="bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
             <ToastContainer />
-            <h1 className="text-3xl font-bold mb-6 text-center">Kreiraj Oglas</h1>
+            <h1 className="text-3xl font-bold mb-6 text-center">Ažuriraj Oglas</h1>
             <form onSubmit={slanjeForme} className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                 <div className="mb-4">
                     <label className="block text-gray-300 mb-2">Cijena:</label>
@@ -316,52 +323,11 @@ const KreirajOglas = () => {
                     {errors.opis && <span className="text-red-500">{errors.opis}</span>}
                 </div>
 
-                <div className="mb-4">
-                    <label className="block text-gray-300 mb-2">Slike:</label>
-                    <div className="mb-2">
-                        <input
-                            type="file"
-                            name="slike"
-                            onChange={promjenaDatoteka}
-                            multiple
-                            className="hidden"
-                            id="fileInput"
-                            accept="image/*"
-                        />
-                        <label htmlFor="fileInput" className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900 cursor-pointer">
-                            Odaberite slike
-                        </label>
-                    </div>
-                    {errors.slike && <span className="text-red-500">{errors.slike}</span>}
-                    <div className="flex flex-wrap -mx-2">
-                        {podaciForme.slike.map((image, index) => (
-                            <div key={index} className="relative w-24 h-24 mx-2 mb-2">
-                                <img
-                                    src={URL.createObjectURL(image)}
-                                    alt={`Slika ${index + 1}`}
-                                    className="w-full h-full object-cover rounded"
-                                />
-                                <button
-                                    type="button"
-                                    className="absolute top-0 right-0 text-white p-1 rounded-full"
-                                    onClick={() => removeImage(index)}
-                                >
-                                    <img
-                                        src={xSvg}
-                                        alt="X Circle Icon"
-                                        className="h-6 w-6"
-                                    />
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
                 <div className="col-span-2">
-                    <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Kreiraj</button>
+                    <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Ažuriraj</button>
                 </div>
             </form>
         </div>
     );
 };
-
-export default KreirajOglas;
+export default AzurirajOglas;

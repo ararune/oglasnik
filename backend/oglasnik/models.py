@@ -27,9 +27,10 @@ class Grad(models.Model):
         return self.naziv
 
 class Korisnik(AbstractUser):
-    oib = models.CharField(max_length=11, null=True, validators=[RegexValidator(r'^\d{11}$', message='OIB must be exactly 11 digits')])
+    oib = models.CharField(max_length=11, null=True, validators=[RegexValidator(r'^\d{11}$', message='OIB mora imati 11 znamenki')])
     zupanija = models.ForeignKey(Zupanija, on_delete=models.CASCADE, null=True)
     grad = models.ForeignKey(Grad, on_delete=models.SET_NULL, null=True)
+    telefon = models.CharField(max_length=12, null=True, blank=True, validators=[RegexValidator(r'^\d{6,12}$', message='Telefon mora imati između 6 i 12 znamenki')])
 
     class Meta:
         verbose_name = 'Korisnik'
