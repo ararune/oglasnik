@@ -1,6 +1,6 @@
 import React from 'react';
 import useAuth from './useAuth';
-
+import { Link } from 'react-router-dom';
 function Profil() {
     const { user, loading } = useAuth();
 
@@ -23,6 +23,8 @@ function Profil() {
                         <p><span className="font-bold">Datum pridruživanja:</span> {user.datum_pridruzivanja}</p>
                         <p><span className="font-bold">Grad:</span> {user.grad}</p>
                         <p><span className="font-bold">Županija:</span> {user.zupanija}</p>
+                        <br></br>
+                        <Link to="/azuriraj-korisnika" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center">Ažuriraj</Link>
                     </div>
                 ) : (
                     <p>Nema dostupnih informacija o korisniku</p>

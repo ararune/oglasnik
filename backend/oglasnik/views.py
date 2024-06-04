@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from .models import Zupanija, Grad, Korisnik, Kategorija, Oglas, Slika
 from .serializers import ZupanijaSerializer, GradSerializer, KorisnikSerializer, KategorijaSerializer, OglasSerializer, SlikaSerializer
-from .forms import FormaZaRegistraciju, FormaZaIzraduOglasa, SlikaForma
+from .forms import FormaZaRegistraciju, FormaZaIzraduOglasa, SlikaForma, AzuriranjeKorisnikaForma
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login, logout
@@ -71,6 +71,22 @@ def registracija(request):
         form = FormaZaRegistraciju()
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def azuriraj_korisnika(request):
+    try:
+        korisnik = request.user
+    except Korisnik.DoesNotExist:
+        return Response({'error': 'Korisnik nije pronađen.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        form = AzuriranjeKorisnikaForma(request.data, instance=korisnik) # Use a different form class for updating user info
+        if form.is_valid():
+            form.save()
+            return Response({'success': 'Podaci korisnika su uspješno ažurirani.'}, status=status.HTTP_200_OK)
+        else:
+            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def trenutni_korisnik(request):
@@ -135,7 +151,7 @@ def azuriraj_oglas(request, oglas_id):
     try:
         oglas = Oglas.objects.get(pk=oglas_id, korisnik=request.user)
     except Oglas.DoesNotExist:
-        return Response({'error': 'Oglas not found or you do not have permission to edit it.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Oglas nije pronađen ili nemate autorizaciju.'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = OglasSerializer(oglas)
@@ -146,13 +162,19 @@ def azuriraj_oglas(request, oglas_id):
         slike = request.FILES.getlist('slike')
 
         if oglas_form.is_valid():
-            oglas = oglas_form.save()
+            for stara_slika in oglas.slike.all():
+                if stara_slika.slika:
+                    file_path = os.path.join(settings.MEDIA_ROOT, stara_slika.slika.path)
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
+                stara_slika.delete() 
 
-            # Delete old images if new ones are provided
-            if slike:
-                oglas.slike.all().delete()
-                for slika in slike:
-                    Slika.objects.create(oglas=oglas, slika=slika)
+            
+            for nova_slika in slike:
+                Slika.objects.create(oglas=oglas, slika=nova_slika)
+
+            
+            oglas = oglas_form.save()
 
             return Response(OglasSerializer(oglas).data, status=status.HTTP_200_OK)
         else:
@@ -161,6 +183,8 @@ def azuriraj_oglas(request, oglas_id):
                 'slike_errors': [{'slika': 'Obavezno polje.'}] if not slike else None
             }
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+        
     
 @api_view(['GET'])
 def moji_oglasi(request):

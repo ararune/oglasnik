@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAuth from './useAuth'; // Import the useAuth hook
 
-const Registracija = () => {
+const AzurirajKorisnika = () => {
+    const { user} = useAuth(); // Use the useAuth hook to get the user object
     const [formData, setFormData] = useState({
-        username: '',
         email: '',
-        password1: '',
-        password2: '',
         first_name: '',
         last_name: '',
         oib: '',
@@ -24,7 +23,20 @@ const Registracija = () => {
 
     useEffect(() => {
         fetchZupanije();
-    }, []);
+        if (user) {
+            // Populate form data with user details
+            setFormData({
+                email: user.email,
+                first_name: user.ime,
+                last_name: user.prezime,
+                oib: user.oib,
+                zupanija: user.zupanija_id,
+                grad: user.grad_id,
+                telefon: user.telefon
+            });
+            fetchGradovi(user.zupanija_id);
+        }
+    }, [user]);
 
     const fetchZupanije = async () => {
         try {
@@ -72,54 +84,37 @@ const Registracija = () => {
             ?.split('=')[1];
 
         try {
-            const response = await fetch('http://localhost:8000/registracija/', {
-                method: 'POST',
+            const response = await fetch('http://localhost:8000/azuriraj-korisnika/', {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'X-CSRFToken': csrfToken,
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                 },
-                body: JSON.stringify(formData),
-                credentials: 'include'
+                body: JSON.stringify(formData)
             });
 
             if (response.ok) {
-                toast.success('Registracija je uspješna!', {
+                toast.success('Korisnik ažuriran!', {
                     autoClose: 2000,
-                    onClose: () => navigate('/prijava')
+                    onClose: () => navigate('/profil'),
                 });
             } else {
                 const data = await response.json();
-                setErrors(data);
+                setErrors(data); 
             }
         } catch (error) {
-            console.error('Error u registraciji:', error);
+            console.error('Error updating user:', error);
         }
     };
-
+    
 
     return (
         <div className="bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
             <ToastContainer />
-            <h2 className="text-3xl font-bold mb-6 text-center">Registracija</h2>
-            <p>
-                Već imate račun?
-                <Link to="/prijava" className="text-blue-500 hover:text-blue-700 underline"> Prijavite se ovdje</Link>.
-            </p>
+            <h2 className="text-3xl font-bold mb-6 text-center">Ažuriraj Korisnika</h2>
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                    <div className="mb-4">
-                        <label className="block text-gray-300 mb-2">Korisničko ime:</label>
-                        <input
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            placeholder="Unesite korisničko ime..."
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
-                            required
-                        />
-                        {errors.username && <p className="text-red-500">{errors.username}</p>}
-                    </div>
                     <div className="mb-4">
                         <label className="block text-gray-300 mb-2">Email:</label>
                         <input
@@ -132,32 +127,6 @@ const Registracija = () => {
                             required
                         />
                         {errors.email && <p className="text-red-500">{errors.email}</p>}
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-300 mb-2">Lozinka:</label>
-                        <input
-                            type="password"
-                            name="password1"
-                            value={formData.password1}
-                            placeholder="Dozvoljeni znakovi: @/./+/-/_"
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
-                            required
-                        />
-                        {errors.password1 && <p className="text-red-500">{errors.password1}</p>}
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-300 mb-2">Ponovite lozinku:</label>
-                        <input
-                            type="password"
-                            name="password2"
-                            value={formData.password2}
-                            placeholder="Ponovite lozinku..."
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
-                            required
-                        />
-                        {errors.password2 && <p className="text-red-500">{errors.password2}</p>}
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-300 mb-2">Ime:</label>
@@ -248,10 +217,10 @@ const Registracija = () => {
                         {errors.telefon && <p className="text-red-500">{errors.telefon}</p>}
                     </div>
                 </div>
-                <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Registriraj se</button>
+                <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Ažuriraj Korisnika</button>
             </form>
         </div>
     );
 };
 
-export default Registracija;
+export default AzurirajKorisnika;

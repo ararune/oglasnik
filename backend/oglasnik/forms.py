@@ -82,3 +82,33 @@ class FormaZaIzraduOglasa(forms.ModelForm):
                 raise ValidationError('Slika ne smije biti veća od 5MB.')
 
         return cleaned_data
+
+class AzuriranjeKorisnikaForma(forms.ModelForm):
+    zupanija = forms.ModelChoiceField(queryset=Zupanija.objects.all(), empty_label=_("Odaberi županiju"), label=_("Županija"))
+    grad = forms.ModelChoiceField(queryset=Grad.objects.none(), empty_label=_("Odaberi grad"), label=_("Grad"))
+    telefon = forms.CharField(max_length=12, validators=[RegexValidator(r'^\d{6,12}$', message=_("Telefon mora imati između 6 i 12 znamenki"))], required=False)
+    
+    class Meta:
+        model = Korisnik
+        fields = ['email', 'first_name', 'last_name', 'oib', 'zupanija', 'grad', 'telefon']
+        labels = {
+            'email': _('Email'),
+            'first_name': _('Ime'),
+            'last_name': _('Prezime'),
+            'oib': _('OIB'),
+            'zupanija': _('Županija'),
+            'grad': _('Grad'),
+            'telefon': _('Telefon')
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if 'zupanija' in self.data:
+            try:
+                zupanija_id = int(self.data.get('zupanija'))
+                self.fields['grad'].queryset = Grad.objects.filter(zupanija_id=zupanija_id)
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.zupanija_id:
+            self.fields['grad'].queryset = Grad.objects.filter(zupanija_id=self.instance.zupanija_id)

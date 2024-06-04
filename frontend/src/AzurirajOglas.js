@@ -16,6 +16,7 @@ const AzurirajOglas = () => {
         opis: '',
         trajanje: '1',
         kategorija: '',
+        slike: [],
         zupanija: user ? user.zupanija_id : '',
         grad: user ? user.grad_id : '',
     });
@@ -44,7 +45,8 @@ const AzurirajOglas = () => {
                         cijena: data.cijena,
                         naziv: data.naziv,
                         opis: data.opis,
-                        trajanje: data.trajanje.toString(), // Ensure it's a string
+                        trajanje: data.trajanje.toString(),
+                        slike: [],
                         zupanija: user ? user.zupanija_id : '',
                         grad: user ? user.grad_id : '',
                     });
@@ -74,6 +76,13 @@ const AzurirajOglas = () => {
         }
     };
 
+    const promjenaDatoteka = (e) => {
+        const files = Array.from(e.target.files);
+        setPodaciForme((prevPodaci) => ({
+            ...prevPodaci,
+            slike: [...prevPodaci.slike, ...files],
+        }));
+    };
     const promjenaUnosa = (e) => {
         const { name, value } = e.target;
         setPodaciForme((prevPodaci) => ({
@@ -139,6 +148,11 @@ const AzurirajOglas = () => {
         if (!podaciForme.kategorija) {
             newErrors.kategorija = 'Kategorija je obavezna.';
         }
+        if (podaciForme.slike.length === 0) {
+            newErrors.slike = 'Morate dodati barem jednu sliku.';
+        } else if (podaciForme.slike.length > MAX_BROJ_SLIKA) {
+            newErrors.slike = `Možete odabrati maksimalno ${MAX_BROJ_SLIKA} slike.`;
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -171,7 +185,10 @@ const AzurirajOglas = () => {
             formData.append('kategorija', lastSelectedKategorija);
             formData.append('zupanija', podaciForme.zupanija);
             formData.append('grad', podaciForme.grad);
-            ;
+            podaciForme.slike.forEach(file => {
+                formData.append('slike', file);
+            });
+
 
             const response = await fetch(`http://localhost:8000/api/azuriraj_oglas/${oglasId}/`, {
                 method: 'PUT',
@@ -198,6 +215,14 @@ const AzurirajOglas = () => {
     };
 
     
+    const removeImage = (index) => {
+        const newImages = [...podaciForme.slike];
+        newImages.splice(index, 1);
+        setPodaciForme((prevPodaci) => ({
+            ...prevPodaci,
+            slike: newImages,
+        }));
+    };
 
     if (loading) {
         return <div>Loading...</div>;
@@ -323,6 +348,46 @@ const AzurirajOglas = () => {
                     {errors.opis && <span className="text-red-500">{errors.opis}</span>}
                 </div>
 
+                <div className="mb-4">
+                    <label className="block text-gray-300 mb-2">Slike:</label>
+                    <div className="mb-2">
+                        <input
+                            type="file"
+                            name="slike"
+                            onChange={promjenaDatoteka}
+                            multiple
+                            className="hidden"
+                            id="fileInput"
+                            accept="image/*"
+                        />
+                        <label htmlFor="fileInput" className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900 cursor-pointer">
+                            Odaberite slike
+                        </label>
+                    </div>
+                    {errors.slike && <span className="text-red-500">{errors.slike}</span>}
+                    <div className="flex flex-wrap -mx-2">
+                        {podaciForme.slike.map((image, index) => (
+                            <div key={index} className="relative w-24 h-24 mx-2 mb-2">
+                                <img
+                                    src={URL.createObjectURL(image)}
+                                    alt={`Slika ${index + 1}`}
+                                    className="w-full h-full object-cover rounded"
+                                />
+                                <button
+                                    type="button"
+                                    className="absolute top-0 right-0 text-white p-1 rounded-full"
+                                    onClick={() => removeImage(index)}
+                                >
+                                    <img
+                                        src={xSvg}
+                                        alt="X Circle Icon"
+                                        className="h-6 w-6"
+                                    />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
                 <div className="col-span-2">
                     <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Ažuriraj</button>
                 </div>

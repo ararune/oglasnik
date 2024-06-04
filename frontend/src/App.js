@@ -12,7 +12,7 @@ import Registracija from './Registracija';
 import KreirajOglas from './KreirajOglas';
 import Oglasi from './Oglasi';
 import AzurirajOglas from './AzurirajOglas';
-
+import AzurirajKorisnika from './AzurirajKorisnika';
 
 const PretragaForma = ({ searchQuery, handleSearchChange, handleSearchSubmit }) => {
   const lokacija = useLocation();
@@ -99,7 +99,7 @@ function App() {
 
   return (
     <Router>
-      <div className="bg-gray-800">
+      <div className="bg-gray-900">
         <nav className="flex items-center justify-between px-6 py-4">
           <div>
             <Link to="/">
@@ -136,13 +136,14 @@ function App() {
             <Route path="/profil" element={<Profil />} />
             <Route path="/kreiraj_oglas" element={<KreirajOglas />} />
             <Route path="/moji_oglasi" element={<MojiOglasi />} />
+            <Route path="/api/azuriraj-oglas/:oglasId" element={<AzurirajOglas />} />
+            <Route path="/azuriraj-korisnika" element={<AzurirajKorisnika />} />
           </Route>
 
           <Route path="/registracija" element={<Registracija />} />
           <Route path="/prijava" element={<Prijava setLoggedInUser={setLoggedInUser} />} />
           <Route path="/oglasi/:category" element={<Oglasi />} />
           <Route path="/pretraga" element={<Pretraga />} />
-          <Route path="/api/azuriraj-oglas/:oglasId" element={<AzurirajOglas />} />
         </Routes>
       </div>
     </Router>
