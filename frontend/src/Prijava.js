@@ -1,12 +1,13 @@
-// Prijava.js
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import eyeOnIcon from './images/eye-on.svg';
+import eyeOffIcon from './images/eye-off.svg';
 
 const Prijava = ({ setLoggedInUser }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -47,25 +48,34 @@ const Prijava = ({ setLoggedInUser }) => {
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        className="px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500 w-full"
                         required
                     />
                 </div>
                 <div>
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lozinka</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                        required
-                    />
+                    <div className="relative">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500 w-full"
+                            required
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600 dark:text-gray-400"
+                        >
+                            <img src={showPassword ? eyeOffIcon : eyeOnIcon} alt="toggle password visibility" className="w-5 h-5" />
+                        </button>
+                    </div>
                 </div>
                 <div className="flex justify-between">
                 </div>
-                <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Prijavite se</button>
+                <button type="submit" className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Prijavite se</button>
                 <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
-                    Niste registrirani? <Link to="/registracija" className="text-blue-700 hover:underline dark:text-blue-500">Izradite račun</Link>
+                    Niste registrirani? <Link to="/registracija" className="text-rose-700 hover:underline dark:text-rose-500">Izradite račun</Link>
                 </div>
             </form>
         </div>

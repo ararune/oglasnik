@@ -4,7 +4,7 @@ from django.urls import path, include
 from rest_framework import routers
 from oglasnik.views import ZupanijaViewSet, GradViewSet, KorisnikViewSet, KategorijaViewSet, OglasViewSet, SlikaViewSet
 from oglasnik.views import registracija, trenutni_korisnik, profil, kreiraj_oglas, moji_oglasi, izbrisi_oglas, uredi_oglas
-from oglasnik.views import oglasi_po_kategoriji, oglas_detalji, odjavi_korisnika, pretraga_oglasi, azuriraj_oglas, azuriraj_korisnika
+from oglasnik.views import oglasi_po_kategoriji, oglas_detalji, odjavi_korisnika, pretraga_oglasi, azuriraj_oglas, azuriraj_korisnika, promjena_lozinke
 from django.contrib.auth import views as auth_views
 from rest_framework_simplejwt import views as jwt_views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -37,6 +37,7 @@ urlpatterns = [
     path('api/odjava/', odjavi_korisnika, name='logout_user'),
     path('registracija/', registracija, name='registracija'),
     path('azuriraj-korisnika/', azuriraj_korisnika, name='azuriraj_korisnika'),
+    path('promjena-lozinke/', promjena_lozinke, name='promjena_lozinke'),
     path('prijava/', auth_views.LoginView.as_view(template_name='prijava.html', success_url='localhost:3000/'), name='prijava'),
     path('profil/', profil, name='profil'),
     path('api/pretraga/', pretraga_oglasi, name='pretraga_oglasi'),

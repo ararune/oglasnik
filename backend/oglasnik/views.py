@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from .models import Zupanija, Grad, Korisnik, Kategorija, Oglas, Slika
 from .serializers import ZupanijaSerializer, GradSerializer, KorisnikSerializer, KategorijaSerializer, OglasSerializer, SlikaSerializer
-from .forms import FormaZaRegistraciju, FormaZaIzraduOglasa, SlikaForma, AzuriranjeKorisnikaForma
+from .forms import FormaZaRegistraciju, FormaZaIzraduOglasa, SlikaForma, AzuriranjeKorisnikaForma, PromjenaLozinkeForma
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login, logout
@@ -21,6 +21,7 @@ import os
 from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
+from django.contrib.auth import update_session_auth_hash
 
 class ZupanijaViewSet(viewsets.ModelViewSet):
     queryset = Zupanija.objects.all()
@@ -80,12 +81,22 @@ def azuriraj_korisnika(request):
         return Response({'error': 'Korisnik nije pronađen.'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
-        form = AzuriranjeKorisnikaForma(request.data, instance=korisnik) # Use a different form class for updating user info
+        form = AzuriranjeKorisnikaForma(request.data, instance=korisnik)
         if form.is_valid():
             form.save()
             return Response({'success': 'Podaci korisnika su uspješno ažurirani.'}, status=status.HTTP_200_OK)
         else:
             return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def promjena_lozinke(request):
+    form = PromjenaLozinkeForma(user=request.user, data=request.data)
+    if form.is_valid():
+        user = form.save()
+        update_session_auth_hash(request, user)
+        return Response({'success': 'Lozinka je uspješno promijenjena.'}, status=status.HTTP_200_OK)
+    return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
         
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -120,7 +131,7 @@ def odjavi_korisnika(request):
 @login_required
 def profil(request):
     user = request.user
-    return render(request, 'profil.html', {'user': user})
+    return render(request, {'user': user})
 
 @api_view(['POST'])
 @login_required
@@ -270,6 +281,7 @@ def oglasi_po_kategoriji(request, url):
             'datum': oglas.datum,
             'sifra': oglas.sifra,
             'cijena': oglas.cijena,
+            'kategorija': oglas.kategorija.naziv,
             'slike': slike_urls,
             'korisnik': korisnik_info
         })
@@ -282,7 +294,12 @@ def oglasi_po_kategoriji(request, url):
 
     children = kategorija.children.all().values('naziv', 'url')
 
-    return JsonResponse({'kategorija': kategorija.naziv, 'oglasi': oglasi_with_images, 'hijerarhija': hijerarhija, 'children': list(children)})
+    return JsonResponse({
+        'kategorija': kategorija.naziv, 
+        'oglasi': oglasi_with_images, 
+        'hijerarhija': hijerarhija, 
+        'children': list(children)
+})
 
 
 

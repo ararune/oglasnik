@@ -171,7 +171,6 @@ const KreirajOglas = () => {
 
             if (response.ok) {
                 toast.success('Oglas kreiran!', {
-                    autoClose: 2000,
                     onClose: () => navigate('/'),
                 });
             } else {
@@ -199,7 +198,20 @@ const KreirajOglas = () => {
 
     return (
         <div className="bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
-            <ToastContainer />
+                       <ToastContainer 
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                toastClassName={() => "relative flex p-1 min-h-10 rounded-md justify-between overflow-hidden cursor-pointer bg-gray-700 border border-gray-600"}
+                bodyClassName={() => "text-sm font-white font-med block p-3 text-gray-300"}
+                closeButton={false}
+            />
             <h1 className="text-3xl font-bold mb-6 text-center">Kreiraj Oglas</h1>
             <form onSubmit={slanjeForme} className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                 <div className="mb-4">
@@ -210,7 +222,7 @@ const KreirajOglas = () => {
                         value={podaciForme.cijena}
                         placeholder="Unesite cijenu..."
                         onChange={promjenaUnosa}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                         required
                     />
                     {errors.cijena && <span className="text-red-500">{errors.cijena}</span>}
@@ -223,7 +235,7 @@ const KreirajOglas = () => {
                         value={podaciForme.naziv}
                         placeholder="Unesite naziv..."
                         onChange={promjenaUnosa}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                         required
                     />
                     {errors.naziv && <span className="text-red-500">{errors.naziv}</span>}
@@ -235,7 +247,7 @@ const KreirajOglas = () => {
                         name="trajanje"
                         value={podaciForme.trajanje}
                         onChange={promjenaUnosa}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                         required
                     >
                         <option value="1">1 dan</option>
@@ -249,7 +261,7 @@ const KreirajOglas = () => {
                         name="kategorija"
                         value={podaciForme.kategorija}
                         onChange={promjenaKategorije}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                         required
                     >
                         <option value="">Odaberi kategoriju</option>
@@ -268,7 +280,7 @@ const KreirajOglas = () => {
                             name="podkategorija"
                             value={podaciForme.podkategorija}
                             onChange={promjenaPodkategorije}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                             required
                         >
                             <option value="">Odaberi podkategoriju</option>
@@ -287,7 +299,7 @@ const KreirajOglas = () => {
                             name="unukKategorija"
                             value={podaciForme.unukKategorija}
                             onChange={promjenaUnosa}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                             required
                         >
                             <option value="">Odaberi unuk kategoriju</option>
@@ -308,7 +320,7 @@ const KreirajOglas = () => {
                         value={podaciForme.opis}
                         placeholder="Unesite opis..."
                         onChange={promjenaUnosa}
-                        className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                         rows="10"
                         required
                     ></textarea>
@@ -328,7 +340,7 @@ const KreirajOglas = () => {
                             id="fileInput"
                             accept="image/*"
                         />
-                        <label htmlFor="fileInput" className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900 cursor-pointer">
+                        <label htmlFor="fileInput" className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500 cursor-pointer">
                             Odaberite slike
                         </label>
                     </div>
@@ -339,7 +351,7 @@ const KreirajOglas = () => {
                                 <img
                                     src={URL.createObjectURL(image)}
                                     alt={`Slika ${index + 1}`}
-                                    className="w-full h-full object-cover rounded"
+                                    className="w-full h-full object-cover rounded mt-2"
                                 />
                                 <button
                                     type="button"
@@ -357,7 +369,7 @@ const KreirajOglas = () => {
                     </div>
                 </div>
                 <div className="col-span-2">
-                    <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Kreiraj</button>
+                    <button type="submit" className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Kreiraj</button>
                 </div>
             </form>
         </div>

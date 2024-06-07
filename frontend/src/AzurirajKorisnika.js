@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate} from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import useAuth from './useAuth'; // Import the useAuth hook
+import useAuth from './useAuth'; 
 
 const AzurirajKorisnika = () => {
-    const { user} = useAuth(); // Use the useAuth hook to get the user object
+    const { user} = useAuth();
     const [formData, setFormData] = useState({
         email: '',
         first_name: '',
@@ -22,9 +22,10 @@ const AzurirajKorisnika = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchZupanije();
+        if (zupanije.length === 0) {
+            fetchZupanije();
+        }
         if (user) {
-            // Populate form data with user details
             setFormData({
                 email: user.email,
                 first_name: user.ime,
@@ -36,7 +37,7 @@ const AzurirajKorisnika = () => {
             });
             fetchGradovi(user.zupanija_id);
         }
-    }, [user]);
+    }, [user, zupanije]);
 
     const fetchZupanije = async () => {
         try {
@@ -96,7 +97,6 @@ const AzurirajKorisnika = () => {
 
             if (response.ok) {
                 toast.success('Korisnik ažuriran!', {
-                    autoClose: 2000,
                     onClose: () => navigate('/profil'),
                 });
             } else {
@@ -104,6 +104,7 @@ const AzurirajKorisnika = () => {
                 setErrors(data); 
             }
         } catch (error) {
+            toast.error('Greška pri ažuriranju!');
             console.error('Error updating user:', error);
         }
     };
@@ -111,7 +112,20 @@ const AzurirajKorisnika = () => {
 
     return (
         <div className="bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
-            <ToastContainer />
+            <ToastContainer 
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                toastClassName={() => "relative flex p-1 min-h-10 rounded-md justify-between overflow-hidden cursor-pointer bg-gray-700 border border-gray-600"}
+                bodyClassName={() => "text-sm font-white font-med block p-3 text-gray-300"}
+                closeButton={false}
+            />
             <h2 className="text-3xl font-bold mb-6 text-center">Ažuriraj Korisnika</h2>
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -123,7 +137,7 @@ const AzurirajKorisnika = () => {
                             value={formData.email}
                             placeholder="Unesite e-mail..."
                             onChange={handleChange}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                             required
                         />
                         {errors.email && <p className="text-red-500">{errors.email}</p>}
@@ -136,7 +150,7 @@ const AzurirajKorisnika = () => {
                             value={formData.first_name}
                             placeholder="Unesite ime..."
                             onChange={handleChange}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                             required
                         />
                         {errors.first_name && <p className="text-red-500">{errors.first_name}</p>}
@@ -149,7 +163,7 @@ const AzurirajKorisnika = () => {
                             value={formData.last_name}
                             placeholder="Unesite prezime..."
                             onChange={handleChange}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                             required
                         />
                         {errors.last_name && <p className="text-red-500">{errors.last_name}</p>}
@@ -162,10 +176,23 @@ const AzurirajKorisnika = () => {
                             value={formData.oib}
                             placeholder="OIB sadrži 11 znamenki..."
                             onChange={handleChange}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                             required
                         />
                         {errors.oib && <p className="text-red-500">{errors.oib}</p>}
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-300 mb-2">Telefon:</label>
+                        <input
+                            type="tel"
+                            name="telefon"
+                            value={formData.telefon}
+                            placeholder="Unesite broj telefona..."
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            required
+                        />
+                        {errors.telefon && <p className="text-red-500">{errors.telefon}</p>}
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-300 mb-2">Županija:</label>
@@ -173,7 +200,7 @@ const AzurirajKorisnika = () => {
                             name="zupanija"
                             value={formData.zupanija}
                             onChange={handleZupanijaChange}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                             required
                         >
                             <option value="">Odaberi županiju</option>
@@ -191,7 +218,7 @@ const AzurirajKorisnika = () => {
                             name="grad"
                             value={formData.grad}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
                             required
                         >
                             <option value="">Odaberi grad</option>
@@ -203,21 +230,9 @@ const AzurirajKorisnika = () => {
                         </select>
                         {errors.grad && <p className="text-red-500">{errors.grad}</p>}
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-300 mb-2">Telefon:</label>
-                        <input
-                            type="tel"
-                            name="telefon"
-                            value={formData.telefon}
-                            placeholder="Unesite broj telefona..."
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900"
-                            required
-                        />
-                        {errors.telefon && <p className="text-red-500">{errors.telefon}</p>}
-                    </div>
+
                 </div>
-                <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Ažuriraj Korisnika</button>
+                <button type="submit" className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Ažuriraj Korisnika</button>
             </form>
         </div>
     );

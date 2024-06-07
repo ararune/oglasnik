@@ -12,7 +12,7 @@ import sportSlika from './images/sport.png';
 function Kategorije() {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="bg-gray-800 p-6 rounded shadow-md w-full max-w-4xl">
+        <div className="bg-slate-800 p-6 rounded shadow-md w-full max-w-4xl">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             <Link to="/oglasi/glazbala" className="bg-blue-800 p-4 rounded shadow-md hover:bg-blue-900 text-center flex flex-col items-center">
               <img src={glazbalaSlika} alt="Glazbala" className="h-24 mb-2 rounded" />

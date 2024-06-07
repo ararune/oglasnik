@@ -9,8 +9,8 @@ function Profil() {
     }
 
     return (
-        <div className="flex justify-center p-6">
-            <div className="bg-gray-800 p-6 rounded shadow-md w-full max-w-lg">
+        <div className="bg-gray-800 p-6 rounded shadow-md max-w-md w-full mb-32 mx-auto">
+            <div className="">
                 {user ? (
                     <div>
                         <p className="text-xl font-bold mb-2">{user.korisnicko_ime}</p>
@@ -24,7 +24,8 @@ function Profil() {
                         <p><span className="font-bold">Grad:</span> {user.grad}</p>
                         <p><span className="font-bold">Županija:</span> {user.zupanija}</p>
                         <br></br>
-                        <Link to="/azuriraj-korisnika" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center">Ažuriraj</Link>
+                        <Link to="/azuriraj-korisnika" className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center">Ažuriraj</Link>
+                        <Link to="/promjena-lozinke" className="ml-2 text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center">Promjena Lozinke</Link>
                     </div>
                 ) : (
                     <p>Nema dostupnih informacija o korisniku</p>

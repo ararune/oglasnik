@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
+from django.contrib.auth.forms import PasswordChangeForm
 
 class FormaZaRegistraciju(UserCreationForm):
     zupanija = forms.ModelChoiceField(queryset=Zupanija.objects.all(), empty_label=_("Odaberi županiju"), label=_("Županija"))
@@ -112,3 +113,11 @@ class AzuriranjeKorisnikaForma(forms.ModelForm):
                 pass
         elif self.instance.zupanija_id:
             self.fields['grad'].queryset = Grad.objects.filter(zupanija_id=self.instance.zupanija_id)
+
+class PromjenaLozinkeForma(PasswordChangeForm):
+    old_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Stara lozinka'}))
+    new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Nova lozinka'}))
+    new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Ponovite novu lozinku'}))
+
+    class Meta:
+        fields = ['old_password', 'new_password1', 'new_password2']

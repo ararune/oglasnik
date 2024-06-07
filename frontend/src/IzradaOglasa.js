@@ -197,7 +197,7 @@ const IzradaOglasa = () => {
                         <input type="file" id="slike" accept="image/*" multiple onChange={(e) => setSlike(e.target.files)} required className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900" />
                     </div>
                     {error && <p className="text-red-500">{error}</p>}
-                    <button type="submit" className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded focus:outline-none focus:bg-blue-600 transition-colors">Kreiraj Oglas</button>
+                    <button type="submit" className="w-full px-4 py-2 bg-rose-500 hover:bg-rose-600 rounded focus:outline-none focus:bg-rose-600 transition-colors">Kreiraj Oglas</button>
                 </form>
             )}
         </div>
