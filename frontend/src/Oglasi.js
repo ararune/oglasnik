@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
-
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import useAuth from './useAuth'
 function Oglasi() {
     const { category } = useParams();
     const [oglasi, setOglasi] = useState([]);
@@ -10,7 +11,7 @@ function Oglasi() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedZupanije, setSelectedZupanije] = useState([]);
-
+    const { user} = useAuth();
     const itemsPerPage = 6;
 
     const sortOption = searchParams.get('sort') || '';
@@ -91,9 +92,7 @@ function Oglasi() {
         setSelectedZupanije(updatedZupanije);
         setSearchParams((prevSearchParams) => {
             const newSearchParams = new URLSearchParams(prevSearchParams);
-            // Remove the existing županija parameter
             newSearchParams.delete("zupanija");
-            // Append the updated županije list
             updatedZupanije.forEach((selectedZup) => {
                 newSearchParams.append("zupanija", selectedZup);
             });
@@ -101,7 +100,27 @@ function Oglasi() {
         });
     };
 
-
+    const toggleFavorite = (oglasId, isFavorited) => {
+        const url = isFavorited ? 'http://localhost:8000/favoriti/ukloni/' : 'http://localhost:8000/favoriti/dodaj/';
+        const method = isFavorited ? 'DELETE' : 'POST';
+        fetch(url, {
+            method: method,
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ oglas: oglasId })
+        })
+            .then(response => response.json())
+            .then(() => {
+                setOglasi(prevOglasi =>
+                    prevOglasi.map(oglas =>
+                        oglas.id === oglasId ? { ...oglas, favorited: !isFavorited } : oglas
+                    )
+                );
+            })
+            .catch(error => console.error('Error toggling favorite:', error));
+    };
 
     const formatDatum = (datum) => {
         const date = new Date(datum);
@@ -128,7 +147,7 @@ function Oglasi() {
 
     const sortedOglasi = sortOglasi(filteredOglasi, sortOption);
     const paginatedOglasi = sortedOglasi.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
+    
     return (
         <div className="container mx-auto p-4">
             <nav className="lg:w-2/3 px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white font-bold">
@@ -175,7 +194,7 @@ function Oglasi() {
                                 placeholder="Min cijena"
                                 value={minCijena}
                                 onChange={handleMinCijenaChange}
-                                inputmode="numeric"
+                                inputMode="numeric"
                                 pattern="[0-9]*"
                                 className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-rose-500"
                             />
@@ -185,7 +204,7 @@ function Oglasi() {
                                 placeholder="Max cijena"
                                 value={maxCijena}
                                 onChange={handleMaxCijenaChange}
-                                inputmode="numeric"
+                                inputMode="numeric"
                                 pattern="[0-9]*"
                                 className="ml-2 w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-rose-500"
                             />
@@ -265,7 +284,14 @@ function Oglasi() {
                                 <p className="text-gray-400 text-sm mb-2">Objavljen: {formatDatum(oglas.datum)}</p>
                             </div>
                             <p className="text-yellow-500 text-lg font-bold">{oglas.cijena} €</p>
-                            
+                            {user && (
+                            <button
+                                onClick={() => toggleFavorite(oglas.id, oglas.favorited)}
+                                className="text-gray-400 hover:text-red-500 focus:outline-none"
+                            >
+                                {oglas.favorited ? <FaHeart /> : <FaRegHeart />}
+                            </button>
+                        )}
                         </div>
                     </li>
                 ))}

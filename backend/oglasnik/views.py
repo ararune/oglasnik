@@ -1,6 +1,6 @@
-from rest_framework import viewsets
-from .models import Zupanija, Grad, Korisnik, Kategorija, Oglas, Slika
-from .serializers import ZupanijaSerializer, GradSerializer, KorisnikSerializer, KategorijaSerializer, OglasSerializer, SlikaSerializer
+from rest_framework import viewsets, permissions
+from .models import Zupanija, Grad, Korisnik, Kategorija, Oglas, Slika, Favorit
+from .serializers import ZupanijaSerializer, GradSerializer, KorisnikSerializer, KategorijaSerializer, OglasSerializer, SlikaSerializer, FavoritSerializer
 from .forms import FormaZaRegistraciju, FormaZaIzraduOglasa, SlikaForma, AzuriranjeKorisnikaForma, PromjenaLozinkeForma
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.decorators import api_view
@@ -22,6 +22,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
 from django.contrib.auth import update_session_auth_hash
+from rest_framework.decorators import action
 
 class ZupanijaViewSet(viewsets.ModelViewSet):
     queryset = Zupanija.objects.all()
@@ -37,7 +38,7 @@ class GradViewSet(viewsets.ModelViewSet):
         queryset = Grad.objects.all()
         zupanija_id = self.request.query_params.get('zupanija') 
         if zupanija_id:
-            queryset = queryset.filter(zupanija_id=zupanija_id)  # Filtriraj gradove po ID-u zupanije
+            queryset = queryset.filter(zupanija_id=zupanija_id)
         return queryset
 
 class KorisnikViewSet(viewsets.ModelViewSet):
@@ -56,6 +57,38 @@ class SlikaViewSet(viewsets.ModelViewSet):
     queryset = Slika.objects.all()
     serializer_class = SlikaSerializer
 
+class FavoritViewSet(viewsets.ModelViewSet):
+    queryset = Favorit.objects.all()
+    serializer_class = FavoritSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Favorit.objects.filter(korisnik=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(korisnik=self.request.user)
+
+    @action(detail=False, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def dodaj(self, request):
+        oglas_id = request.data.get('oglas')
+        oglas = Oglas.objects.get(id=oglas_id)
+        favorit, created = Favorit.objects.get_or_create(korisnik=request.user, oglas=oglas)
+        if created:
+            return Response({'status': 'Oglas je dodan u favorite'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'status': 'Oglas je već u favoritima'}, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['delete'], permission_classes=[permissions.IsAuthenticated])
+    def ukloni(self, request):
+        oglas_id = request.data.get('oglas')
+        oglas = Oglas.objects.get(id=oglas_id)
+        favorit = Favorit.objects.filter(korisnik=request.user, oglas=oglas)
+        if favorit.exists():
+            favorit.delete()
+            return Response({'status': 'Oglas je uklonjen iz favorita'}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({'status': 'Oglas nije pronađen u favoritima'}, status=status.HTTP_404_NOT_FOUND)
+        
 def registracija(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -264,7 +297,6 @@ def oglasi_po_kategoriji(request, url):
     kategorija = get_object_or_404(Kategorija, url=url)
     potkategorije = dohvati_podkategorije(kategorija)
     oglasi = Oglas.objects.filter(kategorija__in=potkategorije).select_related('korisnik__zupanija', 'korisnik__grad')
-
     oglasi_with_images = []
     for oglas in oglasi:
         slike = Slika.objects.filter(oglas=oglas).values_list('slika', flat=True)
@@ -275,6 +307,12 @@ def oglasi_po_kategoriji(request, url):
             'grad': korisnik.grad.naziv if korisnik.grad else None,
             'telefon': korisnik.telefon
         }
+        # Check if the oglas is favorited by the user
+        if request.user.is_authenticated:
+            # Check if the oglas is favorited by the user
+            favorited = Favorit.objects.filter(korisnik=request.user, oglas=oglas).exists()
+        else:
+            favorited = False
         oglasi_with_images.append({
             'id': oglas.id,
             'naziv': oglas.naziv,
@@ -283,7 +321,8 @@ def oglasi_po_kategoriji(request, url):
             'cijena': oglas.cijena,
             'kategorija': oglas.kategorija.naziv,
             'slike': slike_urls,
-            'korisnik': korisnik_info
+            'korisnik': korisnik_info,
+            'favorited': favorited  # Include the favorited status for the oglas
         })
 
     hijerarhija = []
@@ -299,7 +338,7 @@ def oglasi_po_kategoriji(request, url):
         'oglasi': oglasi_with_images, 
         'hijerarhija': hijerarhija, 
         'children': list(children)
-})
+    })
 
 
 
@@ -347,6 +386,7 @@ def pretraga_oglasi(request):
             'naziv': oglas.naziv,
             'datum': oglas.datum,
             'sifra': oglas.sifra,
+            'kategorija': oglas.kategorija.naziv,
             'cijena': oglas.cijena,
             'slike': slike_urls,
             'korisnik': korisnik_info

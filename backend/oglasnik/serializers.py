@@ -1,6 +1,6 @@
 # backend/oglasnik/serializers.py
 from rest_framework import serializers
-from .models import Zupanija, Grad, Korisnik, Kategorija, Oglas, Slika
+from .models import Zupanija, Grad, Korisnik, Kategorija, Oglas, Slika, Favorit
 
 class ZupanijaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,3 +37,8 @@ class OglasSerializer(serializers.ModelSerializer):
     class Meta:
         model = Oglas
         fields = ['id', 'cijena', 'sifra', 'naziv', 'opis', 'korisnik', 'zupanija', 'grad', 'trajanje', 'kategorija', 'datum', 'slike']
+
+class FavoritSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorit
+        fields = ['id', 'korisnik', 'oglas', 'datum']

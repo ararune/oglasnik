@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import useAuth from './useAuth';
-import xSvg from './images/x-circle.svg';
 const MAX_BROJ_SLIKA = 4;
 
 const KreirajOglas = () => {
@@ -198,7 +197,7 @@ const KreirajOglas = () => {
 
     return (
         <div className="bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
-                       <ToastContainer 
+            <ToastContainer
                 position="top-right"
                 autoClose={2000}
                 hideProgressBar={false}
@@ -329,20 +328,14 @@ const KreirajOglas = () => {
                 </div>
 
                 <div className="mb-4">
-                    <label className="block text-gray-300 mb-2">Slike:</label>
                     <div className="mb-2">
+                        <label className="block text-gray-300 mb-2">Dodajte slike:</label>
                         <input
                             type="file"
-                            name="slike"
-                            onChange={promjenaDatoteka}
                             multiple
-                            className="hidden"
-                            id="fileInput"
-                            accept="image/*"
+                            onChange={promjenaDatoteka}
+                            className={`w-full p-2 border border-gray-600 rounded bg-gray-700 text-gray-300 ${errors.slike ? 'border-red-500' : ''}`}
                         />
-                        <label htmlFor="fileInput" className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500 cursor-pointer">
-                            Odaberite slike
-                        </label>
                     </div>
                     {errors.slike && <span className="text-red-500">{errors.slike}</span>}
                     <div className="flex flex-wrap -mx-2">
@@ -353,16 +346,12 @@ const KreirajOglas = () => {
                                     alt={`Slika ${index + 1}`}
                                     className="w-full h-full object-cover rounded mt-2"
                                 />
-                                <button
+                                  <button
                                     type="button"
-                                    className="absolute top-0 right-0 text-white p-1 rounded-full"
+                                    className="absolute top-0 right-0 text-white px-2.5 py-1 rounded-md bg-red-500"
                                     onClick={() => removeImage(index)}
                                 >
-                                    <img
-                                        src={xSvg}
-                                        alt="X Circle Icon"
-                                        className="h-6 w-6"
-                                    />
+                                    &times;
                                 </button>
                             </div>
                         ))}
