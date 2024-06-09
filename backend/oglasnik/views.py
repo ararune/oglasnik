@@ -310,7 +310,7 @@ def oglasi_po_kategoriji(request, url):
     kategorija = get_object_or_404(Kategorija, url=url)
     potkategorije = dohvati_podkategorije(kategorija)
     oglasi = Oglas.objects.filter(kategorija__in=potkategorije).select_related('korisnik__zupanija', 'korisnik__grad')
-    oglasi_with_images = []
+    oglasi_sa_slikama = []
     for oglas in oglasi:
         slike = Slika.objects.filter(oglas=oglas).values_list('slika', flat=True)
         slike_urls = [f"{settings.MEDIA_URL}{slika}" for slika in slike]
@@ -326,7 +326,7 @@ def oglasi_po_kategoriji(request, url):
             favorited = Favorit.objects.filter(korisnik=request.user, oglas=oglas).exists()
         else:
             favorited = False
-        oglasi_with_images.append({
+        oglasi_sa_slikama.append({
             'id': oglas.id,
             'naziv': oglas.naziv,
             'datum': oglas.datum,
@@ -348,7 +348,7 @@ def oglasi_po_kategoriji(request, url):
 
     return JsonResponse({
         'kategorija': kategorija.naziv, 
-        'oglasi': oglasi_with_images, 
+        'oglasi': oglasi_sa_slikama, 
         'hijerarhija': hijerarhija, 
         'children': list(children)
     })
@@ -401,7 +401,7 @@ def oglas_detalji(request, sifra):
 def pretraga_oglasi(request):
     query = request.GET.get('q', '')
     oglasi = Oglas.objects.filter(naziv__icontains=query) | Oglas.objects.filter(sifra__icontains=query)
-    oglasi_with_images = []
+    oglasi_sa_slikama = []
 
     for oglas in oglasi:
         slike = Slika.objects.filter(oglas=oglas).values_list('slika', flat=True)
@@ -412,7 +412,7 @@ def pretraga_oglasi(request):
             'grad': korisnik.grad.naziv if korisnik.grad else None,
             'telefon': korisnik.telefon
         }
-        oglasi_with_images.append({
+        oglasi_sa_slikama.append({
             'id': oglas.id,
             'naziv': oglas.naziv,
             'datum': oglas.datum,
@@ -423,7 +423,23 @@ def pretraga_oglasi(request):
             'korisnik': korisnik_info
         })
 
-    return JsonResponse({'oglasi': oglasi_with_images})
+    return JsonResponse({'oglasi': oglasi_sa_slikama})
 
+def dohvati_korisnika(request, username):
+    try:
+        korisnik = Korisnik.objects.get(username=username)
+        korisnik_info = KorisnikSerializer(korisnik).data
+
+        
+        oglasi = Oglas.objects.filter(korisnik=korisnik)
+        oglasi_data = OglasSerializer(oglasi, many=True).data
+
+        response_data = {
+            'korisnik': korisnik_info,
+            'oglasi': oglasi_data
+        }
+        return JsonResponse(response_data)
+    except Korisnik.DoesNotExist:
+        return JsonResponse({'error': 'Korisnik not found'}, status=404)
 
 

@@ -15,9 +15,13 @@ class GradSerializer(serializers.ModelSerializer):
         fields = ['id', 'naziv', 'zupanija']
 
 class KorisnikSerializer(serializers.ModelSerializer):
+    zupanija_naziv = serializers.CharField(source='zupanija.naziv', read_only=True)
+    grad_naziv = serializers.CharField(source='grad.naziv', read_only=True)
+
     class Meta:
         model = Korisnik
-        fields = ['id', 'username', 'oib', 'zupanija', 'grad', 'first_name', 'last_name', 'email', 'telefon']
+        fields = ['id', 'username', 'oib', 'zupanija', 'zupanija_naziv', 'grad', 'grad_naziv', 'first_name', 'last_name', 'email', 'telefon']
+
 
 class KategorijaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,11 +36,12 @@ class SlikaSerializer(serializers.ModelSerializer):
 
 class OglasSerializer(serializers.ModelSerializer):
     zupanija = ZupanijaSerializer()
-    slike = SlikaSerializer(many=True)  # Add this line to include the related images
+    slike = SlikaSerializer(many=True)
+    kategorija_naziv = serializers.CharField(source='kategorija.naziv', read_only=True)  # Custom field for kategorija naziv
 
     class Meta:
         model = Oglas
-        fields = ['id', 'cijena', 'sifra', 'naziv', 'opis', 'korisnik', 'zupanija', 'grad', 'trajanje', 'kategorija', 'datum', 'slike']
+        fields = ['id', 'cijena', 'sifra', 'naziv', 'opis', 'korisnik', 'zupanija', 'grad', 'trajanje', 'kategorija', 'kategorija_naziv', 'datum', 'slike']
 
 class FavoritSerializer(serializers.ModelSerializer):
     class Meta:

@@ -213,11 +213,11 @@ function MojiOglasi() {
                         {sortiraniOglasi.map(oglas => (
                             <li key={oglas.id} className="relative bg-gray-800 rounded border border-gray-600 bg-zinc-900 overflow-hidden shadow-md flex flex-row items-start">
                                 {oglas.slike && oglas.slike.length > 0 && (
-                                    <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-48 object-cover" />
+                                    <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block"><img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-48 object-cover" /></Link>
                                 )}
                                           <div className="flex flex-col justify-between p-4 flex-grow">
                             <div>
-                                <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
+                            <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block"><h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4></Link>
                                 <p className="text-gray-400 text-sm mb-2">Objavljen: {formatDatum(oglas.datum)}</p>
                             </div>
                             <p className="text-yellow-500 text-lg font-bold">{oglas.cijena} €</p>
@@ -250,18 +250,16 @@ function MojiOglasi() {
                         {sortiraniFavoriziraniOglasi.map(oglas => (
                             <li key={oglas.id} className="bg-gray-800 p-4 rounded-lg shadow-md">
                                 {oglas.slike && oglas.slike.length > 0 && (
-                                    <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="h-40 w-full object-cover mb-4 rounded" />
+                                    <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block"><img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="h-40 w-full object-contain mb-4 rounded" /></Link>
                                 )}
-                                <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
+                                <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block"><h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4></Link>
                                 <p className="text-yellow-500 text-lg font-bold">{oglas.cijena} €</p>
                                 <p className="text-gray-400 text-sm mb-2">Objavljen: {formatDatum(oglas.datum)}</p>
                                 <div className="flex justify-end mt-4">
                                     <button onClick={() => ukloniIzFavorita(oglas.id)} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center">
                                         Ukloni iz favorita
                                     </button>
-                                    <Link to={`/oglas/${oglas.id}`} className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">
-                                        Pogledaj
-                                    </Link>
+
                                 </div>
                             </li>
                         ))}

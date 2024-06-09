@@ -15,8 +15,8 @@ import AzurirajOglas from './AzurirajOglas';
 import AzurirajKorisnika from './AzurirajKorisnika';
 import PromjenaLozinke from './PromjenaLozinke';
 import hamburgerIkona from './images/hamburger.png';
-import OglasDetalji
- from './OglasDetalji';
+import OglasDetalji from './OglasDetalji';
+import Korisnik from './Korisnik';
 const PretragaForma = ({ searchQuery, handleSearchChange, handleSearchSubmit }) => {
   return (
     (
@@ -221,7 +221,7 @@ function App() {
             <Route path="/oglasi/:category" element={<Oglasi />} />
             <Route path="/pretraga" element={<Pretraga />} />
             <Route path="/oglas/:sifra" element={<OglasDetalji />} />
-
+            <Route path="/korisnik/:username" element={<Korisnik />} />
 
             
           </Routes>

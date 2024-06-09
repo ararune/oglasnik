@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useLocation, useSearchParams, Link } from 'react-router-dom';
+import { useLocation, useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import useAuth from './useAuth'
+import astronaut from './images/astronaut.png';
+import { AiOutlineCalendar, AiOutlineEnvironment, AiOutlineEuroCircle } from 'react-icons/ai';
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -19,7 +21,7 @@ function Pretraga() {
   const [selectedZupanije, setSelectedZupanije] = useState([]);
   const minCijena = searchParams.get('minCijena') || '';
   const maxCijena = searchParams.get('maxCijena') || '';
-  
+  const navigate = useNavigate();
   useEffect(() => {
     const page = searchParams.get('page') || 1;
     setCurrentPage(page);
@@ -109,6 +111,10 @@ function Pretraga() {
     return `${dan}/${mjesec}/${godina}`;
   };
   const toggleFavorite = (oglasId, isFavorited) => {
+    if (!user) {
+      navigate('/prijava');
+      return;
+    }
     const url = isFavorited ? 'http://localhost:8000/favoriti/ukloni/' : 'http://localhost:8000/favoriti/dodaj/';
     const method = isFavorited ? 'DELETE' : 'POST';
     fetch(url, {
@@ -146,7 +152,7 @@ function Pretraga() {
 
   const sortedOglasi = sortOglasi(filteredOglasi, sortOption);
   const paginatedOglasi = sortedOglasi.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  
+
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-white text-2xl mb-4">Rezultati pretrage za: "{searchQuery}"</h2>
@@ -249,35 +255,51 @@ function Pretraga() {
       </div>
 
 
-      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {paginatedOglasi.map(oglas => (
-          <li key={oglas.id} className="relative bg-gray-800 rounded border border-gray-600 bg-zinc-900 overflow-hidden shadow-md flex flex-row items-start">
-            {oglas.slike.length > 0 && (
-              <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-48 object-cover" />
-            )}
-            <div className="flex flex-col justify-between p-4 flex-grow">
-              <div>
-                <p className="w-full text-white bg-gray-800 font-sm px-2 py-1 text-center">{oglas.kategorija}</p>
-                <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
-                {oglas.korisnik && (
-                  <div className="text-gray-400 text-sm mb-1">
-                    <p>{oglas.korisnik.zupanija}, {oglas.korisnik.grad}</p>
+      <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
+        {paginatedOglasi.length === 0 ? (
+          <div className="text-center mt-10">
+            <p className="text-white text-xl mb-4">Nema oglasa u ovoj kategoriji</p>
+            <img src={astronaut} alt="Astronaut" className="mx-auto w-48 h-48" />
+          </div>
+        ) : (
+          paginatedOglasi.map(oglas => (
+
+            <li key={oglas.id} className="relative bg-gray-800 rounded border border-gray-600 bg-zinc-900 overflow-hidden shadow-md flex flex-row items-start">
+              {oglas.slike.length > 0 && (
+                <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block"> <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-48 object-cover" />            </Link>
+              )}
+              <div className="flex flex-col justify-between p-4 flex-grow">
+                <div>
+                  <p className="w-full text-white bg-gray-800 font-sm px-2 py-1 text-center">{oglas.kategorija}</p>
+                  <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block"><h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4></Link>
+                  {oglas.korisnik && (
+                    <div className="text-gray-400 text-sm mb-1 flex items-center">
+                      <AiOutlineEnvironment className="inline-block mr-2" />
+                      <p>{oglas.korisnik.zupanija}, {oglas.korisnik.grad}</p>
+                    </div>
+                  )}
+                  <div className="text-gray-400 text-sm mb-2 flex items-center">
+                    <AiOutlineCalendar className="inline-block mr-2" />
+                    <p>{formatDatum(oglas.datum)}</p>
                   </div>
-                )}
-                <p className="text-gray-400 text-sm mb-2">Objavljen: {formatDatum(oglas.datum)}</p>
-              </div>
-              <p className="text-yellow-500 text-lg font-bold">{oglas.cijena} €</p>
-              {user && (
+                </div>
+                <p className="text-yellow-500 text-lg font-bold flex items-center">
+                  <AiOutlineEuroCircle className="inline-block mr-2" />
+                  {oglas.cijena} €
+                </p>
+
                 <button
                   onClick={() => toggleFavorite(oglas.id, oglas.favorited)}
                   className="text-gray-400 hover:text-red-500 focus:outline-none"
                 >
                   {oglas.favorited ? <FaHeart /> : <FaRegHeart />}
                 </button>
-              )}
-            </div>
-          </li>
-        ))}
+
+              </div>
+            </li>
+
+          ))
+        )}
       </ul>
     </div>
   );

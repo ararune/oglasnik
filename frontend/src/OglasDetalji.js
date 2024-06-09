@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { AiOutlineUser, AiOutlineEnvironment, AiOutlinePhone, AiOutlineMail } from 'react-icons/ai';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import useAuth from './useAuth';
 
 function OglasDetalji() {
     const { sifra } = useParams();
     const [oglas, setOglas] = useState(null);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [hijerarhija, setHijerarhija] = useState([]);
+    const [isFavorited, setIsFavorited] = useState(false);
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch(`http://localhost:8000/oglas/${sifra}/`)
             .then(response => response.json())
             .then(data => {
                 setOglas(data);
-                setHijerarhija(data.hijerarhija); // Set hijerarhija from the response
+                setHijerarhija(data.hijerarhija);
+                setIsFavorited(data.favorited); // Set the favorite status from the response
             })
             .catch(error => console.error('Error fetching oglas details:', error));
     }, [sifra]);
@@ -29,6 +36,31 @@ function OglasDetalji() {
         const mjesec = String(date.getMonth() + 1).padStart(2, '0');
         const godina = date.getFullYear();
         return `${dan}/${mjesec}/${godina}`;
+    };
+
+    const toggleFavorite = () => {
+        if (!user) {
+            navigate('/prijava');
+            return;
+        }
+
+        const url = isFavorited ? 'favoriti/ukloni/' : 'favoriti/dodaj/';
+        const method = isFavorited ? 'DELETE' : 'POST';
+
+        fetch(`http://localhost:8000/${url}`, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            },
+            body: JSON.stringify({ oglas: oglas.id })
+        })
+            .then(response => {
+                if (response.ok) {
+                    setIsFavorited(!isFavorited);
+                }
+            })
+            .catch(error => console.error('Error:', error));
     };
 
     if (!oglas) {
@@ -81,14 +113,27 @@ function OglasDetalji() {
                             <p><span className="font-bold">Cijena:</span> {oglas.cijena} €</p>
                             <p><span className="font-bold">Kategorija:</span> {oglas.kategorija}</p>
                         </div>
-                        <div className="text-gray-600 dark:text-gray-300 text-sm mb-4 mb-4">
-                            <p><span className="font-bold">Korisnik:</span>  {oglas.korisnik.username}</p>
-                            <p><span className="font-bold">Županija:</span>  {oglas.korisnik.zupanija}</p>
-                            <p><span className="font-bold">Grad:</span>  {oglas.korisnik.grad}</p>
-                            <p><span className="font-bold">Telefon:</span>  {oglas.korisnik.telefon}</p>
-                            <p><span className="font-bold">Email:</span>  {oglas.korisnik.email}</p>
+                        <div className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                            <p>
+                                <span className="font-bold">
+                                    <Link to={`/korisnik/${oglas.korisnik.username}`} className="text-yellow-500 hover:underline">
+                                        <AiOutlineUser className="inline-block align-middle mr-2" />
+                                        {oglas.korisnik.username}
+                                    </Link>
+                                </span>
+                            </p>
+                            <p><span className="font-bold"><AiOutlineEnvironment className="inline-block align-middle mr-2" /></span> {oglas.korisnik.zupanija}, {oglas.korisnik.grad}</p>
+                            <p><span className="font-bold"><AiOutlinePhone className="inline-block align-middle mr-2" /></span> {oglas.korisnik.telefon}</p>
+                            <p><span className="font-bold"><AiOutlineMail className="inline-block align-middle mr-2" /></span> {oglas.korisnik.email}</p>
                         </div>
-                        <p className="font-bold text-gray-700 dark:text-gray-300">Favorited: {oglas.favorited ? 'Yes' : 'No'}</p>
+                        <div className="flex items-center mb-4">
+                            <button
+                                onClick={toggleFavorite}
+                                className="text-gray-400 hover:text-red-500 focus:outline-none"
+                            >
+                                {isFavorited ? <FaHeart /> : <FaRegHeart />}
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div className="mb-4 ml-4 mr-4">
