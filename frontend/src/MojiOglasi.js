@@ -4,26 +4,26 @@ import { Link } from 'react-router-dom';
 
 function MojiOglasi() {
     const [oglasi, setOglasi] = useState([]);
-    const [favoritedOglasi, setFavoritedOglasi] = useState([]);
+    const [favoriziraniOglasi, setFavoriziraniOglasi] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [prikaziModal, setPokaziModal] = useState(false);
     const [oglasToDelete, setOglasZaBrisanje] = useState(null);
-    const [sortOption, setSortOption] = useState('');
-    const [activeTab, setActiveTab] = useState('moji-oglasi'); // Added state for active tab
+    const [sortOpcija, setSortOpcija] = useState('');
+    const [aktivniTab, setAktivniTab] = useState('moji-oglasi');
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        const sortingOption = params.get('sort');
+        const sortiranjeOpcija = params.get('sort');
         const tabOption = params.get('tab');
-        if (sortingOption) {
-            setSortOption(sortingOption);
+        if (sortiranjeOpcija) {
+            setSortOpcija(sortiranjeOpcija);
         }
         if (tabOption) {
-            setActiveTab(tabOption); // Set active tab from URL params
+            setAktivniTab(tabOption);
         }
         dohvatiOglase();
-        dohvatiFavoritedOglase(); // Fetch favorited ads
+        dohvatiFavoriziraneOglase();
     }, []);
 
     const dohvatiOglase = async () => {
@@ -52,7 +52,7 @@ function MojiOglasi() {
         }
     };
 
-    const dohvatiFavoritedOglase = async () => {
+    const dohvatiFavoriziraneOglase = async () => {
         try {
             const accessToken = localStorage.getItem('access_token');
             const response = await fetch('http://localhost:8000/favoriti/moji_favoriti/', {
@@ -63,7 +63,7 @@ function MojiOglasi() {
             });
             if (response.ok) {
                 const data = await response.json();
-                setFavoritedOglasi(data.oglasi);
+                setFavoriziraniOglasi(data.oglasi);
             } else {
                 if (response.status === 401) {
                     setError('Korisnik nije prijavljen');
@@ -88,7 +88,7 @@ function MojiOglasi() {
                 body: JSON.stringify({ oglas: oglasId }),
             });
             if (response.ok) {
-                setFavoritedOglasi(favoritedOglasi.filter(oglas => oglas.id !== oglasId));
+                setFavoriziraniOglasi(favoriziraniOglasi.filter(oglas => oglas.id !== oglasId));
             } else {
                 console.error('Greška prilikom uklanjanja oglasa iz favorita: HTTP status', response.status);
             }
@@ -124,14 +124,14 @@ function MojiOglasi() {
         }
     };
     const handleTabChange = (tab) => {
-        setActiveTab(tab);
+        setAktivniTab(tab);
         const params = new URLSearchParams(window.location.search);
         params.set('tab', tab); 
         window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
     };
     const handleSortChange = (event) => {
         const selectedOption = event.target.value;
-        setSortOption(selectedOption);
+        setSortOpcija(selectedOption);
 
         const params = new URLSearchParams(window.location.search);
         params.set('sort', selectedOption);
@@ -139,17 +139,17 @@ function MojiOglasi() {
     };
 
     const sortOglasi = (ads, option) => {
-        let sortedOglasi = [...ads];
+        let sortiraniOglasi = [...ads];
         if (option === 'cijena-uzlazno') {
-            sortedOglasi.sort((a, b) => a.cijena - b.cijena);
+            sortiraniOglasi.sort((a, b) => a.cijena - b.cijena);
         } else if (option === 'cijena-silazno') {
-            sortedOglasi.sort((a, b) => b.cijena - a.cijena);
+            sortiraniOglasi.sort((a, b) => b.cijena - a.cijena);
         } else if (option === 'datum-najstariji') {
-            sortedOglasi.sort((a, b) => new Date(a.datum) - new Date(b.datum));
+            sortiraniOglasi.sort((a, b) => new Date(a.datum) - new Date(b.datum));
         } else if (option === 'datum-najnoviji') {
-            sortedOglasi.sort((a, b) => new Date(b.datum) - new Date(a.datum));
+            sortiraniOglasi.sort((a, b) => new Date(b.datum) - new Date(a.datum));
         }
-        return sortedOglasi;
+        return sortiraniOglasi;
     };
 
     const formatDatum = (datum) => {
@@ -168,14 +168,14 @@ function MojiOglasi() {
         return <div>Greška: {error}</div>;
     }
 
-    const sortedOglasi = sortOglasi(oglasi, sortOption);
-    const sortedFavoritedOglasi = sortOglasi(favoritedOglasi, sortOption);
+    const sortiraniOglasi = sortOglasi(oglasi, sortOpcija);
+    const sortiraniFavoriziraniOglasi = sortOglasi(favoriziraniOglasi, sortOpcija);
 
     return (
         <div className="w-full max-w-4xl mx-auto mb-32">
             <h2 className="text-white text-2xl mb-4">Moji oglasi</h2>
             <div className="flex justify-end mb-4">
-                <select id="sortCriteria" value={sortOption} onChange={handleSortChange} className="bg-gray-800 text-white rounded p-2">
+                <select id="sortCriteria" value={sortOpcija} onChange={handleSortChange} className="bg-gray-800 text-white rounded p-2">
                     <option value="">Sortiraj po</option>
                     <option value="cijena-uzlazno">Cijena uzlazno</option>
                     <option value="cijena-silazno">Cijena silazno</option>
@@ -185,20 +185,20 @@ function MojiOglasi() {
             </div>
             <div className="flex justify-center mb-6">
                 <button
-                    className={`px-4 py-2 mx-2 ${activeTab === 'moji-oglasi' ? 'text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}
+                    className={`px-4 py-2 mx-2 ${aktivniTab === 'moji-oglasi' ? 'text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}
                     onClick={() => handleTabChange('moji-oglasi')}
                 >
                     Moji oglasi
                 </button>
                 <button
-                    className={`px-4 py-2 mx-2 ${activeTab === 'favorizirani-oglasi' ? 'text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}
+                    className={`px-4 py-2 mx-2 ${aktivniTab === 'favorizirani-oglasi' ? 'text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}
                     onClick={() => handleTabChange('favorizirani-oglasi')}
                 >
                     Favoriti
                 </button>
             </div>
-            {activeTab === 'moji-oglasi' && (
-                sortedOglasi.length === 0 ? (
+            {aktivniTab === 'moji-oglasi' && (
+                sortiraniOglasi.length === 0 ? (
                     <div className="text-center mt-10">
                         <p className="text-white text-xl mb-4">Nemate nijedan oglas</p>
                         <Link
@@ -210,7 +210,7 @@ function MojiOglasi() {
                     </div>
                 ) : (
                     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                        {sortedOglasi.map(oglas => (
+                        {sortiraniOglasi.map(oglas => (
                             <li key={oglas.id} className="relative bg-gray-800 rounded border border-gray-600 bg-zinc-900 overflow-hidden shadow-md flex flex-row items-start">
                                 {oglas.slike && oglas.slike.length > 0 && (
                                     <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-48 object-cover" />
@@ -239,15 +239,15 @@ function MojiOglasi() {
                     </ul>
                 )
             )}
-            {activeTab === 'favorizirani-oglasi' && (
-                sortedFavoritedOglasi.length === 0 ? (
+            {aktivniTab === 'favorizirani-oglasi' && (
+                sortiraniFavoriziraniOglasi.length === 0 ? (
                     <div className="text-center mt-10">
                         <p className="text-white text-xl mb-4">Nemate nijedan favorizirani oglas</p>
                         <img src={astronaut} alt="Astronaut" className="mx-auto w-48 h-48" />
                     </div>
                 ) : (
                     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                        {sortedFavoritedOglasi.map(oglas => (
+                        {sortiraniFavoriziraniOglasi.map(oglas => (
                             <li key={oglas.id} className="bg-gray-800 p-4 rounded-lg shadow-md">
                                 {oglas.slike && oglas.slike.length > 0 && (
                                     <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="h-40 w-full object-cover mb-4 rounded" />

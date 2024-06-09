@@ -353,32 +353,50 @@ def oglasi_po_kategoriji(request, url):
         'children': list(children)
     })
 
+def oglas_detalji(request, sifra):
+    oglas = get_object_or_404(Oglas, sifra=sifra)
+    
+    slike = Slika.objects.filter(oglas=oglas).values_list('slika', flat=True)
+    slike_urls = [f"{settings.MEDIA_URL}{slika}" for slika in slike]
+    
+    korisnik = oglas.korisnik
+    korisnik_info = {
+        'username': korisnik.username,
+        'zupanija': korisnik.zupanija.naziv if korisnik.zupanija else None,
+        'grad': korisnik.grad.naziv if korisnik.grad else None,
+        'telefon': korisnik.telefon,
+        'email': korisnik.email
+    }
+    
+    # Check if the oglas is favorited by the user
+    if request.user.is_authenticated:
+        favorited = Favorit.objects.filter(korisnik=request.user, oglas=oglas).exists()
+    else:
+        favorited = False
+    
+    # Get the category hierarchy
+    hijerarhija = []
+    trenutna_kategorija = oglas.kategorija
+    while trenutna_kategorija:
+        hijerarhija.insert(0, {'naziv': trenutna_kategorija.naziv, 'url': trenutna_kategorija.url})
+        trenutna_kategorija = trenutna_kategorija.roditelj
+    
+    data = {
+        'id': oglas.id,
+        'naziv': oglas.naziv,
+        'opis': oglas.opis,
+        'datum': oglas.datum,
+        'sifra': oglas.sifra,
+        'cijena': oglas.cijena,
+        'kategorija': oglas.kategorija.naziv,
+        'slike': slike_urls,
+        'korisnik': korisnik_info,
+        'favorited': favorited,
+        'hijerarhija': hijerarhija  # Include the category hierarchy
+    }
+    
+    return JsonResponse(data)
 
-
-def oglas_detalji(request, kategorija_url, oglas_naziv, sifra):
-    try:
-        oglas = Oglas.objects.get(sifra=sifra)
-        slike = Slika.objects.filter(oglas=oglas).values_list('slika', flat=True)
-        slike_urls = [f"{settings.MEDIA_URL}{slika}" for slika in slike]
-        korisnik = oglas.korisnik
-        korisnik_info = {
-            'zupanija': korisnik.zupanija.naziv if korisnik.zupanija else None,
-            'grad': korisnik.grad.naziv if korisnik.grad else None,
-            'telefon': korisnik.telefon
-        }
-        oglas_details = {
-            'id': oglas.id,
-            'naziv': oglas.naziv,
-            'datum': oglas.datum,
-            'sifra': oglas.sifra,
-            'cijena': oglas.cijena,
-            'slike': slike_urls,
-            'korisnik': korisnik_info,
-            # Include other fields as needed
-        }
-        return JsonResponse(oglas_details)
-    except Oglas.DoesNotExist:
-        return JsonResponse({'error': 'Oglas not found'}, status=404)
 
 def pretraga_oglasi(request):
     query = request.GET.get('q', '')

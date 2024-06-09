@@ -45,7 +45,9 @@ urlpatterns = [
     path('favoriti/dodaj/', FavoritViewSet.as_view({'post': 'dodaj'}), name='dodaj-favorit'),
     path('favoriti/ukloni/', FavoritViewSet.as_view({'delete': 'ukloni'}), name='ukloni-favorit'),
     path('favoriti/moji_favoriti/', FavoritViewSet.as_view({'get': 'moji_favoriti'}), name='moji-favoriti'),
-    path('<str:kategorija_url>/<str:oglas_naziv>-oglas-<str:sifra>/', oglas_detalji, name='oglas_detalji'),
+    path('oglas/<str:sifra>/', oglas_detalji, name='oglas_detalji'),
+
+
     path('<str:kategorija_url>/uredi/<str:oglas_naziv>-oglas-<str:sifra>/', uredi_oglas, name='uredi_oglas'),
     path('izbrisi_oglas/<int:oglas_id>/', izbrisi_oglas, name='izbrisi_oglas'),  
 ]

@@ -15,7 +15,8 @@ import AzurirajOglas from './AzurirajOglas';
 import AzurirajKorisnika from './AzurirajKorisnika';
 import PromjenaLozinke from './PromjenaLozinke';
 import hamburgerIkona from './images/hamburger.png';
-
+import OglasDetalji
+ from './OglasDetalji';
 const PretragaForma = ({ searchQuery, handleSearchChange, handleSearchSubmit }) => {
   return (
     (
@@ -219,6 +220,10 @@ function App() {
             <Route path="/prijava" element={<Prijava setLoggedInUser={setLoggedInUser} />} />
             <Route path="/oglasi/:category" element={<Oglasi />} />
             <Route path="/pretraga" element={<Pretraga />} />
+            <Route path="/oglas/:sifra" element={<OglasDetalji />} />
+
+
+            
           </Routes>
           <footer className="rounded-lg bg-zinc-900 m-4 w-full max-w-screen">
             <div className="w-full max-w-screen-xl mx-auto p-8 md:p-10 lg:p-12">
