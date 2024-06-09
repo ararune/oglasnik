@@ -88,7 +88,20 @@ class FavoritViewSet(viewsets.ModelViewSet):
             return Response({'status': 'Oglas je uklonjen iz favorita'}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'status': 'Oglas nije pronađen u favoritima'}, status=status.HTTP_404_NOT_FOUND)
-        
+    
+    @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def moji_favoriti(self, request):
+        favoriti = Favorit.objects.filter(korisnik=request.user)
+        oglasi = [favorit.oglas for favorit in favoriti]
+        oglasi_data = OglasSerializer(oglasi, many=True).data
+
+        for oglas in oglasi_data:
+            slike = Slika.objects.filter(oglas_id=oglas['id'])
+            slike_data = SlikaSerializer(slike, many=True).data
+            oglas['slike'] = [slika['slika'] for slika in slike_data]
+
+        return Response({'oglasi': oglasi_data})
+    
 def registracija(request):
     if request.method == 'POST':
         data = json.loads(request.body)

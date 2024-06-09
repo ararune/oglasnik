@@ -203,7 +203,7 @@ const AzurirajOglas = () => {
             if (response.ok) {
                 toast.success('Oglas ažuriran!', {
                     autoClose: 2000,
-                    onClose: () => navigate('/'),
+                    onClose: () => navigate('/moji_oglasi'),
                 });
             } else {
                 const errors = await response.json();

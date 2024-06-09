@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import useAuth from './useAuth'
+import astronaut from './images/astronaut.png';
 function Oglasi() {
     const { category } = useParams();
     const [oglasi, setOglasi] = useState([]);
@@ -267,35 +268,43 @@ function Oglasi() {
 
 
             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {paginatedOglasi.map(oglas => (
-                    <li key={oglas.id} className="relative bg-gray-800 rounded border border-gray-600 bg-zinc-900 overflow-hidden shadow-md flex flex-row items-start">
-                        {oglas.slike.length > 0 && (
-                            <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-48 object-cover" />
-                        )}
-                        <div className="flex flex-col justify-between p-4 flex-grow">
-                            <div>
-                            <p className="w-full text-white bg-gray-800 font-sm px-2 py-1 text-center">{oglas.kategorija}</p>
-                                <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
-                                {oglas.korisnik && (
-                                    <div className="text-gray-400 text-sm mb-1">
-                                        <p>{oglas.korisnik.zupanija}, {oglas.korisnik.grad}</p>
-                                    </div>
-                                )}
-                                <p className="text-gray-400 text-sm mb-2">Objavljen: {formatDatum(oglas.datum)}</p>
+    {paginatedOglasi.length === 0 ? (
+        <div className="text-center mt-10">
+            <p className="text-white text-xl mb-4">Nema oglasa u ovoj kategoriji</p>
+            <img src={astronaut} alt="Astronaut" className="mx-auto w-48 h-48" />
+        </div>
+    ) : (
+        paginatedOglasi.map(oglas => (
+            <li key={oglas.id} className="relative bg-gray-800 rounded border border-gray-600 bg-zinc-900 overflow-hidden shadow-md flex flex-row items-start">
+                {oglas.slike.length > 0 && (
+                    <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-48 object-cover" />
+                )}
+                <div className="flex flex-col justify-between p-4 flex-grow">
+                    <div>
+                        <p className="w-full text-white bg-gray-800 font-sm px-2 py-1 text-center">{oglas.kategorija}</p>
+                        <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
+                        {oglas.korisnik && (
+                            <div className="text-gray-400 text-sm mb-1">
+                                <p>{oglas.korisnik.zupanija}, {oglas.korisnik.grad}</p>
                             </div>
-                            <p className="text-yellow-500 text-lg font-bold">{oglas.cijena} €</p>
-                            {user && (
-                            <button
-                                onClick={() => toggleFavorite(oglas.id, oglas.favorited)}
-                                className="text-gray-400 hover:text-red-500 focus:outline-none"
-                            >
-                                {oglas.favorited ? <FaHeart /> : <FaRegHeart />}
-                            </button>
                         )}
-                        </div>
-                    </li>
-                ))}
-            </ul>
+                        <p className="text-gray-400 text-sm mb-2">Objavljen: {formatDatum(oglas.datum)}</p>
+                    </div>
+                    <p className="text-yellow-500 text-lg font-bold">{oglas.cijena} €</p>
+                    {user && (
+                        <button
+                            onClick={() => toggleFavorite(oglas.id, oglas.favorited)}
+                            className="text-gray-400 hover:text-red-500 focus:outline-none"
+                        >
+                            {oglas.favorited ? <FaHeart /> : <FaRegHeart />}
+                        </button>
+                    )}
+                </div>
+            </li>
+        ))
+    )}
+</ul>
+
 
         </div>
     );

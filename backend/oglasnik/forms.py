@@ -114,6 +114,12 @@ class AzuriranjeKorisnikaForma(forms.ModelForm):
         elif self.instance.zupanija_id:
             self.fields['grad'].queryset = Grad.objects.filter(zupanija_id=self.instance.zupanija_id)
 
+    def clean_oib(self):
+        oib = self.cleaned_data['oib']
+        if Korisnik.objects.exclude(pk=self.instance.pk).filter(oib=oib).exists():
+            raise ValidationError(_('OIB već postoji.'))
+        return oib
+
 class PromjenaLozinkeForma(PasswordChangeForm):
     old_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Stara lozinka'}))
     new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Nova lozinka'}))
