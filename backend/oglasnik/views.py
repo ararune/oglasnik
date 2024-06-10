@@ -400,6 +400,10 @@ def oglas_detalji(request, sifra):
 
 def pretraga_oglasi(request):
     query = request.GET.get('q', '')
+    if 'prijedlozi' in request.GET:
+        prijedlozi = Oglas.objects.filter(naziv__icontains=query).values_list('naziv', flat=True)[:5]
+        return JsonResponse({'prijedlozi': list(prijedlozi)})
+    
     oglasi = Oglas.objects.filter(naziv__icontains=query) | Oglas.objects.filter(sifra__icontains=query)
     oglasi_sa_slikama = []
 
@@ -424,6 +428,7 @@ def pretraga_oglasi(request):
         })
 
     return JsonResponse({'oglasi': oglasi_sa_slikama})
+
 
 def dohvati_korisnika(request, username):
     try:

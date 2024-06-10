@@ -17,24 +17,7 @@ import PromjenaLozinke from './PromjenaLozinke';
 import hamburgerIkona from './images/hamburger.png';
 import OglasDetalji from './OglasDetalji';
 import Korisnik from './Korisnik';
-const PretragaForma = ({ searchQuery, handleSearchChange, handleSearchSubmit }) => {
-  return (
-    (
-      <div>
-        <form onSubmit={handleSearchSubmit} className="mb-6">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            placeholder="Traži po pojmu ili šifri"
-            className="lg:w-96 px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-rose-500"
-          />
-          <button type="submit" className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-r px-4 py-2 text-center">Traži</button>
-        </form>
-      </div>
-    )
-  );
-};
+import PretragaForma from './PretragaForma';
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
