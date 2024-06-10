@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import useAuth from './useAuth'; 
-
+import useAuth from './useAuth';
+import { FaEdit } from 'react-icons/fa';
 const AzurirajKorisnika = () => {
-    const { user} = useAuth();
+    const { user } = useAuth();
     const [formData, setFormData] = useState({
         email: '',
         first_name: '',
@@ -101,18 +101,18 @@ const AzurirajKorisnika = () => {
                 });
             } else {
                 const data = await response.json();
-                setErrors(data); 
+                setErrors(data);
             }
         } catch (error) {
             toast.error('Greška pri ažuriranju!');
             console.error('Error updating user:', error);
         }
     };
-    
+
 
     return (
-        <div className="bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
-            <ToastContainer 
+        <div className="rounded border border-gray-600 bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
+            <ToastContainer
                 position="top-right"
                 autoClose={2000}
                 hideProgressBar={false}
@@ -137,7 +137,7 @@ const AzurirajKorisnika = () => {
                             value={formData.email}
                             placeholder="Unesite e-mail..."
                             onChange={handleChange}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                             required
                         />
                         {errors.email && <p className="text-red-500">{errors.email}</p>}
@@ -150,7 +150,7 @@ const AzurirajKorisnika = () => {
                             value={formData.first_name}
                             placeholder="Unesite ime..."
                             onChange={handleChange}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                             required
                         />
                         {errors.first_name && <p className="text-red-500">{errors.first_name}</p>}
@@ -163,7 +163,7 @@ const AzurirajKorisnika = () => {
                             value={formData.last_name}
                             placeholder="Unesite prezime..."
                             onChange={handleChange}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                             required
                         />
                         {errors.last_name && <p className="text-red-500">{errors.last_name}</p>}
@@ -176,7 +176,7 @@ const AzurirajKorisnika = () => {
                             value={formData.oib}
                             placeholder="OIB sadrži 11 znamenki..."
                             onChange={handleChange}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                             required
                         />
                         {errors.oib && <p className="text-red-500">{errors.oib}</p>}
@@ -189,7 +189,7 @@ const AzurirajKorisnika = () => {
                             value={formData.telefon}
                             placeholder="Unesite broj telefona..."
                             onChange={handleChange}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                             required
                         />
                         {errors.telefon && <p className="text-red-500">{errors.telefon}</p>}
@@ -200,7 +200,7 @@ const AzurirajKorisnika = () => {
                             name="zupanija"
                             value={formData.zupanija}
                             onChange={handleZupanijaChange}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                             required
                         >
                             <option value="">Odaberi županiju</option>
@@ -218,7 +218,7 @@ const AzurirajKorisnika = () => {
                             name="grad"
                             value={formData.grad}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                             required
                         >
                             <option value="">Odaberi grad</option>
@@ -232,7 +232,10 @@ const AzurirajKorisnika = () => {
                     </div>
 
                 </div>
-                <button type="submit" className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Ažuriraj Korisnika</button>
+                <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center">
+                    <FaEdit className="mr-2" />
+                    Ažuriraj Korisnika
+                </button>
             </form>
         </div>
     );

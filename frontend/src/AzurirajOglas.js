@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import useAuth from './useAuth';
-import xSvg from './images/x-circle.svg';
+import { RiCloseCircleFill } from 'react-icons/ri';
 import { useParams } from 'react-router-dom';
-
+import { FaEdit } from 'react-icons/fa';
 const MAX_BROJ_SLIKA = 4;
 
 const AzurirajOglas = () => {
@@ -230,7 +230,7 @@ const AzurirajOglas = () => {
     
 
     return (
-        <div className="bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
+        <div className="rounded border border-gray-600 bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
             <ToastContainer />
             <h1 className="text-3xl font-bold mb-6 text-center">Ažuriraj Oglas</h1>
             <form onSubmit={slanjeForme} className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -242,7 +242,7 @@ const AzurirajOglas = () => {
                         value={podaciForme.cijena}
                         placeholder="Unesite cijenu..."
                         onChange={promjenaUnosa}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-rose-500 focus:border-rose-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required
                     />
                     {errors.cijena && <span className="text-red-500">{errors.cijena}</span>}
@@ -255,7 +255,7 @@ const AzurirajOglas = () => {
                         value={podaciForme.naziv}
                         placeholder="Unesite naziv..."
                         onChange={promjenaUnosa}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-rose-500 focus:border-rose-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required
                     />
                     {errors.naziv && <span className="text-red-500">{errors.naziv}</span>}
@@ -267,7 +267,7 @@ const AzurirajOglas = () => {
                         name="trajanje"
                         value={podaciForme.trajanje}
                         onChange={promjenaUnosa}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-rose-500 focus:border-rose-500"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                         required
                     >
                         <option value="1">1 dan</option>
@@ -281,7 +281,7 @@ const AzurirajOglas = () => {
                         name="kategorija"
                         value={podaciForme.kategorija}
                         onChange={promjenaKategorije}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-rose-500 focus:border-rose-500"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                         required
                     >
                         <option value="">Odaberi kategoriju</option>
@@ -300,7 +300,7 @@ const AzurirajOglas = () => {
                             name="podkategorija"
                             value={podaciForme.podkategorija}
                             onChange={promjenaPodkategorije}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-rose-500 focus:border-rose-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                             required
                         >
                             <option value="">Odaberi podkategoriju</option>
@@ -319,7 +319,7 @@ const AzurirajOglas = () => {
                             name="unukKategorija"
                             value={podaciForme.unukKategorija}
                             onChange={promjenaUnosa}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-rose-500 focus:border-rose-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                             required
                         >
                             <option value="">Odaberi unuk kategoriju</option>
@@ -340,7 +340,7 @@ const AzurirajOglas = () => {
                         value={podaciForme.opis}
                         placeholder="Unesite opis..."
                         onChange={promjenaUnosa}
-                        className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-rose-500 focus:border-rose-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-rose-500 dark:focus:border-rose-500"
+                        className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         rows="10"
                         required
                     ></textarea>
@@ -378,18 +378,18 @@ const AzurirajOglas = () => {
                                     className="absolute top-0 right-0 text-white p-1 rounded-full"
                                     onClick={() => removeImage(index)}
                                 >
-                                    <img
-                                        src={xSvg}
-                                        alt="X Circle Icon"
-                                        className="h-6 w-6"
-                                    />
+                                   <RiCloseCircleFill className="text-red-800 w-8 h-8" />
+
                                 </button>
                             </div>
                         ))}
                     </div>
                 </div>
                 <div className="col-span-2">
-                    <button type="submit" className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Ažuriraj</button>
+                <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center">
+                    <FaEdit className="mr-2" />
+                    Ažuriraj Oglas
+                </button>
                 </div>
             </form>
         </div>

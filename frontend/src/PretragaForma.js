@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-
+import { FiSearch } from 'react-icons/fi';
 const PretragaForma = ({ searchQuery, handleSearchChange, handleSearchSubmit }) => {
     const [prijedlozi, setPrijedlozi] = useState([]);
     const prijedloziRef = useRef(null);
@@ -43,22 +43,24 @@ const PretragaForma = ({ searchQuery, handleSearchChange, handleSearchSubmit }) 
 
     return (
         <div>
-            <form onSubmit={handleSearchSubmit} className="mb-6 mt-4 relative">
-                <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    placeholder="Traži po pojmu ili šifri"
-                    className="lg:w-96 px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-rose-500"
-                />
-                <button
-                    type="submit"
-                    className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-r px-4 py-2 text-center"
-                >
-                    Traži
-                </button>
+            <form onSubmit={handleSearchSubmit} className="mb-6 mt-4 relative sm:w-80 md:w-96">
+                <div className="flex">
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        placeholder="Traži po pojmu ili šifri"
+                        className="flex-grow px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
+                    />
+                    <button
+                        type="submit"
+                        className="flex items-center justify-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-r px-4 py-2"
+                    >
+                        <FiSearch />
+                    </button>
+                </div>
                 {prijedlozi.length > 0 && (
-                    <ul ref={prijedloziRef} className="absolute left-0 right-0 mt-2 bg-gray-800 text-white rounded-md shadow-lg z-10">
+                    <ul ref={prijedloziRef} className="absolute left-0 right-0 mt-2 rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 text-white rounded-md shadow-lg z-10">
                         {prijedlozi.map((suggestion, index) => (
                             <li
                                 key={index}
@@ -69,7 +71,6 @@ const PretragaForma = ({ searchQuery, handleSearchChange, handleSearchSubmit }) 
                             </li>
                         ))}
                     </ul>
-
                 )}
             </form>
         </div>

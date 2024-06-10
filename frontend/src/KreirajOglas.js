@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import useAuth from './useAuth';
+import { FaPlus } from 'react-icons/fa';
 const MAX_BROJ_SLIKA = 4;
 
 const KreirajOglas = () => {
@@ -196,7 +197,7 @@ const KreirajOglas = () => {
 
 
     return (
-        <div className="bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
+        <div className="rounded bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto rounded border border-gray-600">
             <ToastContainer
                 position="top-right"
                 autoClose={2000}
@@ -221,7 +222,7 @@ const KreirajOglas = () => {
                         value={podaciForme.cijena}
                         placeholder="Unesite cijenu..."
                         onChange={promjenaUnosa}
-                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                         required
                     />
                     {errors.cijena && <span className="text-red-500">{errors.cijena}</span>}
@@ -234,7 +235,7 @@ const KreirajOglas = () => {
                         value={podaciForme.naziv}
                         placeholder="Unesite naziv..."
                         onChange={promjenaUnosa}
-                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                         required
                     />
                     {errors.naziv && <span className="text-red-500">{errors.naziv}</span>}
@@ -246,7 +247,7 @@ const KreirajOglas = () => {
                         name="trajanje"
                         value={podaciForme.trajanje}
                         onChange={promjenaUnosa}
-                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                         required
                     >
                         <option value="1">1 dan</option>
@@ -260,7 +261,7 @@ const KreirajOglas = () => {
                         name="kategorija"
                         value={podaciForme.kategorija}
                         onChange={promjenaKategorije}
-                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                         required
                     >
                         <option value="">Odaberi kategoriju</option>
@@ -279,7 +280,7 @@ const KreirajOglas = () => {
                             name="podkategorija"
                             value={podaciForme.podkategorija}
                             onChange={promjenaPodkategorije}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                             required
                         >
                             <option value="">Odaberi podkategoriju</option>
@@ -298,7 +299,7 @@ const KreirajOglas = () => {
                             name="unukKategorija"
                             value={podaciForme.unukKategorija}
                             onChange={promjenaUnosa}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                             required
                         >
                             <option value="">Odaberi unuk kategoriju</option>
@@ -319,7 +320,7 @@ const KreirajOglas = () => {
                         value={podaciForme.opis}
                         placeholder="Unesite opis..."
                         onChange={promjenaUnosa}
-                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                         rows="10"
                         required
                     ></textarea>
@@ -346,7 +347,7 @@ const KreirajOglas = () => {
                                     alt={`Slika ${index + 1}`}
                                     className="w-full h-full object-cover rounded mt-2"
                                 />
-                                  <button
+                                <button
                                     type="button"
                                     className="absolute top-0 right-0 text-white px-2.5 py-1 rounded-md bg-red-500"
                                     onClick={() => removeImage(index)}
@@ -358,7 +359,10 @@ const KreirajOglas = () => {
                     </div>
                 </div>
                 <div className="col-span-2">
-                    <button type="submit" className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Kreiraj</button>
+                    <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center">
+                        <FaPlus className="mr-2" />
+                        Kreiraj Oglas
+                    </button>
                 </div>
             </form>
         </div>

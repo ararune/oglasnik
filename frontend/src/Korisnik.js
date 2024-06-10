@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { AiOutlineEnvironment, AiOutlineCalendar, AiOutlineEuroCircle } from 'react-icons/ai';
+import { AiOutlineEnvironment, AiOutlineCalendar, AiOutlineEuroCircle, AiOutlineFileSearch } from 'react-icons/ai';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import useAuth from './useAuth'
-import astronaut from './images/astronaut.png';
+
 function Korisnik() {
     const { username } = useParams();
     const [userData, setUserData] = useState(null);
@@ -120,7 +120,7 @@ function Korisnik() {
             </div>
             <h2 className="text-white text-2xl mb-4">Oglasi korisnika {userData.username}</h2>
             <div className="flex justify-end mb-4">
-                <select id="sortCriteria" value={sortOpcija} onChange={handleSortChange} className="px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-rose-500">
+                <select id="sortCriteria" value={sortOpcija} onChange={handleSortChange} className="px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500">
                     <option value="">Sortiraj po</option>
                     <option value="cijena-uzlazno">Cijena uzlazno</option>
                     <option value="cijena-silazno">Cijena silazno</option>
@@ -132,7 +132,7 @@ function Korisnik() {
                 {oglasi.length === 0 ? (
                     <div className="text-center mt-10">
                         <p className="text-white text-xl mb-4">Ovaj korisnik nema oglasa</p>
-                        <img src={astronaut} alt="Astronaut" className="mx-auto w-48 h-48" />
+                        <AiOutlineFileSearch className="mx-auto w-48 h-48 text-gray-400" />
                     </div>
                 ) : (
                     sortiraniOglasi.map(oglas => (

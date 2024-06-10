@@ -2,8 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import useAuth from './useAuth'
-import astronaut from './images/astronaut.png';
-import { AiOutlineCalendar, AiOutlineEnvironment, AiOutlineEuroCircle } from 'react-icons/ai';
+import { AiOutlineCalendar, AiOutlineEnvironment, AiOutlineEuroCircle, AiOutlineFileSearch } from 'react-icons/ai';
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -163,7 +162,7 @@ function Pretraga() {
           {/* Sort Opcije */}
           <div>
             <label className="block mb-1">Sortiraj po:</label>
-            <select value={sortOption} onChange={handleSortChange} className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-rose-500">
+            <select value={sortOption} onChange={handleSortChange} className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500">
               <option value="">Odaberi opciju</option>
               <option value="cijena-uzlazno">Cijena uzlazno</option>
               <option value="cijena-silazno">Cijena silazno</option>
@@ -185,7 +184,7 @@ function Pretraga() {
                 onChange={handleMinCijenaChange}
                 inputMode="numeric"
                 pattern="[0-9]*"
-                className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-rose-500"
+                className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
               />
               <p>do</p>
               <input
@@ -195,7 +194,7 @@ function Pretraga() {
                 onChange={handleMaxCijenaChange}
                 inputMode="numeric"
                 pattern="[0-9]*"
-                className="ml-2 w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-rose-500"
+                className="ml-2 w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
               />
             </div>
           </div>
@@ -203,7 +202,7 @@ function Pretraga() {
           <div>
             <label className="block mb-1">Filter po županiji:</label>
             <div className="relative">
-              <select value="" onChange={handleZupanijaChange} className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-rose-500">
+              <select value="" onChange={handleZupanijaChange} className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500">
                 <option value="">Odaberi županiju</option>
                 {Object.entries(zupanijeCount).map(([zupanija, count], index) => (
                   <option key={index} value={zupanija}>{zupanija} ({count})</option>
@@ -215,7 +214,7 @@ function Pretraga() {
         </div>
         <div className="flex items-center pr-3 mt-4">
           {selectedZupanije.map((zupanija, index) => (
-            <div key={index} className="flex items-center mr-2 text-white text-sm bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-2.5 py-1 text-center">
+            <div key={index} className="flex items-center mr-2 text-white text-sm bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-2.5 py-1 text-center">
               <span>{zupanija}</span>
               <button
                 onClick={() => setSelectedZupanije(prev => prev.filter(z => z !== zupanija))}
@@ -259,7 +258,7 @@ function Pretraga() {
         {paginatedOglasi.length === 0 ? (
           <div className="text-center mt-10">
             <p className="text-white text-xl mb-4">Nema oglasa u ovoj kategoriji</p>
-            <img src={astronaut} alt="Astronaut" className="mx-auto w-48 h-48" />
+            <AiOutlineFileSearch className="mx-auto w-48 h-48 text-gray-400" />
           </div>
         ) : (
           paginatedOglasi.map(oglas => (

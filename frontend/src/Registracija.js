@@ -98,12 +98,12 @@ const Registracija = () => {
 
 
     return (
-        <div className="bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
+        <div className="rounded border border-gray-600 bg-gray-800 text-white p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
     <ToastContainer />
     <h2 className="text-3xl font-bold mb-6 text-center">Registracija</h2>
     <p>
         Već imate račun?
-        <Link to="/prijava" className="text-rose-500 hover:text-rose-700 underline"> Prijavite se ovdje</Link>.
+        <Link to="/prijava" className="text-blue-500 hover:text-blue-700 underline"> Prijavite se ovdje</Link>.
     </p>
     <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -115,7 +115,7 @@ const Registracija = () => {
                     value={formData.username}
                     placeholder="Unesite korisničko ime..."
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                     required
                 />
                 {errors.username && <p className="text-red-500">{errors.username}</p>}
@@ -128,7 +128,7 @@ const Registracija = () => {
                     value={formData.email}
                     placeholder="Unesite e-mail..."
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                     required
                 />
                 {errors.email && <p className="text-red-500">{errors.email}</p>}
@@ -141,7 +141,7 @@ const Registracija = () => {
                     value={formData.password1}
                     placeholder="Dozvoljeni znakovi: @/./+/-/_"
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                     required
                 />
                 {errors.password1 && <p className="text-red-500">{errors.password1}</p>}
@@ -154,7 +154,7 @@ const Registracija = () => {
                     value={formData.password2}
                     placeholder="Ponovite lozinku..."
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                     required
                 />
                 {errors.password2 && <p className="text-red-500">{errors.password2}</p>}
@@ -167,7 +167,7 @@ const Registracija = () => {
                     value={formData.first_name}
                     placeholder="Unesite ime..."
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                     required
                 />
                 {errors.first_name && <p className="text-red-500">{errors.first_name}</p>}
@@ -180,7 +180,7 @@ const Registracija = () => {
                     value={formData.last_name}
                     placeholder="Unesite prezime..."
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                     required
                 />
                 {errors.last_name && <p className="text-red-500">{errors.last_name}</p>}
@@ -193,7 +193,7 @@ const Registracija = () => {
                     value={formData.oib}
                     placeholder="OIB sadrži 11 znamenki..."
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                     required
                 />
                 {errors.oib && <p className="text-red-500">{errors.oib}</p>}
@@ -206,7 +206,7 @@ const Registracija = () => {
                     value={formData.telefon}
                     placeholder="Unesite broj telefona..."
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                     required
                 />
                 {errors.telefon && <p className="text-red-500">{errors.telefon}</p>}
@@ -217,7 +217,7 @@ const Registracija = () => {
                     name="zupanija"
                     value={formData.zupanija}
                     onChange={handleZupanijaChange}
-                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                     required
                 >
                     <option value="">Odaberi županiju</option>
@@ -235,7 +235,7 @@ const Registracija = () => {
                     name="grad"
                     value={formData.grad}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                     required
                 >
                     <option value="">Odaberi grad</option>
@@ -248,7 +248,7 @@ const Registracija = () => {
                 {errors.grad && <p className="text-red-500">{errors.grad}</p>}
             </div>
         </div>
-        <button type="submit" className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Registriraj se</button>
+        <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Registriraj se</button>
     </form>
 </div>
 

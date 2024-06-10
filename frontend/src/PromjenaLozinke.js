@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import eyeOnIcon from './images/eye-on.svg';
-import eyeOffIcon from './images/eye-off.svg';
-
+import { RiEyeFill, RiEyeOffFill } from 'react-icons/ri';
 const PromjenaLozinke = () => {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword1, setNewPassword1] = useState('');
@@ -70,8 +68,8 @@ const PromjenaLozinke = () => {
     };
 
     return (
-        <div className="bg-gray-800 p-6 rounded shadow-md max-w-md w-full mb-32 mx-auto">
-            <ToastContainer 
+        <div className="rounded border border-gray-600 bg-gray-800 p-6 rounded shadow-md max-w-md w-full mb-32 mx-auto">
+            <ToastContainer
                 position="top-right"
                 autoClose={2000}
                 hideProgressBar={false}
@@ -94,7 +92,7 @@ const PromjenaLozinke = () => {
                             type={showOldPassword ? "text" : "password"}
                             value={oldPassword}
                             onChange={(e) => setOldPassword(e.target.value)}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                             required
                         />
                         <button
@@ -102,7 +100,7 @@ const PromjenaLozinke = () => {
                             onClick={() => setShowOldPassword(!showOldPassword)}
                             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600 dark:text-gray-400"
                         >
-                            <img src={showOldPassword ? eyeOffIcon : eyeOnIcon} alt="toggle password visibility" className="w-5 h-5" />
+                            {showOldPassword ? <RiEyeOffFill /> : <RiEyeFill />}
                         </button>
                     </div>
                     {errors.old_password && <p className="text-red-500">{errors.old_password}</p>}
@@ -114,7 +112,7 @@ const PromjenaLozinke = () => {
                             type={showNewPassword1 ? "text" : "password"}
                             value={newPassword1}
                             onChange={(e) => setNewPassword1(e.target.value)}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                             required
                         />
                         <button
@@ -122,7 +120,7 @@ const PromjenaLozinke = () => {
                             onClick={() => setShowNewPassword1(!showNewPassword1)}
                             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600 dark:text-gray-400"
                         >
-                            <img src={showNewPassword1 ? eyeOffIcon : eyeOnIcon} alt="toggle password visibility" className="w-5 h-5" />
+                            {showNewPassword1 ? <RiEyeOffFill /> : <RiEyeFill />}
                         </button>
                     </div>
                     {errors.new_password1 && <p className="text-red-500">{errors.new_password1}</p>}
@@ -134,7 +132,7 @@ const PromjenaLozinke = () => {
                             type={showNewPassword2 ? "text" : "password"}
                             value={newPassword2}
                             onChange={(e) => setNewPassword2(e.target.value)}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-rose-500"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                             required
                         />
                         <button
@@ -142,12 +140,12 @@ const PromjenaLozinke = () => {
                             onClick={() => setShowNewPassword2(!showNewPassword2)}
                             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600 dark:text-gray-400"
                         >
-                            <img src={showNewPassword2 ? eyeOffIcon : eyeOnIcon} alt="toggle password visibility" className="w-5 h-5" />
+                            {showNewPassword2 ? <RiEyeOffFill /> : <RiEyeFill />}
                         </button>
                     </div>
                     {errors.new_password2 && <p className="text-red-500">{errors.new_password2}</p>}
                 </div>
-                <button type="submit" className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Promijeni Lozinku</button>
+                <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Promijeni Lozinku</button>
             </form>
         </div>
     );

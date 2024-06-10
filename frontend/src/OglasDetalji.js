@@ -69,13 +69,13 @@ function OglasDetalji() {
 
     return (
         <div className="max-w-screen-xl mx-auto p-4">
-            <nav className="lg:w-2/3 px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white font-bold">
+            <nav className="lg:w-2/3 px-4 py-2 rounded border border-gray-600 bg-gray-800 p-6 p-6 text-white font-bold">
                 <Link to="/" className="text-white text-sm hover:underline">Oglasnik</Link>
                 {hijerarhija.map((kat, index) => (
                     <span key={index} className="mx-1"> {'>'} <Link to={`/oglasi/${kat.url}`} className="text-white text-sm hover:underline">{kat.naziv}</Link></span>
                 ))}
             </nav>
-            <div className="mt-4 bg-gray-800 shadow-md rounded-lg overflow-hidden">
+            <div className="mt-4 rounded border border-gray-600 bg-gray-800 p-6 overflow-hidden">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 ml-4 mb-4">
                     <div>
                         <div className="max-w-lg mx-auto bg-zinc-900 py-2 px-2">
