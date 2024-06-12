@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { AiOutlineEnvironment, AiOutlineCalendar, AiOutlineEuroCircle, AiOutlineFileSearch } from 'react-icons/ai';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import useAuth from './useAuth'
-
+import { AiOutlineMail, AiOutlinePhone, AiOutlineIdcard, AiOutlineUser } from 'react-icons/ai';
 function Korisnik() {
     const { username } = useParams();
     const [userData, setUserData] = useState(null);
@@ -110,15 +110,41 @@ function Korisnik() {
     const sortiraniOglasi = sortOglasi(oglasi, sortOpcija);
     return (
         <div className="container mx-auto p-4">
-            <div className="max-w-lg mx-auto bg-gray-800 rounded-lg overflow-hidden shadow-lg mb-4">
-                <div className="p-4">
-                    <h2 className="text-white text-2xl font-bold mb-4">{userData.username}</h2>
-                    <p className="text-gray-400">Email: {userData.email}</p>
-                    <p className="text-gray-400">OIB: {userData.oib}</p>
-                    <p className="text-gray-400">Lokacija: {userData.zupanija_naziv}, {userData.grad_naziv}</p>
+            <div className="max-w-lg mx-auto bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-6">
+                <div className="p-6">
+                    <div className="flex items-center mb-4">
+                        <AiOutlineUser className="w-16 h-16 text-gray-400 rounded-full mr-4" />
+                        <h2 className="text-white text-3xl font-bold">{userData.username}</h2>
+                    </div>
+                    <div className="space-y-2">
+                        <div className="text-gray-400 flex items-center">
+                            <AiOutlineIdcard className="mr-2 text-xl" />
+                            <span><strong>Ime i prezime:</strong> {userData.first_name} {userData.last_name}</span>
+                        </div>
+                        <div className="text-gray-400 flex items-center">
+                            <AiOutlineMail className="mr-2 text-xl" />
+                            <span><strong>Email:</strong> {userData.email}</span>
+                        </div>
+                        <div className="text-gray-400 flex items-center">
+                            <AiOutlinePhone className="mr-2 text-xl" />
+                            <span><strong>Telefon:</strong> {userData.telefon}</span>
+                        </div>
+                        <div className="text-gray-400 flex items-center">
+                            <AiOutlineIdcard className="mr-2 text-xl" />
+                            <span><strong>OIB:</strong> {userData.oib}</span>
+                        </div>
+                        <div className="text-gray-400 flex items-center">
+                            <AiOutlineEnvironment className="mr-2 text-xl" />
+                            <span><strong>Lokacija:</strong> {userData.zupanija_naziv}, {userData.grad_naziv}</span>
+                        </div>
+                        <div className="text-gray-400 flex items-center">
+                            <AiOutlineCalendar className="mr-2 text-xl" />
+                            <span><strong>Datum pridruživanja:</strong> {userData.date_joined}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <h2 className="text-white text-2xl mb-4">Oglasi korisnika {userData.username}</h2>
+            <h2 className="text-white text-3xl font-bold mb-4">Oglasi korisnika {userData.username}</h2>
             <div className="flex justify-end mb-4">
                 <select id="sortCriteria" value={sortOpcija} onChange={handleSortChange} className="px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500">
                     <option value="">Sortiraj po</option>

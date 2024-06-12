@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { AiOutlineUser, AiOutlineEnvironment, AiOutlinePhone, AiOutlineMail } from 'react-icons/ai';
+import { AiOutlineUser, AiOutlineEnvironment, AiOutlinePhone, AiOutlineMail, AiOutlineEye } from 'react-icons/ai';
+import { AiOutlineBarcode, AiOutlineCalendar, AiOutlineEuroCircle, AiOutlineTags } from 'react-icons/ai';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import useAuth from './useAuth';
+import { FaHome, FaChevronRight } from 'react-icons/fa';
 
 function OglasDetalji() {
     const { sifra } = useParams();
@@ -13,6 +15,7 @@ function OglasDetalji() {
     const [hijerarhija, setHijerarhija] = useState([]);
     const [isFavorited, setIsFavorited] = useState(false);
     const { user } = useAuth();
+    const [uniqueViewsCount, setUniqueViewsCount] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -21,7 +24,8 @@ function OglasDetalji() {
             .then(data => {
                 setOglas(data);
                 setHijerarhija(data.hijerarhija);
-                setIsFavorited(data.favorited); // Set the favorite status from the response
+                setIsFavorited(data.favorited);
+                setUniqueViewsCount(data.unique_views_count);
             })
             .catch(error => console.error('Error fetching oglas details:', error));
     }, [sifra]);
@@ -69,10 +73,17 @@ function OglasDetalji() {
 
     return (
         <div className="max-w-screen-xl mx-auto p-4">
-            <nav className="lg:w-2/3 px-4 py-2 rounded border border-gray-600 bg-gray-800 p-6 p-6 text-white font-bold">
-                <Link to="/" className="text-white text-sm hover:underline">Oglasnik</Link>
+            <nav className="px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white font-bold flex items-center flex-wrap">
+                <Link to="/" className="flex items-center text-white text-sm hover:underline mr-2">
+                    <FaHome className="mr-1" /> Oglasnik
+                </Link>
                 {hijerarhija.map((kat, index) => (
-                    <span key={index} className="mx-1"> {'>'} <Link to={`/oglasi/${kat.url}`} className="text-white text-sm hover:underline">{kat.naziv}</Link></span>
+                    <React.Fragment key={index}>
+                        <FaChevronRight className="mx-2" />
+                        <Link to={`/oglasi/${kat.url}`} className="text-white text-sm hover:underline">
+                            {kat.naziv}
+                        </Link>
+                    </React.Fragment>
                 ))}
             </nav>
             <div className="mt-4 rounded border border-gray-600 bg-gray-800 p-6 overflow-hidden">
@@ -98,7 +109,7 @@ function OglasDetalji() {
                                     key={index}
                                     src={slika}
                                     alt={`Slika ${index + 1}`}
-                                    className={`thumbnail cursor-pointer ${index === selectedImageIndex ? 'border-2 border-blue-500' : ''}`}
+                                    className={`thumbnail cursor-pointer mr-2 ${index === selectedImageIndex ? 'border-2 border-blue-500' : ''}`}
                                     onClick={() => handleThumbnailClick(index)}
                                     style={{ width: '50px', height: '50px' }} // Adjust the width and height as needed
                                 />
@@ -107,24 +118,25 @@ function OglasDetalji() {
                     </div>
                     <div className="md:flex-1 px-4">
                         <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">{oglas.naziv}</h2>
-                        <div className="text-gray-600 dark:text-gray-300 text-sm mb-4">
-                            <p><span className="font-bold">Šifra:</span> {oglas.sifra}</p>
-                            <p><span className="font-bold">Datum:</span> {formatDatum(oglas.datum)}</p>
-                            <p><span className="font-bold">Cijena:</span> {oglas.cijena} €</p>
-                            <p><span className="font-bold">Kategorija:</span> {oglas.kategorija}</p>
+                        <div className="text-gray-600 dark:text-gray-300 text-md mb-4">
+                            <p><AiOutlineBarcode className="inline-block mr-2 text-xl" /><span className="font-bold">Šifra:</span> {oglas.sifra}</p>
+                            <p><AiOutlineCalendar className="inline-block mr-2 text-xl" /><span className="font-bold">Datum:</span> {formatDatum(oglas.datum)}</p>
+                            <p><AiOutlineEuroCircle className="inline-block mr-2 text-xl" /><span className="font-bold">Cijena:</span> {oglas.cijena} €</p>
+                            <p><AiOutlineTags className="inline-block mr-2 text-xl" /><span className="font-bold">Kategorija:</span> {oglas.kategorija}</p>
+                            <p> <AiOutlineEye className="inline-block mr-2 text-xl" /><span className="font-bold">Broj pregleda:</span> {uniqueViewsCount}</p>
                         </div>
-                        <div className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                        <div className="text-gray-600 dark:text-gray-300 text-md mb-4">
                             <p>
                                 <span className="font-bold">
-                                    <Link to={`/korisnik/${oglas.korisnik.username}`} className="text-yellow-500 hover:underline">
-                                        <AiOutlineUser className="inline-block align-middle mr-2" />
+                                    <Link to={`/korisnik/${oglas.korisnik.username}`} className="text-blue-500 hover:underline">
+                                        <AiOutlineUser className="inline-block align-middle mr-2 text-xl" />
                                         {oglas.korisnik.username}
                                     </Link>
                                 </span>
                             </p>
-                            <p><span className="font-bold"><AiOutlineEnvironment className="inline-block align-middle mr-2" /></span> {oglas.korisnik.zupanija}, {oglas.korisnik.grad}</p>
-                            <p><span className="font-bold"><AiOutlinePhone className="inline-block align-middle mr-2" /></span> {oglas.korisnik.telefon}</p>
-                            <p><span className="font-bold"><AiOutlineMail className="inline-block align-middle mr-2" /></span> {oglas.korisnik.email}</p>
+                            <p><span className="font-bold"><AiOutlineEnvironment className="inline-block align-middle mr-2 text-xl" /></span> {oglas.korisnik.zupanija}, {oglas.korisnik.grad}</p>
+                            <p><span className="font-bold"><AiOutlinePhone className="inline-block align-middle mr-2 text-xl" /></span> {oglas.korisnik.telefon}</p>
+                            <p><span className="font-bold"><AiOutlineMail className="inline-block align-middle mr-2 text-xl" /></span> {oglas.korisnik.email}</p>
                         </div>
                         <div className="flex items-center mb-4">
                             <button

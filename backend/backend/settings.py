@@ -121,6 +121,10 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:8000',
+    'http://192.168.5.23:8000',
+    'http://192.168.5.23:3000'
+    
+  
 ]
 
 CORS_ALLOW_HEADERS = [
@@ -135,6 +139,8 @@ CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:8000',
+    'http://192.168.5.23:8000',
+    'http://192.168.5.23:3000'
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

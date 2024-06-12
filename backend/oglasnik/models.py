@@ -82,6 +82,13 @@ class Oglas(models.Model):
     def __str__(self):
         return self.naziv
 
+class Pregled(models.Model):
+    oglas = models.ForeignKey(Oglas, on_delete=models.CASCADE)
+    ip_address = models.GenericIPAddressField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('oglas', 'ip_address')
 class Slika(models.Model):
     oglas = models.ForeignKey(Oglas, on_delete=models.CASCADE, related_name='slike')
     slika = models.ImageField(upload_to='slike/')

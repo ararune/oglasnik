@@ -4,6 +4,8 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import useAuth from './useAuth'
 import { AiOutlineCalendar, AiOutlineEnvironment, AiOutlineEuroCircle } from 'react-icons/ai';
 import { AiOutlineFileSearch } from 'react-icons/ai';
+import { FaHome, FaChevronRight } from 'react-icons/fa';
+
 function Oglasi() {
     const { category } = useParams();
     const [oglasi, setOglasi] = useState([]);
@@ -156,10 +158,17 @@ function Oglasi() {
 
     return (
         <div className="container mx-auto p-4">
-            <nav className="lg:w-1/3 px-4 py-2 rounded border border-gray-600 bg-gray-800 p-6 text-white font-bold">
-                <Link to="/" className="text-white text-sm hover:underline">Oglasnik</Link>
+            <nav className="lg:w-1/3 px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white font-bold flex items-center flex-wrap">
+                <Link to="/" className="flex items-center text-white text-sm hover:underline mr-2">
+                    <FaHome className="mr-1" /> Oglasnik
+                </Link>
                 {hijerarhija.map((kat, index) => (
-                    <span key={index} className="mx-1"> {'>'} <Link to={`/oglasi/${kat.url}`} className="text-white text-sm hover:underline">{kat.naziv}</Link></span>
+                    <React.Fragment key={index}>
+                        <FaChevronRight className="mx-2" />
+                        <Link to={`/oglasi/${kat.url}`} className="text-white text-sm hover:underline">
+                            {kat.naziv}
+                        </Link>
+                    </React.Fragment>
                 ))}
             </nav>
 
@@ -287,7 +296,7 @@ function Oglasi() {
                             )}
                             <div className="flex flex-col justify-between p-4 flex-grow">
                                 <div>
-                                    <p className="w-full text-white bg-gray-800 font-sm px-2 py-1 text-center">{oglas.kategorija}</p>
+                                    <p className="inline-flex items-center bg-blue-600 text-white font-semibold py-2 px-4 rounded">{oglas.kategorija}</p>
                                     <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block">
                                         <h4 className="text-white text-xl font-bold mb-2 white-space: nowrap;">{oglas.naziv}</h4>
                                     </Link>

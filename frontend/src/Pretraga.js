@@ -269,7 +269,7 @@ function Pretraga() {
               )}
               <div className="flex flex-col justify-between p-4 flex-grow">
                 <div>
-                  <p className="w-full text-white bg-gray-800 font-sm px-2 py-1 text-center">{oglas.kategorija}</p>
+                <p className="inline-flex items-center bg-blue-600 text-white font-semibold py-2 px-4 rounded">{oglas.kategorija}</p>
                   <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block"><h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4></Link>
                   {oglas.korisnik && (
                     <div className="text-gray-400 text-sm mb-1 flex items-center">

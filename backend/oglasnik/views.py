@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions
-from .models import Zupanija, Grad, Korisnik, Kategorija, Oglas, Slika, Favorit
+from .models import Zupanija, Grad, Korisnik, Kategorija, Oglas, Slika, Favorit, Pregled
 from .serializers import ZupanijaSerializer, GradSerializer, KorisnikSerializer, KategorijaSerializer, OglasSerializer, SlikaSerializer, FavoritSerializer
 from .forms import FormaZaRegistraciju, FormaZaIzraduOglasa, SlikaForma, AzuriranjeKorisnikaForma, PromjenaLozinkeForma
 from django.shortcuts import render, redirect, get_object_or_404
@@ -23,7 +23,7 @@ from rest_framework import status
 from django.conf import settings
 from django.contrib.auth import update_session_auth_hash
 from rest_framework.decorators import action
-
+from django.utils import timezone
 class ZupanijaViewSet(viewsets.ModelViewSet):
     queryset = Zupanija.objects.all()
     serializer_class = ZupanijaSerializer
@@ -320,9 +320,9 @@ def oglasi_po_kategoriji(request, url):
             'grad': korisnik.grad.naziv if korisnik.grad else None,
             'telefon': korisnik.telefon
         }
-        # Check if the oglas is favorited by the user
+        
         if request.user.is_authenticated:
-            # Check if the oglas is favorited by the user
+           
             favorited = Favorit.objects.filter(korisnik=request.user, oglas=oglas).exists()
         else:
             favorited = False
@@ -335,7 +335,7 @@ def oglasi_po_kategoriji(request, url):
             'kategorija': oglas.kategorija.naziv,
             'slike': slike_urls,
             'korisnik': korisnik_info,
-            'favorited': favorited  # Include the favorited status for the oglas
+            'favorited': favorited 
         })
 
     hijerarhija = []
@@ -368,13 +368,20 @@ def oglas_detalji(request, sifra):
         'email': korisnik.email
     }
     
-    # Check if the oglas is favorited by the user
+    
     if request.user.is_authenticated:
         favorited = Favorit.objects.filter(korisnik=request.user, oglas=oglas).exists()
     else:
         favorited = False
     
-    # Get the category hierarchy
+    ip_address = request.META.get('REMOTE_ADDR')
+    if Pregled.objects.filter(oglas=oglas, ip_address=ip_address).exists():
+        pass
+    else:
+        Pregled.objects.create(oglas=oglas, ip_address=ip_address)
+    
+    unique_views_count = Pregled.objects.filter(oglas=oglas).values('ip_address').distinct().count()
+    
     hijerarhija = []
     trenutna_kategorija = oglas.kategorija
     while trenutna_kategorija:
@@ -392,7 +399,8 @@ def oglas_detalji(request, sifra):
         'slike': slike_urls,
         'korisnik': korisnik_info,
         'favorited': favorited,
-        'hijerarhija': hijerarhija  # Include the category hierarchy
+        'hijerarhija': hijerarhija,
+        'unique_views_count': unique_views_count,
     }
     
     return JsonResponse(data)
