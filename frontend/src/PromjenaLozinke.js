@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { RiEyeFill, RiEyeOffFill } from 'react-icons/ri';
+
 const PromjenaLozinke = () => {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword1, setNewPassword1] = useState('');
@@ -30,6 +31,12 @@ const PromjenaLozinke = () => {
         return valid;
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        window.location.href = '/prijava'
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -54,8 +61,9 @@ const PromjenaLozinke = () => {
             const data = await response.json();
 
             if (response.ok) {
-                toast.success('Lozinka je promijenjena!', {
-                    onClose: () => navigate('/profil')
+                handleLogout();
+                toast.success('Lozinka je promijenjena, prijavite se ponovno.', {
+                    onClose: () => navigate('/prijava')
                 });
             } else {
                 toast.error('Došlo je do pogreške. Molimo pokušajte ponovo.');

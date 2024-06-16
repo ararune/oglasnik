@@ -24,6 +24,7 @@ from django.conf import settings
 from django.contrib.auth import update_session_auth_hash
 from rest_framework.decorators import action
 from django.utils import timezone
+from datetime import timedelta
 class ZupanijaViewSet(viewsets.ModelViewSet):
     queryset = Zupanija.objects.all()
     serializer_class = ZupanijaSerializer
@@ -267,7 +268,6 @@ def uredi_oglas(request, kategorija_url, oglas_naziv, sifra):
     if request.method == 'POST':
         form = FormaZaIzraduOglasa(request.POST, request.FILES, instance=oglas)
         if form.is_valid():
-            # Handle image deletion
             if 'delete_slike' in request.POST:
                 slike_to_delete_ids = request.POST.getlist('delete_slike')
                 oglas.slike.filter(id__in=slike_to_delete_ids).delete()
@@ -368,19 +368,21 @@ def oglas_detalji(request, sifra):
         'email': korisnik.email
     }
     
-    
     if request.user.is_authenticated:
         favorited = Favorit.objects.filter(korisnik=request.user, oglas=oglas).exists()
     else:
         favorited = False
     
     ip_address = request.META.get('REMOTE_ADDR')
-    if Pregled.objects.filter(oglas=oglas, ip_address=ip_address).exists():
-        pass
-    else:
+    
+    # Calculate 24 hours ago from now
+    now = timezone.now()
+    twenty_four_hours_ago = now - timedelta(hours=24)
+    
+    if not Pregled.objects.filter(oglas=oglas, ip_address=ip_address, timestamp__gte=twenty_four_hours_ago).exists():
         Pregled.objects.create(oglas=oglas, ip_address=ip_address)
     
-    unique_views_count = Pregled.objects.filter(oglas=oglas).values('ip_address').distinct().count()
+    broj_pregleda = Pregled.objects.filter(oglas=oglas).count()
     
     hijerarhija = []
     trenutna_kategorija = oglas.kategorija
@@ -400,7 +402,7 @@ def oglas_detalji(request, sifra):
         'korisnik': korisnik_info,
         'favorited': favorited,
         'hijerarhija': hijerarhija,
-        'unique_views_count': unique_views_count,
+        'broj_pregleda': broj_pregleda,
     }
     
     return JsonResponse(data)

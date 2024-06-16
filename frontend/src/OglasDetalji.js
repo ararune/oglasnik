@@ -15,7 +15,7 @@ function OglasDetalji() {
     const [hijerarhija, setHijerarhija] = useState([]);
     const [isFavorited, setIsFavorited] = useState(false);
     const { user } = useAuth();
-    const [uniqueViewsCount, setUniqueViewsCount] = useState(0);
+    const [brojPregleda, setBrojPregleda] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,7 +25,7 @@ function OglasDetalji() {
                 setOglas(data);
                 setHijerarhija(data.hijerarhija);
                 setIsFavorited(data.favorited);
-                setUniqueViewsCount(data.unique_views_count);
+                setBrojPregleda(data.broj_pregleda);
             })
             .catch(error => console.error('Error fetching oglas details:', error));
     }, [sifra]);
@@ -123,7 +123,7 @@ function OglasDetalji() {
                             <p><AiOutlineCalendar className="inline-block mr-2 text-xl" /><span className="font-bold">Datum:</span> {formatDatum(oglas.datum)}</p>
                             <p><AiOutlineEuroCircle className="inline-block mr-2 text-xl" /><span className="font-bold">Cijena:</span> {oglas.cijena} €</p>
                             <p><AiOutlineTags className="inline-block mr-2 text-xl" /><span className="font-bold">Kategorija:</span> {oglas.kategorija}</p>
-                            <p> <AiOutlineEye className="inline-block mr-2 text-xl" /><span className="font-bold">Broj pregleda:</span> {uniqueViewsCount}</p>
+                            <p> <AiOutlineEye className="inline-block mr-2 text-xl" /><span className="font-bold">Broj pregleda:</span> {brojPregleda}</p>
                         </div>
                         <div className="text-gray-600 dark:text-gray-300 text-md mb-4">
                             <p>

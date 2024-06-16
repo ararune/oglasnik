@@ -19,12 +19,33 @@ import OglasDetalji from './OglasDetalji';
 import Korisnik from './Korisnik';
 import PretragaForma from './PretragaForma';
 import { FaUserPlus, FaSignInAlt, FaUser, FaPlus, FaListAlt, FaSignOutAlt } from 'react-icons/fa';
+import { v4 as uuidv4 } from 'uuid';
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [csrfToken, setCsrfToken] = useState('');
 
+  
+  useEffect(() => {
+    const csrfTokenCookie = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('csrftoken='))
+      ?.split('=')[1];
+
+    if (!csrfTokenCookie) {
+      const newCsrfToken = generateCsrfToken();
+      document.cookie = `csrftoken=${newCsrfToken}; path=/`;
+      setCsrfToken(newCsrfToken);
+    } else {
+      setCsrfToken(csrfTokenCookie);
+    }
+  }, []);
+
+  const generateCsrfToken = () => {
+    return uuidv4();
+  };
   useEffect(() => {
     fetchUser();
     const handleResize = () => {
