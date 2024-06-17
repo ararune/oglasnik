@@ -185,13 +185,13 @@ function MojiOglasi() {
             </div>
             <div className="flex justify-center mb-6">
                 <button
-                    className={`px-4 py-2 mx-2 ${aktivniTab === 'moji-oglasi' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}
+                    className={`px-4 py-2 mx-2 ${aktivniTab === 'moji-oglasi' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}
                     onClick={() => handleTabChange('moji-oglasi')}
                 >
                     Moji oglasi
                 </button>
                 <button
-                    className={`px-4 py-2 mx-2 ${aktivniTab === 'favorizirani-oglasi' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}
+                    className={`px-4 py-2 mx-2 ${aktivniTab === 'favorizirani-oglasi' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}
                     onClick={() => handleTabChange('favorizirani-oglasi')}
                 >
                     Favoriti

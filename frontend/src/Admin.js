@@ -107,7 +107,7 @@ const Admin = () => {
                             {oglas.cijena} €
                         </p>
                         <div className="flex justify-end mt-4">
-                            <button onClick={() => potvrdiBrisanje(oglas.id)} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
+                            <button onClick={() => potvrdiBrisanje(oglas.id)} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
                                 Izbriši
                             </button>
                         </div>
@@ -122,7 +122,7 @@ const Admin = () => {
                             <button onClick={() => setShowModal(false)} className="bg-gray-300 text-gray-800 py-2 px-4 rounded mr-2">
                                 Odustani
                             </button>
-                            <button onClick={izbrisiOglas} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
+                            <button onClick={izbrisiOglas} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
                                 Izbriši
                             </button>
                         </div>
@@ -213,13 +213,13 @@ const Admin = () => {
 
             <div className="flex justify-center mb-6">
                 <button
-                    className={`px-4 py-2 mx-2 ${activeTab === 'oglasi' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-center' : 'bg-gray-800'} text-white rounded`}
+                    className={`px-4 py-2 mx-2 ${activeTab === 'oglasi' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg text-center' : 'bg-gray-800'} text-white rounded`}
                     onClick={() => setActiveTab('oglasi')}
                 >
                     Oglasi
                 </button>
                 <button
-                    className={`px-4 py-2 mx-2 ${activeTab === 'korisnici' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-center' : 'bg-gray-800'} text-white rounded`}
+                    className={`px-4 py-2 mx-2 ${activeTab === 'korisnici' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg text-center' : 'bg-gray-800'} text-white rounded`}
                     onClick={() => setActiveTab('korisnici')}
                 >
                     Korisnici
