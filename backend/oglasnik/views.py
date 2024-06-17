@@ -457,4 +457,22 @@ def dohvati_korisnika(request, username):
     except Korisnik.DoesNotExist:
         return JsonResponse({'error': 'Korisnik not found'}, status=404)
 
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def admin_view(request):
+    user = request.user
+    
+    # Ensure only admin (superuser) can access this view
+    if not user.is_superuser:
+        return JsonResponse({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # Fetch all Korisnik instances
+    korisnici = Korisnik.objects.all()
+    korisnici_serializer = KorisnikSerializer(korisnici, many=True)
+    
+    # Fetch all Oglas instances
+    oglasi = Oglas.objects.all()
+    oglasi_serializer = OglasSerializer(oglasi, many=True)
+    
+    # Return serialized data
+    return JsonResponse({'korisnici': korisnici_serializer.data, 'oglasi': oglasi_serializer.data})

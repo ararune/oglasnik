@@ -33,7 +33,7 @@ function OglasDetalji() {
     const handleThumbnailClick = (index) => {
         setSelectedImageIndex(index);
     };
-
+    
     const formatDatum = (datum) => {
         const date = new Date(datum);
         const dan = String(date.getDate()).padStart(2, '0');

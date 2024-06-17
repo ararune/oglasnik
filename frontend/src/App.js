@@ -18,16 +18,15 @@ import { FiMenu } from 'react-icons/fi';
 import OglasDetalji from './OglasDetalji';
 import Korisnik from './Korisnik';
 import PretragaForma from './PretragaForma';
-import { FaUserPlus, FaSignInAlt, FaUser, FaPlus, FaListAlt, FaSignOutAlt } from 'react-icons/fa';
+import { FaUserPlus, FaSignInAlt, FaUser, FaPlus, FaListAlt, FaSignOutAlt, FaUserShield } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
+import Admin from './Admin';
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
-  const [csrfToken, setCsrfToken] = useState('');
 
-  
   useEffect(() => {
     const csrfTokenCookie = document.cookie
       .split('; ')
@@ -37,9 +36,6 @@ function App() {
     if (!csrfTokenCookie) {
       const newCsrfToken = generateCsrfToken();
       document.cookie = `csrftoken=${newCsrfToken}; path=/`;
-      setCsrfToken(newCsrfToken);
-    } else {
-      setCsrfToken(csrfTokenCookie);
     }
   }, []);
 
@@ -75,7 +71,7 @@ function App() {
       });
       if (response.ok) {
         const data = await response.json();
-        setLoggedInUser(data.ime);
+        setLoggedInUser(data);
       } else {
         setLoggedInUser(null);
       }
@@ -185,6 +181,17 @@ function App() {
                         <FaListAlt /><span>Moji Oglasi</span>
                       </Link>
                     </li>
+                    {loggedInUser.uloga === 'Admin' && (
+                      <li>
+                        <Link
+                          to="/admin-panel"
+                          className="font-bold flex items-center space-x-2 block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                          onClick={handleMenuLinkClick}
+                        >
+                          <FaUserShield /><span>Admin Panel</span>
+                        </Link>
+                      </li>
+                    )}
                     <li>
                       <button
                         type="button"
@@ -217,6 +224,7 @@ function App() {
               <Route path="/api/azuriraj-oglas/:oglasId" element={<AzurirajOglas />} />
               <Route path="/azuriraj-korisnika" element={<AzurirajKorisnika />} />
               <Route path="/promjena-lozinke" element={<PromjenaLozinke />} />
+              <Route path="/admin-panel" element={<Admin />} />
             </Route>
 
             <Route path="/registracija" element={<Registracija />} />

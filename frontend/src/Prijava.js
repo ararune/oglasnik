@@ -28,7 +28,7 @@ const Prijava = ({ setLoggedInUser }) => {
                 }
             });
 
-            setLoggedInUser(userResponse.data.ime);
+            setLoggedInUser(userResponse.data);
             navigate('/');
         } catch (error) {
             console.error('Error logging in:', error);

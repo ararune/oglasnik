@@ -17,11 +17,18 @@ class GradSerializer(serializers.ModelSerializer):
 class KorisnikSerializer(serializers.ModelSerializer):
     zupanija_naziv = serializers.CharField(source='zupanija.naziv', read_only=True)
     grad_naziv = serializers.CharField(source='grad.naziv', read_only=True)
-    date_joined = serializers.DateTimeField(format="%d/%m/%Y", read_only=True)  # Assuming date_joined is the field name
+    date_joined = serializers.DateTimeField(format="%d/%m/%Y", read_only=True)
+    uloga = serializers.SerializerMethodField()
 
     class Meta:
         model = Korisnik
-        fields = ['id', 'username', 'oib', 'zupanija', 'zupanija_naziv', 'grad', 'grad_naziv', 'first_name', 'last_name', 'email', 'telefon', 'date_joined']
+        fields = ['id', 'username', 'oib', 'zupanija', 'zupanija_naziv', 'grad', 'grad_naziv', 'first_name', 'last_name', 'email', 'telefon', 'date_joined', 'uloga']
+
+    def get_uloga(self, obj):
+        if obj.is_superuser:
+            return 'Admin'
+        else:
+            return 'Korisnik'
 
 
 class KategorijaSerializer(serializers.ModelSerializer):
@@ -37,6 +44,7 @@ class SlikaSerializer(serializers.ModelSerializer):
 
 class OglasSerializer(serializers.ModelSerializer):
     zupanija = ZupanijaSerializer()
+    grad = GradSerializer()
     slike = SlikaSerializer(many=True)
     kategorija_naziv = serializers.CharField(source='kategorija.naziv', read_only=True)
 
