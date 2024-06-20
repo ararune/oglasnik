@@ -32,9 +32,18 @@ class KorisnikSerializer(serializers.ModelSerializer):
 
 
 class KategorijaSerializer(serializers.ModelSerializer):
+    djeca = serializers.SerializerMethodField()  # Change the key to 'djeca'
+
     class Meta:
         model = Kategorija
-        fields = ['id', 'naziv', 'roditelj', 'url']
+        fields = ['id', 'naziv', 'roditelj', 'url', 'djeca']  # Update field name to 'djeca'
+
+    def get_djeca(self, obj):  # Change method name to 'get_djeca'
+        children_qs = obj.children.all()
+        if children_qs.exists():
+            children = KategorijaSerializer(children_qs, many=True).data
+            return children
+        return None
 
 
 class SlikaSerializer(serializers.ModelSerializer):

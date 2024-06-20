@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import useAuth from './useAuth';
-import { AiOutlineEnvironment, AiOutlineCalendar, AiOutlineIdcard, AiOutlineEuroCircle, AiOutlinePhone,  AiOutlineMail } from 'react-icons/ai';
+import { AiOutlineEnvironment, AiOutlineCalendar, AiOutlineIdcard, AiOutlineEuroCircle, AiOutlinePhone, AiOutlineMail } from 'react-icons/ai';
 import { FaUserShield, FaUser } from 'react-icons/fa';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import moment from 'moment';
 
 const Admin = () => {
     const { user, loading } = useAuth();
@@ -13,6 +15,8 @@ const Admin = () => {
     const [activeTab, setActiveTab] = useState('oglasi');
     const [showModal, setShowModal] = useState(false);
     const [oglasToDelete, setOglasToDelete] = useState(null);
+    const [period, setPeriod] = useState('day');
+
     useEffect(() => {
         const fetchAdminData = async () => {
             try {
@@ -68,11 +72,7 @@ const Admin = () => {
 
 
     const formatDatum = (datum) => {
-        const date = new Date(datum);
-        const dan = String(date.getDate()).padStart(2, '0');
-        const mjesec = String(date.getMonth() + 1).padStart(2, '0');
-        const godina = date.getFullYear();
-        return `${dan}/${mjesec}/${godina}`;
+        return moment(datum).format('DD/MM/YYYY');
     };
     const potvrdiBrisanje = (id) => {
         setOglasToDelete(id);
@@ -132,45 +132,132 @@ const Admin = () => {
         </div>
     );
 
+    const aggregateRegistrations = (korisnici, period) => {
+        const registrations = korisnici.reduce((acc, user) => {
+            let key;
+            if (period === 'day') {
+                key = moment(user.date_joined, 'DD/MM/YYYY').format('DD/MM/YYYY');
+            } else if (period === 'month') {
+                key = moment(user.date_joined, 'DD/MM/YYYY').format('MM/YYYY');
+            } else if (period === 'year') {
+                key = moment(user.date_joined, 'DD/MM/YYYY').format('YYYY');
+            }
+
+            if (!acc[key]) {
+                acc[key] = 0;
+            }
+            acc[key]++;
+            return acc;
+        }, {});
+
+        const sortedData = Object.keys(registrations)
+            .map(date => ({
+                date,
+                registrirani: registrations[date]
+            }))
+            .sort((a, b) => {
+                // Custom sorting function to handle different date formats
+                return moment(a.date, getMomentFormat(period)).unix() - moment(b.date, getMomentFormat(period)).unix();
+            });
+
+        return sortedData;
+    };
+
+    const getMomentFormat = (period) => {
+        if (period === 'day') {
+            return 'DD/MM/YYYY';
+        } else if (period === 'month') {
+            return 'MM/YYYY';
+        } else if (period === 'year') {
+            return 'YYYY';
+        }
+    };
+    const renderChart = () => {
+        const data = aggregateRegistrations(korisnici, period);
+
+        let countText, countValue;
+        if (period === 'day') {
+            const todayDate = new Date().toLocaleDateString('en-GB');
+            countText = 'Broj registriranih korisnika danas:';
+            countValue = korisnici.filter(user => user.date_joined === todayDate).length;
+        } else if (period === 'month') {
+            countText = 'Broj registriranih korisnika ovaj mjesec:';
+            const currentMonthYear = moment().format('MM/YYYY');
+            countValue = data.find(item => item.date === currentMonthYear)?.registrirani || 0;
+        } else if (period === 'year') {
+            countText = 'Broj registriranih korisnika ove godine:';
+            const currentYear = moment().format('YYYY');
+            countValue = data.find(item => item.date === currentYear)?.registrirani || 0;
+        }
+
+        return (
+            <div className="flex flex-col items-center">
+                <ResponsiveContainer width="100%" height={400}>
+                    <LineChart data={data}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Line type="monotone" dataKey="registrirani" stroke="#8884d8" />
+                    </LineChart>
+                </ResponsiveContainer>
+                <div className="rounded border border-gray-600 bg-gray-800 p-4 rounded-lg shadow-md mt-2">
+                    <p className="text-lg font-semibold capitalize">{countText} {countValue}</p>
+                </div>
+            </div>
+        );
+    };
+
+
+
 
     const renderKorisnici = () => (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-            {korisnici.map((korisnik) => (
-                <div key={korisnik.id} className="rounded border border-gray-600 bg-gray-800 p-4 rounded-lg shadow-md">
-                    <Link to={`/korisnik/${korisnik.username}`} className="text-white flex items-center mb-4 hover:underline">
-                        {korisnik.uloga === 'Admin' ? (
-                            <FaUserShield className="w-16 h-16 text-yellow-500 rounded-full mr-4" />
-                        ) : (
-                            <FaUser className="w-16 h-16 text-green-500 rounded-full mr-4" />
-                        )}
-                        <div>
-                            <h2 className="text-3xl font-bold text-white mb-1">{korisnik.username}</h2>
-                            <p className="text-yellow-500 text-sm font-bold">{korisnik.uloga}</p>
+        <div>
+            <div className="flex justify-center mb-4">
+                <button onClick={() => setPeriod('day')} className={`px-4 py-2 mx-2 ${period === 'day' ? 'text-white bg-blue-700' : 'bg-gray-800'} rounded`}>Day</button>
+                <button onClick={() => setPeriod('month')} className={`px-4 py-2 mx-2 ${period === 'month' ? 'text-white bg-blue-700' : 'bg-gray-800'} rounded`}>Month</button>
+                <button onClick={() => setPeriod('year')} className={`px-4 py-2 mx-2 ${period === 'year' ? 'text-white bg-blue-700' : 'bg-gray-800'} rounded`}>Year</button>
+            </div>
+            {renderChart()}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
+                {korisnici.map((korisnik) => (
+                    <div key={korisnik.id} className="rounded border border-gray-600 bg-gray-800 p-4 rounded-lg shadow-md">
+                        <Link to={`/korisnik/${korisnik.username}`} className="text-white flex items-center mb-4 hover:underline">
+                            {korisnik.uloga === 'Admin' ? (
+                                <FaUserShield className="w-16 h-16 text-yellow-500 rounded-full mr-4" />
+                            ) : (
+                                <FaUser className="w-16 h-16 text-green-500 rounded-full mr-4" />
+                            )}
+                            <div>
+                                <h2 className="text-3xl font-bold text-white mb-1">{korisnik.username}</h2>
+                                <p className="text-yellow-500 text-sm font-bold">{korisnik.uloga}</p>
+                            </div>
+                        </Link>
+                        <div className="flex items-center text-gray-400 text-sm mb-2">
+                            <AiOutlineIdcard className="mr-2" />
+                            Ime i prezime: {korisnik.first_name} {korisnik.last_name}
                         </div>
-                    </Link>
-                    <div className="flex items-center text-gray-400 text-sm mb-2">
-                        <AiOutlineIdcard className="mr-2" />
-                        Ime i prezime: {korisnik.first_name} {korisnik.last_name}
-                    </div>
-                    <div className="flex items-center text-gray-400 text-sm mb-2">
-                        <AiOutlineMail className="mr-2" />
-                        Email: {korisnik.email}
-                    </div>
+                        <div className="flex items-center text-gray-400 text-sm mb-2">
+                            <AiOutlineMail className="mr-2" />
+                            Email: {korisnik.email}
+                        </div>
 
-                    <div className="flex items-center text-gray-400 text-sm mb-2">
-                        <AiOutlinePhone className="mr-2" />
-                        Telefon: {korisnik.telefon}
+                        <div className="flex items-center text-gray-400 text-sm mb-2">
+                            <AiOutlinePhone className="mr-2" />
+                            Telefon: {korisnik.telefon}
+                        </div>
+                        <div className="flex items-center text-gray-400 text-sm mb-2">
+                            <AiOutlineEnvironment className="mr-2" />
+                            Lokacija: {korisnik.zupanija_naziv}, {korisnik.grad_naziv}
+                        </div>
+                        <div className="flex items-center text-gray-400 text-sm mb-2">
+                            <AiOutlineCalendar className="mr-2" />
+                            Datum pridruživanja: {korisnik.date_joined}
+                        </div>
                     </div>
-                    <div className="flex items-center text-gray-400 text-sm mb-2">
-                        <AiOutlineEnvironment className="mr-2" />
-                        Lokacija: {korisnik.zupanija_naziv}, {korisnik.grad_naziv}
-                    </div>
-                    <div className="flex items-center text-gray-400 text-sm mb-2">
-                        <AiOutlineCalendar className="mr-2" />
-                        Datum pridruživanja: {korisnik.date_joined}
-                    </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     );
 

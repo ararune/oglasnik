@@ -84,6 +84,7 @@ class FormaZaIzraduOglasa(forms.ModelForm):
 
         return cleaned_data
 
+
 class AzuriranjeKorisnikaForma(forms.ModelForm):
     zupanija = forms.ModelChoiceField(queryset=Zupanija.objects.all(), empty_label=_("Odaberi županiju"), label=_("Županija"))
     grad = forms.ModelChoiceField(queryset=Grad.objects.none(), empty_label=_("Odaberi grad"), label=_("Grad"))
@@ -127,3 +128,4 @@ class PromjenaLozinkeForma(PasswordChangeForm):
 
     class Meta:
         fields = ['old_password', 'new_password1', 'new_password2']
+        

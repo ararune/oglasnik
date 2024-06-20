@@ -38,9 +38,6 @@ const AzurirajOglas = () => {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Fetched oglas data:', data);
-    
-                    // Set the form data with fetched data
                     setPodaciForme({
                         cijena: data.cijena,
                         naziv: data.naziv,
