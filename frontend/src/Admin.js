@@ -16,7 +16,7 @@ const Admin = () => {
     const [showModal, setShowModal] = useState(false);
     const [oglasToDelete, setOglasToDelete] = useState(null);
     const [period, setPeriod] = useState('day');
-
+    const [totalPregledi, setTotalPregledi] = useState(0);
     useEffect(() => {
         const fetchAdminData = async () => {
             try {
@@ -44,6 +44,18 @@ const Admin = () => {
         }
     }, [user]);
 
+    useEffect(() => {
+        const fetchPreglediCount = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/api/oglasi/pregledi_count/');
+                setTotalPregledi(response.data.total_pregledi);
+            } catch (error) {
+                console.error('Error fetching pregledi count:', error);
+            }
+        };
+
+        fetchPreglediCount();
+    }, []);
     if (error) {
         return <div>{error}</div>;
     }
@@ -145,7 +157,7 @@ const Admin = () => {
             </div>
         </div>
     );
-    
+
 
     const aggregateRegistrations = (korisnici, period) => {
         const registrations = korisnici.reduce((acc, user) => {
@@ -187,14 +199,14 @@ const Admin = () => {
             } else if (period === 'year') {
                 key = moment(oglas.datum).format('YYYY');
             }
-    
+
             if (!acc[key]) {
                 acc[key] = 0;
             }
             acc[key]++;
             return acc;
         }, {});
-    
+
         const sortedData = Object.keys(oglasiAggregated)
             .map(date => ({
                 date,
@@ -203,12 +215,12 @@ const Admin = () => {
             .sort((a, b) => {
                 return moment(a.date, getMomentFormat(period)).unix() - moment(b.date, getMomentFormat(period)).unix();
             });
-    
+
         return sortedData;
     };
     const renderOglasiGraf = () => {
         const data = aggregateOglasi(oglasi, period);
-    
+
         let countText, countValue;
         if (period === 'day') {
             const todayDate = moment().format('DD/MM/YYYY');
@@ -223,7 +235,7 @@ const Admin = () => {
             const currentYear = moment().format('YYYY');
             countValue = data.find(item => item.date === currentYear)?.oglasi || 0;
         }
-    
+
         return (
             <div className="bg-gray-800 rounded-lg p-6 shadow-lg mb-4 border border-gray-600">
                 <div className="flex justify-center mb-4">
@@ -251,10 +263,14 @@ const Admin = () => {
                     <h3 className="text-xl font-bold">Ukupan broj oglasa:</h3>
                     <p className="text-3xl font-extrabold">{oglasi.length}</p>
                 </div>
+                <div className="text-white text-center mb-4">
+                    <h3 className="text-xl font-bold">Ukupan broj pregleda:</h3>
+                    <p className="text-3xl font-extrabold">{totalPregledi}</p>
+                </div>
             </div>
         );
     };
-        
+
     const getMomentFormat = (period) => {
         if (period === 'day') {
             return 'DD/MM/YYYY';

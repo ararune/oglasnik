@@ -53,6 +53,11 @@ class KategorijaViewSet(viewsets.ModelViewSet):
 class OglasViewSet(viewsets.ModelViewSet):
     queryset = Oglas.objects.all()
     serializer_class = OglasSerializer
+    
+    @action(detail=False, methods=['get'])
+    def pregledi_count(self, request):
+        total_pregledi = Pregled.objects.count()
+        return Response({'total_pregledi': total_pregledi})
 
 class SlikaViewSet(viewsets.ModelViewSet):
     queryset = Slika.objects.all()
@@ -379,7 +384,14 @@ def oglas_detalji(request, sifra):
     now = timezone.now()
     twenty_four_hours_ago = now - timedelta(hours=24)
     
-    if not Pregled.objects.filter(oglas=oglas, ip_address=ip_address, timestamp__gte=twenty_four_hours_ago).exists():
+    # Check if the same IP has viewed this ad in the past 24 hours
+    pregled_exists = Pregled.objects.filter(
+        oglas=oglas,
+        ip_address=ip_address,
+        timestamp__gte=twenty_four_hours_ago
+    ).exists()
+
+    if not pregled_exists:
         Pregled.objects.create(oglas=oglas, ip_address=ip_address)
     
     broj_pregleda = Pregled.objects.filter(oglas=oglas).count()
@@ -476,3 +488,4 @@ def admin_view(request):
     
     # Return serialized data
     return JsonResponse({'korisnici': korisnici_serializer.data, 'oglasi': oglasi_serializer.data})
+
