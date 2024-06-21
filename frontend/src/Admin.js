@@ -12,7 +12,7 @@ const Admin = () => {
     const [error, setError] = useState(null);
     const [oglasi, setOglasi] = useState([]);
     const [korisnici, setKorisnici] = useState([]);
-    const [activeTab, setActiveTab] = useState('oglasi');
+    const [aktivniTab, setAktivniTab] = useState('oglasi');
     const [showModal, setShowModal] = useState(false);
     const [oglasToDelete, setOglasToDelete] = useState(null);
     const [period, setPeriod] = useState('day');
@@ -33,8 +33,14 @@ const Admin = () => {
             }
         };
 
+
         if (user) {
             fetchAdminData();
+        }
+        const params = new URLSearchParams(window.location.search);
+        const tabOption = params.get('tab');
+        if (tabOption) {
+            setAktivniTab(tabOption);
         }
     }, [user]);
 
@@ -45,7 +51,12 @@ const Admin = () => {
     if (loading || !user) {
         return <div>Loading...</div>;
     }
-
+    const handleTabChange = (tab) => {
+        setAktivniTab(tab);
+        const params = new URLSearchParams(window.location.search);
+        params.set('tab', tab);
+        window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
+    };
     const izbrisiOglas = async () => {
         try {
             const accessToken = localStorage.getItem('access_token');
@@ -80,57 +91,61 @@ const Admin = () => {
     };
 
     const renderOglasi = () => (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-            {oglasi.map((oglas) => (
-                <div key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">
-                    {oglas.slike && oglas.slike.length > 0 && (
-                        <Link to={`/oglas/${oglas.sifra}`} className="block">
-                            <img src={`http://localhost:8000${oglas.slike[0].slika}`} alt={oglas.naziv} className="w-48 h-48 object-cover" />
-                        </Link>
-                    )}
-                    <div className="flex flex-col justify-between p-4 flex-grow">
-                        <div>
+        <div>
+            {renderOglasiGraf()}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                {oglasi.map((oglas) => (
+                    <div key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">
+                        {oglas.slike && oglas.slike.length > 0 && (
                             <Link to={`/oglas/${oglas.sifra}`} className="block">
-                                <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
+                                <img src={`http://localhost:8000${oglas.slike[0].slika}`} alt={oglas.naziv} className="w-48 h-48 object-cover" />
                             </Link>
-                            <p className="text-gray-400 text-sm mb-2">
-                                <AiOutlineCalendar className="inline-block mr-1" />
-                                Objavljen: {formatDatum(oglas.datum)}
+                        )}
+                        <div className="flex flex-col justify-between p-4 flex-grow">
+                            <div>
+                                <Link to={`/oglas/${oglas.sifra}`} className="block">
+                                    <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
+                                </Link>
+                                <p className="text-gray-400 text-sm mb-2">
+                                    <AiOutlineCalendar className="inline-block mr-1" />
+                                    Objavljen: {formatDatum(oglas.datum)}
+                                </p>
+                                <p className="text-gray-400 text-sm mb-2">
+                                    <AiOutlineEnvironment className="inline-block mr-1" />
+                                    {oglas.zupanija.naziv}, {oglas.grad.naziv}
+                                </p>
+                            </div>
+                            <p className="text-yellow-500 text-lg font-bold">
+                                <AiOutlineEuroCircle className="inline-block mr-1" />
+                                {oglas.cijena} €
                             </p>
-                            <p className="text-gray-400 text-sm mb-2">
-                                <AiOutlineEnvironment className="inline-block mr-1" />
-                                {oglas.zupanija.naziv}, {oglas.grad.naziv}
-                            </p>
-                        </div>
-                        <p className="text-yellow-500 text-lg font-bold">
-                            <AiOutlineEuroCircle className="inline-block mr-1" />
-                            {oglas.cijena} €
-                        </p>
-                        <div className="flex justify-end mt-4">
-                            <button onClick={() => potvrdiBrisanje(oglas.id)} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
-                                Izbriši
-                            </button>
+                            <div className="flex justify-end mt-4">
+                                <button onClick={() => potvrdiBrisanje(oglas.id)} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
+                                    Izbriši
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            ))}
-            {showModal && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-gray-800 p-6 rounded-lg">
-                        <p className="text-white mb-4">Jeste li sigurni da želite izbrisati ovaj oglas?</p>
-                        <div className="flex justify-end">
-                            <button onClick={() => setShowModal(false)} className="bg-gray-300 text-gray-800 py-2 px-4 rounded mr-2">
-                                Odustani
-                            </button>
-                            <button onClick={izbrisiOglas} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
-                                Izbriši
-                            </button>
+                ))}
+                {showModal && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-gray-800 p-6 rounded-lg">
+                            <p className="text-white mb-4">Jeste li sigurni da želite izbrisati ovaj oglas?</p>
+                            <div className="flex justify-end">
+                                <button onClick={() => setShowModal(false)} className="bg-gray-300 text-gray-800 py-2 px-4 rounded mr-2">
+                                    Odustani
+                                </button>
+                                <button onClick={izbrisiOglas} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
+                                    Izbriši
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
+    
 
     const aggregateRegistrations = (korisnici, period) => {
         const registrations = korisnici.reduce((acc, user) => {
@@ -162,7 +177,84 @@ const Admin = () => {
 
         return sortedData;
     };
-
+    const aggregateOglasi = (oglasi, period) => {
+        const oglasiAggregated = oglasi.reduce((acc, oglas) => {
+            let key;
+            if (period === 'day') {
+                key = moment(oglas.datum).format('DD/MM/YYYY');
+            } else if (period === 'month') {
+                key = moment(oglas.datum).format('MM/YYYY');
+            } else if (period === 'year') {
+                key = moment(oglas.datum).format('YYYY');
+            }
+    
+            if (!acc[key]) {
+                acc[key] = 0;
+            }
+            acc[key]++;
+            return acc;
+        }, {});
+    
+        const sortedData = Object.keys(oglasiAggregated)
+            .map(date => ({
+                date,
+                oglasi: oglasiAggregated[date]
+            }))
+            .sort((a, b) => {
+                return moment(a.date, getMomentFormat(period)).unix() - moment(b.date, getMomentFormat(period)).unix();
+            });
+    
+        return sortedData;
+    };
+    const renderOglasiGraf = () => {
+        const data = aggregateOglasi(oglasi, period);
+    
+        let countText, countValue;
+        if (period === 'day') {
+            const todayDate = moment().format('DD/MM/YYYY');
+            countText = 'Broj kreiranih oglasa danas:';
+            countValue = oglasi.filter(oglas => moment(oglas.datum).format('DD/MM/YYYY') === todayDate).length;
+        } else if (period === 'month') {
+            countText = 'Broj kreiranih oglasa ovaj mjesec:';
+            const currentMonthYear = moment().format('MM/YYYY');
+            countValue = data.find(item => item.date === currentMonthYear)?.oglasi || 0;
+        } else if (period === 'year') {
+            countText = 'Broj kreiranih oglasa ove godine:';
+            const currentYear = moment().format('YYYY');
+            countValue = data.find(item => item.date === currentYear)?.oglasi || 0;
+        }
+    
+        return (
+            <div className="bg-gray-800 rounded-lg p-6 shadow-lg mb-4 border border-gray-600">
+                <div className="flex justify-center mb-4">
+                    <button onClick={() => setPeriod('day')} className={`px-4 py-2 mx-2 border border-gray-600 ${period === 'day' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}>Dan</button>
+                    <button onClick={() => setPeriod('month')} className={`px-4 py-2 mx-2 border border-gray-600 ${period === 'month' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}>Mjesec</button>
+                    <button onClick={() => setPeriod('year')} className={`px-4 py-2 mx-2 border border-gray-600 ${period === 'year' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}>Godina</button>
+                </div>
+                <div className="text-white text-center mb-4">
+                    <h3 className="text-xl font-bold">{countText}</h3>
+                    <p className="text-3xl font-extrabold">{countValue}</p>
+                </div>
+                <div className="flex justify-center">
+                    <ResponsiveContainer width="100%" height={300}>
+                        <LineChart data={data}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="date" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line type="monotone" dataKey="oglasi" stroke="#8884d8" />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="text-white text-center mb-4">
+                    <h3 className="text-xl font-bold">Ukupan broj oglasa:</h3>
+                    <p className="text-3xl font-extrabold">{oglasi.length}</p>
+                </div>
+            </div>
+        );
+    };
+        
     const getMomentFormat = (period) => {
         if (period === 'day') {
             return 'DD/MM/YYYY';
@@ -172,7 +264,7 @@ const Admin = () => {
             return 'YYYY';
         }
     };
-    const renderChart = () => {
+    const renderKorisniciGraf = () => {
         const data = aggregateRegistrations(korisnici, period);
 
         let countText, countValue;
@@ -191,19 +283,31 @@ const Admin = () => {
         }
 
         return (
-            <div className="flex flex-col items-center">
-                <ResponsiveContainer width="100%" height={400}>
-                    <LineChart data={data}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Line type="monotone" dataKey="registrirani" stroke="#8884d8" />
-                    </LineChart>
-                </ResponsiveContainer>
-                <div className="rounded border border-gray-600 bg-gray-800 p-4 rounded-lg shadow-md mt-2">
-                    <p className="text-lg font-semibold capitalize">{countText} {countValue}</p>
+            <div className="bg-gray-800 rounded-lg p-6 shadow-lg mb-4 border border-gray-600">
+                <div className="flex justify-center mb-4">
+                    <button onClick={() => setPeriod('day')} className={`px-4 py-2 mx-2 border border-gray-600 ${period === 'day' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}>Dan</button>
+                    <button onClick={() => setPeriod('month')} className={`px-4 py-2 mx-2 border border-gray-600 ${period === 'month' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}>Mjesec</button>
+                    <button onClick={() => setPeriod('year')} className={`px-4 py-2 mx-2 border border-gray-600 ${period === 'year' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center' : 'bg-gray-800'} text-white rounded`}>Godina</button>
+                </div>
+                <div className="text-white text-center mb-4">
+                    <h3 className="text-xl font-bold">{countText}</h3>
+                    <p className="text-3xl font-extrabold">{countValue}</p>
+                </div>
+                <div className="flex justify-center">
+                    <ResponsiveContainer width="100%" height={300}>
+                        <LineChart data={data}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="date" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line type="monotone" dataKey="registrirani" stroke="#8884d8" />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="text-white text-center mb-4">
+                    <h3 className="text-xl font-bold">Ukupan broj registriranih korisnika:</h3>
+                    <p className="text-3xl font-extrabold">{korisnici.length}</p>
                 </div>
             </div>
         );
@@ -212,18 +316,14 @@ const Admin = () => {
 
 
 
+
     const renderKorisnici = () => (
         <div>
-            <div className="flex justify-center mb-4">
-                <button onClick={() => setPeriod('day')} className={`px-4 py-2 mx-2 ${period === 'day' ? 'text-white bg-blue-700' : 'bg-gray-800'} rounded`}>Day</button>
-                <button onClick={() => setPeriod('month')} className={`px-4 py-2 mx-2 ${period === 'month' ? 'text-white bg-blue-700' : 'bg-gray-800'} rounded`}>Month</button>
-                <button onClick={() => setPeriod('year')} className={`px-4 py-2 mx-2 ${period === 'year' ? 'text-white bg-blue-700' : 'bg-gray-800'} rounded`}>Year</button>
-            </div>
-            {renderChart()}
+            {renderKorisniciGraf()}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
                 {korisnici.map((korisnik) => (
                     <div key={korisnik.id} className="rounded border border-gray-600 bg-gray-800 p-4 rounded-lg shadow-md">
-                        <Link to={`/korisnik/${korisnik.username}`} className="text-white flex items-center mb-4 hover:underline">
+                        <Link to={`/korisnik/${korisnik.username}`} className="text-white flex items-center mb-4">
                             {korisnik.uloga === 'Admin' ? (
                                 <FaUserShield className="w-16 h-16 text-yellow-500 rounded-full mr-4" />
                             ) : (
@@ -300,21 +400,21 @@ const Admin = () => {
 
             <div className="flex justify-center mb-6">
                 <button
-                    className={`px-4 py-2 mx-2 ${activeTab === 'oglasi' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg text-center' : 'bg-gray-800'} text-white rounded`}
-                    onClick={() => setActiveTab('oglasi')}
+                    className={`px-4 py-2 mx-2 border border-gray-600 ${aktivniTab === 'oglasi' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg text-center' : 'bg-gray-800'} text-white rounded`}
+                    onClick={() => handleTabChange('oglasi')}
                 >
                     Oglasi
                 </button>
                 <button
-                    className={`px-4 py-2 mx-2 ${activeTab === 'korisnici' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg text-center' : 'bg-gray-800'} text-white rounded`}
-                    onClick={() => setActiveTab('korisnici')}
+                    className={`px-4 py-2 mx-2 border border-gray-600 ${aktivniTab === 'korisnici' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg text-center' : 'bg-gray-800'} text-white rounded`}
+                    onClick={() => handleTabChange('korisnici')}
                 >
                     Korisnici
                 </button>
             </div>
 
-            {activeTab === 'oglasi' && renderOglasi()}
-            {activeTab === 'korisnici' && renderKorisnici()}
+            {aktivniTab === 'oglasi' && renderOglasi()}
+            {aktivniTab === 'korisnici' && renderKorisnici()}
         </div>
     );
 };
