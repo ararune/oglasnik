@@ -117,8 +117,8 @@ const Admin = () => {
                     {oglasi.map((oglas) => (
                         <div key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">
                             {oglas.slike && oglas.slike.length > 0 && (
-                                <Link to={`/oglas/${oglas.sifra}`} className="block">
-                                    <img src={`http://localhost:8000${oglas.slike[0].slika}`} alt={oglas.naziv} className="w-48 h-48 object-cover" />
+                                <Link to={`/oglas/${oglas.sifra}`} className="block h-full">
+                                    <img src={`http://localhost:8000${oglas.slike[0].slika}`} alt={oglas.naziv} className="w-48 h-full object-cover" />
                                 </Link>
                             )}
                             <div className="flex flex-col justify-between p-4 flex-grow">

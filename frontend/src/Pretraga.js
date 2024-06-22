@@ -254,7 +254,7 @@ function Pretraga() {
       </div>
 
 
-      <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
+      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
         {paginatedOglasi.length === 0 ? (
           <div className="text-center mt-10">
             <p className="text-white text-xl mb-4">Nema oglasa u ovoj kategoriji</p>
@@ -263,9 +263,9 @@ function Pretraga() {
         ) : (
           paginatedOglasi.map(oglas => (
 
-            <li key={oglas.id} className="relative bg-gray-800 rounded border border-gray-600 bg-zinc-900 overflow-hidden shadow-md flex flex-row items-start">
+            <li key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">
               {oglas.slike.length > 0 && (
-                <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block"> <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-48 object-cover" />            </Link>
+                <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block h-full"> <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-full object-cover" />            </Link>
               )}
               <div className="flex flex-col justify-between p-4 flex-grow">
                 <div>

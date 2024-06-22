@@ -229,5 +229,77 @@
     "Ribe": {
       "url": "ribe"
     }
+  },
+  "Strojevi i alati": {
+    "url": "strojevi-i-alati",
+    "Električni alati": {
+      "url": "elektricni-alati"
+    },
+    "Ručni alati": {
+      "url": "rucni-alati"
+    },
+    "Građevinski strojevi": {
+      "url": "gradjevinski-strojevi"
+    },
+    "Oprema za obradu metala": {
+      "url": "oprema-za-obradu-metala"
+    },
+    "Oprema za obradu drva": {
+      "url": "oprema-za-obradu-drva"
+    }
+  },
+  "Profesionalna oprema": {
+    "url": "profesionalna-oprema",
+    "Uredski namještaj": {
+      "url": "uredski-namjestaj"
+    },
+    "Industrijska oprema": {
+      "url": "industrijska-oprema"
+    },
+    "Medicinska oprema": {
+      "url": "medicinska-oprema"
+    },
+    "Laboratorijska oprema": {
+      "url": "laboratorijska-oprema"
+    },
+    "Gastronomska oprema": {
+      "url": "gastronomska-oprema"
+    }
+  },
+  "Sve za školu": {
+    "url": "sve-za-skolu",
+    "Školski pribor": {
+      "url": "skolski-pribor"
+    },
+    "Udžbenici": {
+      "url": "udzbenici"
+    },
+    "Školska odjeća": {
+      "url": "skolska-odjeca"
+    },
+    "Sportska oprema za školu": {
+      "url": "sportska-oprema-za-skolu"
+    },
+    "Računala i oprema za učionice": {
+      "url": "racunala-i-oprema-za-ucionice"
+    }
+  },
+  "Kolekcionarstvo": {
+    "url": "kolekcionarstvo",
+    "Numizmatika": {
+      "url": "numizmatika"
+    },
+    "Filatelija": {
+      "url": "filatelija"
+    },
+    "Antikviteti": {
+      "url": "antikviteti"
+    },
+    "Sportski suveniri": {
+      "url": "sportski-suveniri"
+    },
+    "Umjetnine": {
+      "url": "umjetnine"
+    }
   }
 }

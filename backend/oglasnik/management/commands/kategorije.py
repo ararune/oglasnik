@@ -1,8 +1,8 @@
 """ kategorije.py """
-import json
-import os
 from django.core.management.base import BaseCommand
 from oglasnik.models import Kategorija
+import json
+import os
 
 class Command(BaseCommand):
     help = 'Popunjava zapise kategorija iz kategorije.json'
@@ -17,7 +17,18 @@ class Command(BaseCommand):
         for naziv, details in data.items():
             url = details.get('url')
             children = {k: v for k, v in details.items() if k != 'url'}
-            kategorija = Kategorija.objects.create(naziv=naziv, url=url, roditelj=roditelj)
-            self.stdout.write(self.style.SUCCESS(f'Dodana kategorija: {kategorija} s URL-om: {url}'))
+            
+            if Kategorija.objects.filter(naziv=naziv).exists():
+                kategorija = Kategorija.objects.get(naziv=naziv)
+                if url:
+                    kategorija.url = url
+                    kategorija.save()
+                    self.stdout.write(self.style.SUCCESS(f'Ažurirana kategorija: {kategorija} sa URL-om: {url}'))
+                else:
+                    self.stdout.write(self.style.WARNING(f'Kategorija "{naziv}" već postoji u bazi. Preskačem...'))
+            else:
+                kategorija = Kategorija.objects.create(naziv=naziv, url=url, roditelj=roditelj)
+                self.stdout.write(self.style.SUCCESS(f'Dodana kategorija: {kategorija} sa URL-om: {url}'))
+            
             if children:
                 self.kreiraj_kategorije(children, kategorija)

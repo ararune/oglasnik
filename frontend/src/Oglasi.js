@@ -156,24 +156,34 @@ function Oglasi() {
     const sortedOglasi = sortOglasi(filteredOglasi, sortOption);
     const paginatedOglasi = sortedOglasi.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-    return (
-        <div className="container mx-auto p-4">
-            <nav className="lg:w-1/3 px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white font-bold flex items-center flex-wrap">
-                <Link to="/" className="flex items-center text-white text-sm hover:underline mr-2">
-                    <FaHome className="mr-1" /> Oglasnik
-                </Link>
-                {hijerarhija.map((kat, index) => (
-                    <React.Fragment key={index}>
-                        <FaChevronRight className="mx-2" />
-                        <Link to={`/oglasi/${kat.url}`} className="text-white text-sm hover:underline">
-                            {kat.naziv}
-                        </Link>
-                    </React.Fragment>
-                ))}
-            </nav>
+    const RenderHierarchyLinks = () => (
+        <nav className="lg:w-1/3 px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white font-bold flex items-center flex-wrap">
+            <Link to="/" className="flex items-center text-white text-sm hover:underline mr-2">
+                <FaHome className="mr-1" /> Oglasnik
+            </Link>
+            {hijerarhija.map((kat, index) => (
+                <React.Fragment key={index}>
+                    <FaChevronRight className="mx-2" />
+                    <Link to={`/oglasi/${kat.url}`} className="text-white text-sm hover:underline">
+                        {kat.naziv}
+                    </Link>
+                </React.Fragment>
+            ))}
+        </nav>
+    );
 
+    const RenderCategoryInfo = () => {
+        const lastCategory = hijerarhija.length > 0 ? hijerarhija[hijerarhija.length - 1].naziv : '';
+
+        const noChildren = children.length === 0;
+
+        if (noChildren) {
+            return null;
+        }
+
+        return (
             <div className="rounded border border-gray-600 bg-gray-800 p-6 text-white mb-4 mt-2 lg:w-1/3">
-                <h3 className="text-white text-xl font-bold mb-2 uppercase">{category}</h3>
+                <h3 className="text-white text-xl font-bold mb-2 uppercase">{lastCategory}</h3>
                 <ul className="list-disc list-inside grid grid-cols-2">
                     {children.map((child, index) => (
                         <div key={index}>
@@ -182,155 +192,166 @@ function Oglasi() {
                     ))}
                 </ul>
             </div>
-
-            <div className="p-4 rounded text-white mb-4 mt-2">
-                <h3 className="text-xl font-bold mb-2">Filtriraj rezultate</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {/* Sort Opcije */}
-                    <div>
-                        <label className="block mb-1">Sortiraj po:</label>
-                        <select value={sortOption} onChange={handleSortChange} className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500">
-                            <option value="">Odaberi opciju</option>
-                            <option value="cijena-uzlazno">Cijena uzlazno</option>
-                            <option value="cijena-silazno">Cijena silazno</option>
-                            <option value="datum-najstariji">Datum najstariji</option>
-                            <option value="datum-najnoviji">Datum najnoviji</option>
+        );
+    };
+    const RenderFilters = () => (
+        <div className="p-4 rounded text-white mb-4 mt-2">
+            <h3 className="text-xl font-bold mb-2">Filtriraj rezultate</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                    <label className="block mb-1">Sortiraj po:</label>
+                    <select
+                        value={sortOption}
+                        onChange={handleSortChange}
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
+                    >
+                        <option value="">Odaberi opciju</option>
+                        <option value="cijena-uzlazno">Cijena uzlazno</option>
+                        <option value="cijena-silazno">Cijena silazno</option>
+                        <option value="datum-najstariji">Datum najstariji</option>
+                        <option value="datum-najnoviji">Datum najnoviji</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block mb-1">Cijena raspon:</label>
+                    <div className="flex">
+                        <input
+                            type="text"
+                            placeholder="Min cijena"
+                            value={minCijena}
+                            onChange={handleMinCijenaChange}
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
+                        />
+                        <p>do</p>
+                        <input
+                            type="text"
+                            placeholder="Max cijena"
+                            value={maxCijena}
+                            onChange={handleMaxCijenaChange}
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            className="ml-2 w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
+                        />
+                    </div>
+                </div>
+                <div>
+                    <label className="block mb-1">Filter po županiji:</label>
+                    <div className="relative">
+                        <select
+                            value=""
+                            onChange={handleZupanijaChange}
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
+                        >
+                            <option value="">Odaberi županiju</option>
+                            {Object.entries(zupanijeCount).map(([zupanija, count], index) => (
+                                <option key={index} value={zupanija}>{zupanija} ({count})</option>
+                            ))}
                         </select>
                     </div>
-
-
-
-                    {/* Min/Max Cijena */}
-                    <div>
-                        <label className="block mb-1">Cijena raspon:</label>
-                        <div className="flex">
-                            <input
-                                type="text"
-                                placeholder="Min cijena"
-                                value={minCijena}
-                                onChange={handleMinCijenaChange}
-                                inputMode="numeric"
-                                pattern="[0-9]*"
-                                className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
-                            />
-                            <p>do</p>
-                            <input
-                                type="text"
-                                placeholder="Max cijena"
-                                value={maxCijena}
-                                onChange={handleMaxCijenaChange}
-                                inputMode="numeric"
-                                pattern="[0-9]*"
-                                className="ml-2 w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
-                            />
-                        </div>
-                    </div>
-                    {/* Filter po Županiji */}
-                    <div>
-                        <label className="block mb-1">Filter po županiji:</label>
-                        <div className="relative">
-                            <select value="" onChange={handleZupanijaChange} className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500">
-                                <option value="">Odaberi županiju</option>
-                                {Object.entries(zupanijeCount).map(([zupanija, count], index) => (
-                                    <option key={index} value={zupanija}>{zupanija} ({count})</option>
-                                ))}
-                            </select>
-
-                        </div>
-                    </div>
                 </div>
-                <div className="flex items-center pr-3 mt-4">
-                    {selectedZupanije.map((zupanija, index) => (
-                        <div key={index} className="flex items-center mr-2 text-white text-sm bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-2.5 py-1 text-center">
-                            <span>{zupanija}</span>
+            </div>
+            <div className="flex items-center pr-3 mt-4">
+                {selectedZupanije.map((zupanija, index) => (
+                    <div key={index} className="flex items-center mr-2 text-white text-sm bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-2.5 py-1 text-center">
+                        <span>{zupanija}</span>
+                        <button
+                            onClick={() => setSelectedZupanije(prev => prev.filter(z => z !== zupanija))}
+                            className="ml-1 focus:outline-none"
+                        >
+                            &times;
+                        </button>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+    const RenderPagination = () => (
+        <div className="flex justify-center my-4">
+            <div className="flex">
+                <Link
+                    to={`?page=1&sort=${sortOption}&minCijena=${minCijena}&maxCijena=${maxCijena}${selectedZupanije.map(zupanija => `&zupanija=${zupanija}`).join('')}`}
+                    className={`px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-l-md shadow-md`}
+                >
+                    Prva
+                </Link>
+                {[...Array(Math.ceil(sortedOglasi.length / itemsPerPage)).keys()].map((number) => (
+                    <Link
+                        key={number + 1}
+                        to={`?page=${number + 1}&sort=${sortOption}&minCijena=${minCijena}&maxCijena=${maxCijena}${selectedZupanije.map(zupanija => `&zupanija=${zupanija}`).join('')}`}
+                        className={`px-3 py-2 bg-gray-800 hover:bg-gray-700 ${currentPage === number + 1 ? 'bg-gray-400' : ''}`}
+                    >
+                        {number + 1}
+                    </Link>
+                ))}
+                <Link
+                    to={`?page=${Math.ceil(sortedOglasi.length / itemsPerPage)}&sort=${sortOption}&minCijena=${minCijena}&maxCijena=${maxCijena}${selectedZupanije.map(zupanija => `&zupanija=${zupanija}`).join('')}`}
+                    className={`px-4 py-2 bg-gray-800 hover:bg-gray-700  rounded-r-md shadow-md`}
+                >
+                    Zadnja
+                </Link>
+            </div>
+        </div>
+    );
+
+    const RenderOglasiList = () => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+            {paginatedOglasi.length === 0 ? (
+                <div className="text-center mt-10">
+                    <p className="text-white text-xl mb-4">Nema oglasa u ovoj kategoriji</p>
+                    <AiOutlineFileSearch className="mx-auto w-48 h-48 text-gray-400" />
+                </div>
+            ) : (
+                paginatedOglasi.map(oglas => (
+                    <div key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">
+                        {oglas.slike.length > 0 && (
+                            <Link to={`/oglas/${oglas.sifra}`} className="block h-full">
+                                <img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-full object-cover" />
+                            </Link>
+                        )}
+                        <div className="flex flex-col justify-between p-4 flex-grow">
+                            <div>
+                                <p className="inline-flex items-center bg-blue-600 text-white font-semibold py-2 px-4 rounded">{oglas.kategorija}</p>
+                                <Link to={`/oglas/${oglas.sifra}`} className="block">
+                                    <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
+                                </Link>
+                                {oglas.korisnik && (
+                                    <div className="text-gray-400 text-sm mb-1 flex items-center">
+                                        <AiOutlineEnvironment className="inline-block mr-2" />
+                                        <p>{oglas.korisnik.zupanija}, {oglas.korisnik.grad}</p>
+                                    </div>
+                                )}
+                                <div className="text-gray-400 text-sm mb-2 flex items-center">
+                                    <AiOutlineCalendar className="inline-block mr-2" />
+                                    <p>{formatDatum(oglas.datum)}</p>
+                                </div>
+                            </div>
+                            <p className="text-yellow-500 text-lg font-bold flex items-center">
+                                <AiOutlineEuroCircle className="inline-block mr-2" />
+                                {oglas.cijena} €
+                            </p>
                             <button
-                                onClick={() => setSelectedZupanije(prev => prev.filter(z => z !== zupanija))}
-                                className="ml-1 focus:outline-none"
+                                onClick={() => toggleFavorite(oglas.id, oglas.favorited)}
+                                className="text-gray-400 hover:text-red-500 focus:outline-none"
                             >
-                                &times;
+                                {oglas.favorited ? <FaHeart /> : <FaRegHeart />}
                             </button>
                         </div>
-                    ))}
-                </div>
-            </div>
-
-            <div className="flex justify-center my-4">
-                <div className="flex">
-                    <Link
-                        to={`?page=1&sort=${sortOption}&minCijena=${minCijena}&maxCijena=${maxCijena}${selectedZupanije.map(zupanija => `&zupanija=${zupanija}`).join('')}`}
-                        className={`px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-l-md shadow-md`}
-                    >
-                        Prva
-                    </Link>
-                    {[...Array(Math.ceil(sortedOglasi.length / itemsPerPage)).keys()].map((number) => (
-                        <Link
-                            key={number + 1}
-                            to={`?page=${number + 1}&sort=${sortOption}&minCijena=${minCijena}&maxCijena=${maxCijena}${selectedZupanije.map(zupanija => `&zupanija=${zupanija}`).join('')}`}
-                            className={`px-3 py-2 bg-gray-800 hover:bg-gray-700 ${currentPage === number + 1 ? 'bg-gray-400' : ''}`}
-                        >
-                            {number + 1}
-                        </Link>
-                    ))}
-                    <Link
-                        to={`?page=${Math.ceil(sortedOglasi.length / itemsPerPage)}&sort=${sortOption}&minCijena=${minCijena}&maxCijena=${maxCijena}${selectedZupanije.map(zupanija => `&zupanija=${zupanija}`).join('')}`}
-                        className={`px-4 py-2 bg-gray-800 hover:bg-gray-700  rounded-r-md shadow-md`}
-                    >
-                        Zadnja
-                    </Link>
-                </div>
-            </div>
-
-
-            <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
-                {paginatedOglasi.length === 0 ? (
-                    <div className="text-center mt-10">
-                        <p className="text-white text-xl mb-4">Nema oglasa u ovoj kategoriji</p>
-                        <AiOutlineFileSearch className="mx-auto w-48 h-48 text-gray-400" />
                     </div>
-                ) : (
-                    paginatedOglasi.map(oglas => (
+                ))
+            )}
+        </div>
+    );
 
-                        <li key={oglas.id} className="relative bg-gray-800 rounded border border-gray-600 bg-zinc-900 overflow-hidden shadow-md flex flex-row items-start">
-                            {oglas.slike.length > 0 && (
-                                <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block"><img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-48 object-contain" /></Link>
-                            )}
-                            <div className="flex flex-col justify-between p-4 flex-grow">
-                                <div>
-                                    <p className="inline-flex items-center bg-blue-600 text-white font-semibold py-2 px-4 rounded">{oglas.kategorija}</p>
-                                    <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block">
-                                        <h4 className="text-white text-xl font-bold mb-2 white-space: nowrap;">{oglas.naziv}</h4>
-                                    </Link>
-                                    {oglas.korisnik && (
-                                        <div className="text-gray-400 text-sm mb-1 flex items-center">
-                                            <AiOutlineEnvironment className="inline-block mr-2" />
-                                            <p>{oglas.korisnik.zupanija}, {oglas.korisnik.grad}</p>
-                                        </div>
-                                    )}
-                                    <div className="text-gray-400 text-sm mb-2 flex items-center">
-                                        <AiOutlineCalendar className="inline-block mr-2" />
-                                        <p>{formatDatum(oglas.datum)}</p>
-                                    </div>
-                                </div>
-                                <p className="text-yellow-500 text-lg font-bold flex items-center">
-                                    <AiOutlineEuroCircle className="inline-block mr-2" />
-                                    {oglas.cijena} €
-                                </p>
-
-                                <button
-                                    onClick={() => toggleFavorite(oglas.id, oglas.favorited)}
-                                    className="text-gray-400 hover:text-red-500 focus:outline-none"
-                                >
-                                    {oglas.favorited ? <FaHeart /> : <FaRegHeart />}
-                                </button>
-
-                            </div>
-                        </li>
-
-                    ))
-                )}
-            </ul>
-
-
+    return (
+        <div className="container mx-auto p-4">
+            <RenderHierarchyLinks />
+            <RenderCategoryInfo />
+            <RenderFilters />
+            <RenderPagination />
+            <RenderOglasiList />
         </div>
     );
 }
