@@ -21,6 +21,7 @@ import PretragaForma from './PretragaForma';
 import { FaUserPlus, FaSignInAlt, FaUser, FaPlus, FaListAlt, FaSignOutAlt, FaUserShield } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
 import Admin from './Admin';
+import AzurirajKorisnikaAdmin from './AzurirajKorisnikaAdmin';
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -223,6 +224,8 @@ function App() {
               <Route path="/moji_oglasi" element={<MojiOglasi />} />
               <Route path="/api/azuriraj-oglas/:oglasId" element={<AzurirajOglas />} />
               <Route path="/azuriraj-korisnika" element={<AzurirajKorisnika />} />
+              <Route path="/admin-panel/azuriraj-korisnika/:userId" element={<AzurirajKorisnikaAdmin />} />
+
               <Route path="/promjena-lozinke" element={<PromjenaLozinke />} />
               <Route path="/admin-panel" element={<Admin />} />
             </Route>

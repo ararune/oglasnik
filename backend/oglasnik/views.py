@@ -489,3 +489,14 @@ def admin_view(request):
     # Return serialized data
     return JsonResponse({'korisnici': korisnici_serializer.data, 'oglasi': oglasi_serializer.data})
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def azuriraj_korisnika_admin(request, user_id):
+    korisnik = get_object_or_404(Korisnik, id=user_id)
+    if request.method == 'PUT':
+        form = AzuriranjeKorisnikaForma(request.data, instance=korisnik)
+        if form.is_valid():
+            form.save()
+            return Response({'success': 'Podaci korisnika su uspješno ažurirani.'}, status=status.HTTP_200_OK)
+        else:
+            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)

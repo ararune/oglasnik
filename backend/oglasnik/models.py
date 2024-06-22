@@ -86,7 +86,9 @@ class Pregled(models.Model):
     oglas = models.ForeignKey(Oglas, on_delete=models.CASCADE)
     ip_address = models.GenericIPAddressField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
     class Meta:
+        unique_together = ('oglas', 'ip_address', 'timestamp')
         verbose_name = 'Pregled'
         verbose_name_plural = 'Pregledi'
         

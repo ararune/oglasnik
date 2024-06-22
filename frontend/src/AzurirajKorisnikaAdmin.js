@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaEdit } from 'react-icons/fa';
 
-const Registracija = () => {
+const AzurirajKorisnikaAdmin = () => {
+    const { userId } = useParams();
     const [formData, setFormData] = useState({
-        username: '',
         email: '',
-        password1: '',
-        password2: '',
         first_name: '',
         last_name: '',
         oib: '',
@@ -23,8 +22,32 @@ const Registracija = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchZupanije();
-    }, []);
+        const fetchUserData = async (userId) => {
+            try {
+                const response = await fetch(`http://localhost:8000/api/korisnici/${userId}/`);
+                const data = await response.json();
+                setFormData({
+                    email: data.email,
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                    oib: data.oib,
+                    zupanija: data.zupanija,
+                    grad: data.grad,
+                    telefon: data.telefon
+                });
+                fetchGradovi(data.zupanija);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+    
+        if (zupanije.length === 0) {
+            fetchZupanije();
+        }
+        if (userId) {
+            fetchUserData(userId);  // Fetch user data based on userId
+        }
+    }, [userId, zupanije]);  // Include fetchUserData in the dependency array
 
     const fetchZupanije = async () => {
         try {
@@ -32,7 +55,7 @@ const Registracija = () => {
             const data = await response.json();
             setZupanije(data);
         } catch (error) {
-            console.error('Error pri dohvaćanju županija:', error);
+            console.error('Error fetching županije:', error);
         }
     };
 
@@ -42,7 +65,7 @@ const Registracija = () => {
             const data = await response.json();
             setGradovi(data);
         } catch (error) {
-            console.error('Error pri dohvaćanju gradova:', error);
+            console.error('Error fetching gradovi:', error);
         }
     };
 
@@ -72,33 +95,32 @@ const Registracija = () => {
             ?.split('=')[1];
 
         try {
-            const response = await fetch('http://localhost:8000/registracija/', {
-                method: 'POST',
+            const response = await fetch(`http://localhost:8000/admin-panel/azuriraj-korisnika/${userId}/`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'X-CSRFToken': csrfToken,
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                 },
-                body: JSON.stringify(formData),
-                credentials: 'include'
+                body: JSON.stringify(formData)
             });
 
             if (response.ok) {
-                toast.success('Registracija je uspješna!', {
-                    autoClose: 2000,
-                    onClose: () => navigate('/prijava')
+                toast.success('Korisnik ažuriran!', {
+                    onClose: () => navigate('/admin-panel?tab=korisnici'),
                 });
             } else {
                 const data = await response.json();
                 setErrors(data);
             }
         } catch (error) {
-            console.error('Error u registraciji:', error);
+            toast.error('Greška pri ažuriranju!');
+            console.error('Error updating user:', error);
         }
     };
 
-
     return (
-        <div className="rounded border border-gray-600 bg-gray-800 text-white p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
+        <div className="rounded border border-gray-600 bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
             <ToastContainer
                 position="top-right"
                 autoClose={2000}
@@ -113,26 +135,9 @@ const Registracija = () => {
                 bodyClassName={() => "text-sm font-white font-med block p-3 text-gray-300"}
                 closeButton={false}
             />
-            <h2 className="text-3xl font-bold mb-6 text-center">Registracija</h2>
-            <p>
-                Već imate račun?
-                <Link to="/prijava" className="text-blue-500 hover:text-blue-700 underline"> Prijavite se ovdje</Link>.
-            </p>
+            <h2 className="text-3xl font-bold mb-6 text-center">Ažuriraj Korisnika</h2>
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                    <div className="mb-4">
-                        <label className="block text-gray-300 mb-2">Korisničko ime:</label>
-                        <input
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            placeholder="Unesite korisničko ime..."
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
-                            required
-                        />
-                        {errors.username && <p className="text-red-500">{errors.username}</p>}
-                    </div>
                     <div className="mb-4">
                         <label className="block text-gray-300 mb-2">Email:</label>
                         <input
@@ -145,32 +150,6 @@ const Registracija = () => {
                             required
                         />
                         {errors.email && <p className="text-red-500">{errors.email}</p>}
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-300 mb-2">Lozinka:</label>
-                        <input
-                            type="password"
-                            name="password1"
-                            value={formData.password1}
-                            placeholder="Dozvoljeni znakovi: @/./+/-/_"
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
-                            required
-                        />
-                        {errors.password1 && <p className="text-red-500">{errors.password1}</p>}
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-300 mb-2">Ponovite lozinku:</label>
-                        <input
-                            type="password"
-                            name="password2"
-                            value={formData.password2}
-                            placeholder="Ponovite lozinku..."
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
-                            required
-                        />
-                        {errors.password2 && <p className="text-red-500">{errors.password2}</p>}
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-300 mb-2">Ime:</label>
@@ -260,12 +239,15 @@ const Registracija = () => {
                         </select>
                         {errors.grad && <p className="text-red-500">{errors.grad}</p>}
                     </div>
+
                 </div>
-                <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 text-center ml-2">Registriraj se</button>
+                <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center">
+                    <FaEdit className="mr-2" />
+                    Ažuriraj Korisnika
+                </button>
             </form>
         </div>
-
     );
 };
 
-export default Registracija;
+export default AzurirajKorisnikaAdmin;

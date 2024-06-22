@@ -3,8 +3,12 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import useAuth from './useAuth';
 import { AiOutlineEnvironment, AiOutlineCalendar, AiOutlineIdcard, AiOutlineEuroCircle, AiOutlinePhone, AiOutlineMail } from 'react-icons/ai';
-import { FaUserShield, FaUser } from 'react-icons/fa';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { FaUserShield, FaUser, FaEdit } from 'react-icons/fa';
+import {
+    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart,
+    Pie,
+    Cell,
+} from 'recharts';
 import moment from 'moment';
 
 const Admin = () => {
@@ -102,61 +106,67 @@ const Admin = () => {
         setShowModal(true);
     };
 
-    const renderOglasi = () => (
-        <div>
-            {renderOglasiGraf()}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                {oglasi.map((oglas) => (
-                    <div key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">
-                        {oglas.slike && oglas.slike.length > 0 && (
-                            <Link to={`/oglas/${oglas.sifra}`} className="block">
-                                <img src={`http://localhost:8000${oglas.slike[0].slika}`} alt={oglas.naziv} className="w-48 h-48 object-cover" />
-                            </Link>
-                        )}
-                        <div className="flex flex-col justify-between p-4 flex-grow">
-                            <div>
+    const renderOglasi = () => {
+        const aggregatedData = aggregateOglasiByKategorija(oglasi);
+
+        return (
+            <div>
+                {renderOglasiGraf()}
+                {renderOglasiByKategorijaChart(aggregatedData)}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                    {oglasi.map((oglas) => (
+                        <div key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">
+                            {oglas.slike && oglas.slike.length > 0 && (
                                 <Link to={`/oglas/${oglas.sifra}`} className="block">
-                                    <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
+                                    <img src={`http://localhost:8000${oglas.slike[0].slika}`} alt={oglas.naziv} className="w-48 h-48 object-cover" />
                                 </Link>
-                                <p className="text-gray-400 text-sm mb-2">
-                                    <AiOutlineCalendar className="inline-block mr-1" />
-                                    Objavljen: {formatDatum(oglas.datum)}
+                            )}
+                            <div className="flex flex-col justify-between p-4 flex-grow">
+                                <div>
+                                    <Link to={`/oglas/${oglas.sifra}`} className="block">
+                                        <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
+                                    </Link>
+                                    <p className="text-gray-400 text-sm mb-2">
+                                        <AiOutlineCalendar className="inline-block mr-1" />
+                                        Objavljen: {formatDatum(oglas.datum)}
+                                    </p>
+                                    <p className="text-gray-400 text-sm mb-2">
+                                        <AiOutlineEnvironment className="inline-block mr-1" />
+                                        {oglas.zupanija.naziv}, {oglas.grad.naziv}
+                                    </p>
+                                </div>
+                                <p className="text-yellow-500 text-lg font-bold">
+                                    <AiOutlineEuroCircle className="inline-block mr-1" />
+                                    {oglas.cijena} €
                                 </p>
-                                <p className="text-gray-400 text-sm mb-2">
-                                    <AiOutlineEnvironment className="inline-block mr-1" />
-                                    {oglas.zupanija.naziv}, {oglas.grad.naziv}
-                                </p>
-                            </div>
-                            <p className="text-yellow-500 text-lg font-bold">
-                                <AiOutlineEuroCircle className="inline-block mr-1" />
-                                {oglas.cijena} €
-                            </p>
-                            <div className="flex justify-end mt-4">
-                                <button onClick={() => potvrdiBrisanje(oglas.id)} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
-                                    Izbriši
-                                </button>
+                                <div className="flex justify-end mt-4">
+                                    <button onClick={() => potvrdiBrisanje(oglas.id)} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
+                                        Izbriši
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-                {showModal && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-gray-800 p-6 rounded-lg">
-                            <p className="text-white mb-4">Jeste li sigurni da želite izbrisati ovaj oglas?</p>
-                            <div className="flex justify-end">
-                                <button onClick={() => setShowModal(false)} className="bg-gray-300 text-gray-800 py-2 px-4 rounded mr-2">
-                                    Odustani
-                                </button>
-                                <button onClick={izbrisiOglas} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
-                                    Izbriši
-                                </button>
+                    ))}
+                    {showModal && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <div className="bg-gray-800 p-6 rounded-lg">
+                                <p className="text-white mb-4">Jeste li sigurni da želite izbrisati ovaj oglas?</p>
+                                <div className="flex justify-end">
+                                    <button onClick={() => setShowModal(false)} className="bg-gray-300 text-gray-800 py-2 px-4 rounded mr-2">
+                                        Odustani
+                                    </button>
+                                    <button onClick={izbrisiOglas} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
+                                        Izbriši
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
-        </div>
-    );
+        );
+    };
+
 
 
     const aggregateRegistrations = (korisnici, period) => {
@@ -189,6 +199,56 @@ const Admin = () => {
 
         return sortedData;
     };
+    const aggregateOglasiByKategorija = (oglasi) => {
+        return oglasi.reduce((acc, oglas) => {
+            const kategorija = oglas.kategorija_naziv; // Assuming kategorija has a naziv field
+            if (!acc[kategorija]) {
+                acc[kategorija] = 0;
+            }
+            acc[kategorija]++;
+            return acc;
+        }, {});
+    };
+    const renderOglasiByKategorijaChart = (data) => {
+        const formattedData = Object.keys(data).map((key) => ({
+            kategorija: key,
+            count: data[key],
+        }));
+
+        const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6'];
+
+        return (
+            <div className="bg-gray-800 rounded-lg p-6 shadow-lg mb-4 border border-gray-600">
+                <div className="text-white text-center mb-4">
+                    <h3 className="text-xl font-bold">Broj oglasa po kategoriji:</h3>
+                </div>
+                <ResponsiveContainer width="100%" height={400}>
+                    <PieChart>
+                        <Pie
+                            data={formattedData}
+                            dataKey="count"
+                            nameKey="kategorija"
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={150}
+                            fill="#8884d8"
+                            label
+                        >
+                            {formattedData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                    </PieChart>
+                </ResponsiveContainer>
+                <div className="text-white text-center mb-4">
+                    <h3 className="text-xl font-bold">Ukupan broj oglasa:</h3>
+                    <p className="text-3xl font-extrabold">{Object.values(data).reduce((sum, current) => sum + current, 0)}</p>
+                </div>
+            </div>
+        );
+    };
     const aggregateOglasi = (oglasi, period) => {
         const oglasiAggregated = oglasi.reduce((acc, oglas) => {
             let key;
@@ -218,6 +278,8 @@ const Admin = () => {
 
         return sortedData;
     };
+
+
     const renderOglasiGraf = () => {
         const data = aggregateOglasi(oglasi, period);
 
@@ -255,13 +317,9 @@ const Admin = () => {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Line type="monotone" dataKey="oglasi" stroke="#8884d8" />
+                            <Line type="monotone" dataKey="oglasi" stroke="#3b82f6" />
                         </LineChart>
                     </ResponsiveContainer>
-                </div>
-                <div className="text-white text-center mb-4">
-                    <h3 className="text-xl font-bold">Ukupan broj oglasa:</h3>
-                    <p className="text-3xl font-extrabold">{oglasi.length}</p>
                 </div>
                 <div className="text-white text-center mb-4">
                     <h3 className="text-xl font-bold">Ukupan broj pregleda:</h3>
@@ -338,7 +396,7 @@ const Admin = () => {
             {renderKorisniciGraf()}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
                 {korisnici.map((korisnik) => (
-                    <div key={korisnik.id} className="rounded border border-gray-600 bg-gray-800 p-4 rounded-lg shadow-md">
+                    <div key={korisnik.id} className="rounded border border-gray-600 bg-gray-800 p-4 rounded-lg shadow-md relative">
                         <Link to={`/korisnik/${korisnik.username}`} className="text-white flex items-center mb-4">
                             {korisnik.uloga === 'Admin' ? (
                                 <FaUserShield className="w-16 h-16 text-yellow-500 rounded-full mr-4" />
@@ -350,6 +408,13 @@ const Admin = () => {
                                 <p className="text-yellow-500 text-sm font-bold">{korisnik.uloga}</p>
                             </div>
                         </Link>
+                        <Link
+                            to={`/admin-panel/azuriraj-korisnika/${korisnik.id}`}
+                            className="absolute top-2 right-2 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center"
+                        >
+                            <FaEdit className="mr-2" />
+                            Ažuriraj Korisnika
+                        </Link>
                         <div className="flex items-center text-gray-400 text-sm mb-2">
                             <AiOutlineIdcard className="mr-2" />
                             Ime i prezime: {korisnik.first_name} {korisnik.last_name}
@@ -358,7 +423,6 @@ const Admin = () => {
                             <AiOutlineMail className="mr-2" />
                             Email: {korisnik.email}
                         </div>
-
                         <div className="flex items-center text-gray-400 text-sm mb-2">
                             <AiOutlinePhone className="mr-2" />
                             Telefon: {korisnik.telefon}

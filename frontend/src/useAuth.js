@@ -10,7 +10,7 @@ const useAuth = () => {
         const fetchUser = async () => {
             let accessToken = localStorage.getItem('access_token');
             if (!accessToken) {
-                console.error('No access token found');
+                //console.error('No access token found');
                 setLoading(false);
                 return;
             }
