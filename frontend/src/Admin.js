@@ -101,6 +101,19 @@ const Admin = () => {
     const formatDatum = (datum) => {
         return moment(datum).format('DD/MM/YYYY');
     };
+    function formatirajCijenu(cijena) {
+        const parsedPrice = parseFloat(cijena);
+
+        if (Number.isInteger(parsedPrice)) {
+            return parsedPrice.toLocaleString('hr-HR') + ' €';
+        } else {
+            return parsedPrice.toLocaleString('hr-HR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + ' €';
+        }
+    }
+
     const potvrdiBrisanje = (id) => {
         setOglasToDelete(id);
         setShowModal(true);
@@ -137,7 +150,7 @@ const Admin = () => {
                                 </div>
                                 <p className="text-yellow-500 text-lg font-bold">
                                     <AiOutlineEuroCircle className="inline-block mr-1" />
-                                    {oglas.cijena} €
+                                    {formatirajCijenu(oglas.cijena)}
                                 </p>
                                 <div className="flex justify-end mt-4">
                                     <button onClick={() => potvrdiBrisanje(oglas.id)} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">

@@ -209,7 +209,7 @@ function MojiOglasi() {
                     <Link to={`/oglas/${oglas.sifra}`} className="block"><h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4></Link>
                     <p className="text-gray-400 text-sm mb-2">Objavljen: {formatDatum(oglas.datum)}</p>
                 </div>
-                <p className="text-yellow-500 text-lg font-bold">{oglas.cijena} €</p>
+                <p className="text-yellow-500 text-lg font-bold">{formatirajCijenu(oglas.cijena)}</p>
                 <div className="flex justify-end mt-4">
                     <button onClick={() => potvrdiBrisanje(oglas.id)} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
                         Izbriši
@@ -235,7 +235,7 @@ function MojiOglasi() {
                     <Link to={`/oglas/${oglas.sifra}`} className="block"><h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4></Link>
                     <p className="text-gray-400 text-sm mb-2">Objavljen: {formatDatum(oglas.datum)}</p>
                 </div>
-                <p className="text-yellow-500 text-lg font-bold">{oglas.cijena} €</p>
+                <p className="text-yellow-500 text-lg font-bold">{formatirajCijenu(oglas.cijena)} </p>
                 <div className="flex justify-end mt-4">
                     <button onClick={() => ukloniIzFavorita(oglas.id)} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
                         Ukloni iz favorita
@@ -262,6 +262,18 @@ function MojiOglasi() {
             </div>
         )
     );
+    function formatirajCijenu(cijena) {
+        const parsedPrice = parseFloat(cijena);
+
+        if (Number.isInteger(parsedPrice)) {
+            return parsedPrice.toLocaleString('hr-HR') + ' €';
+        } else {
+            return parsedPrice.toLocaleString('hr-HR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + ' €';
+        }
+    }
     return (
         <div className="w-full max-w-4xl mx-auto mb-32">
             <h2 className="text-white text-2xl mb-4">Moji oglasi</h2>

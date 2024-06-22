@@ -137,6 +137,18 @@ function Oglasi() {
         const godina = date.getFullYear();
         return `${dan}/${mjesec}/${godina}`;
     };
+    function formatirajCijenu(cijena) {
+        const parsedPrice = parseFloat(cijena);
+
+        if (Number.isInteger(parsedPrice)) {
+            return parsedPrice.toLocaleString('hr-HR') + ' €';
+        } else {
+            return parsedPrice.toLocaleString('hr-HR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + ' €';
+        }
+    }
 
     const filteredOglasi = oglasi.filter(oglas => {
         let cijena = oglas.cijena;
@@ -330,8 +342,9 @@ function Oglasi() {
                             </div>
                             <p className="text-yellow-500 text-lg font-bold flex items-center">
                                 <AiOutlineEuroCircle className="inline-block mr-2" />
-                                {oglas.cijena} €
+                                {formatirajCijenu(oglas.cijena)}
                             </p>
+
                             <button
                                 onClick={() => toggleFavorite(oglas.id, oglas.favorited)}
                                 className="text-gray-400 hover:text-red-500 focus:outline-none"

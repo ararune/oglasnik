@@ -151,7 +151,19 @@ function Pretraga() {
 
   const sortedOglasi = sortOglasi(filteredOglasi, sortOption);
   const paginatedOglasi = sortedOglasi.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  
+  function formatirajCijenu(cijena) {
+    const parsedPrice = parseFloat(cijena);
 
+    if (Number.isInteger(parsedPrice)) {
+      return parsedPrice.toLocaleString('hr-HR') + ' €';
+    } else {
+      return parsedPrice.toLocaleString('hr-HR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }) + ' €';
+    }
+  }
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-white text-2xl mb-4">Rezultati pretrage za: "{searchQuery}"</h2>
@@ -269,7 +281,7 @@ function Pretraga() {
               )}
               <div className="flex flex-col justify-between p-4 flex-grow">
                 <div>
-                <p className="inline-flex items-center bg-blue-600 text-white font-semibold py-2 px-4 rounded">{oglas.kategorija}</p>
+                  <p className="inline-flex items-center bg-blue-600 text-white font-semibold py-2 px-4 rounded">{oglas.kategorija}</p>
                   <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block"><h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4></Link>
                   {oglas.korisnik && (
                     <div className="text-gray-400 text-sm mb-1 flex items-center">
@@ -284,7 +296,7 @@ function Pretraga() {
                 </div>
                 <p className="text-yellow-500 text-lg font-bold flex items-center">
                   <AiOutlineEuroCircle className="inline-block mr-2" />
-                  {oglas.cijena} €
+                  {formatirajCijenu(oglas.cijena)}
                 </p>
 
                 <button

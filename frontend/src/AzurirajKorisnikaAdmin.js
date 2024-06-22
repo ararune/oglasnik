@@ -40,7 +40,7 @@ const AzurirajKorisnikaAdmin = () => {
                 console.error('Error fetching user data:', error);
             }
         };
-    
+
         if (zupanije.length === 0) {
             fetchZupanije();
         }
