@@ -301,5 +301,71 @@
     "Umjetnine": {
       "url": "umjetnine"
     }
+  },
+  "Hobi i obrt": {
+    "url": "hobi-i-obrt",
+    "Pletenje i heklanje": {
+      "url": "pletenje-i-heklanje"
+    },
+    "Keramika": {
+      "url": "keramika"
+    },
+    "Fotografija": {
+      "url": "fotografija"
+    },
+    "Vrtlarenje": {
+      "url": "vrtlarenje"
+    }
+  },
+  "Dječji kutak": {
+    "url": "djecji-kutak",
+    "Edukativne igračke": {
+      "url": "edukativne-igracke"
+    },
+    "Igre na otvorenom": {
+      "url": "igre-na-otvorenom"
+    },
+    "Dječji namještaj": {
+      "url": "djecji-namjestaj"
+    },
+    "Kolica i autosjedalice": {
+      "url": "kolica-i-autosjedalice"
+    }
+  },
+  "Zdravlje i wellness": {
+    "url": "zdravlje-i-wellness",
+    "Fitness": {
+      "url": "fitness"
+    },
+    "Yoga i meditacija": {
+      "url": "yoga-i-meditacija"
+    },
+    "Dijetetika": {
+      "url": "dijetetika"
+    },
+    "Alternativna medicina": {
+      "url": "alternativna-medicina"
+    },
+    "Wellness centri": {
+      "url": "wellness-centri"
+    }
+  },
+  "Moda i ljepota": {
+    "url": "moda-i-ljepota",
+    "Odjeća": {
+      "url": "odjeca"
+    },
+    "Obuća": {
+      "url": "obuca"
+    },
+    "Nakit": {
+      "url": "nakit"
+    },
+    "Kozmetika": {
+      "url": "kozmetika"
+    },
+    "Frizerski saloni": {
+      "url": "frizerski-saloni"
+    }
   }
 }

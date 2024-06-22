@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   FaGuitar, FaHome, FaCar, FaLaptop, FaTshirt, FaFootballBall, FaBook, FaPaw, FaPlusCircle,
-  FaTools, FaBriefcase, FaSchool, FaChess
+  FaTools, FaBriefcase, FaSchool, FaChess, FaPaintBrush, FaLeaf, FaHeartbeat, FaGem
 } from 'react-icons/fa';
 import useAuth from './useAuth';
 
@@ -13,7 +13,7 @@ function Kategorije() {
     <div className="min-h-screen rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 px-4">
       <div className="py-20 px-4 text-center text-white">
         <h1 className="text-4xl font-bold mb-4">Pronađite sve što vam treba</h1>
-        <p className="text-lg mb-4">Istražite našu ponudu kategorija i pronađite savršeni proizvod za vas.</p>
+        <p className="text-lg mb-4">Istražite našu ponudu i pronađite savršeni proizvod za vas.</p>
       </div>
       <div className="p-6 w-full max-w-4xl mx-auto">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-12">
@@ -54,9 +54,9 @@ function Kategorije() {
             <FaTools className="h-20 w-20 mb-2 text-white" />
             <span className="font-semibold text-lg text-white">Strojevi i alati</span>
           </Link>
-          <Link to="/oglasi/profesionalna-oprema" className="bg-gray-800 p-4 rounded shadow-md hover:bg-gray-900 text-center flex flex-col items-center">
+          <Link to="/oglasi/profesionalna-oprema" className="bg-indigo-800 p-4 rounded shadow-md hover:bg-indigo-900 text-center flex flex-col items-center">
             <FaBriefcase className="h-20 w-20 mb-2 text-white" />
-            <span className="font-semibold text-lg text-white">Profesionalna oprema</span>
+            <span className="font-semibold text-lg text-white">Oprema</span>
           </Link>
           <Link to="/oglasi/sve-za-skolu" className="bg-blue-600 p-4 rounded shadow-md hover:bg-blue-700 text-center flex flex-col items-center">
             <FaSchool className="h-20 w-20 mb-2 text-white" />
@@ -65,6 +65,22 @@ function Kategorije() {
           <Link to="/oglasi/kolekcionarstvo" className="bg-orange-800 p-4 rounded shadow-md hover:bg-orange-900 text-center flex flex-col items-center">
             <FaChess className="h-20 w-20 mb-2 text-white" />
             <span className="font-semibold text-lg text-white">Kolekcionarstvo</span>
+          </Link>
+          <Link to="/oglasi/hobi-i-obrt" className="bg-green-600 p-4 rounded shadow-md hover:bg-green-700 text-center flex flex-col items-center">
+            <FaPaintBrush className="h-20 w-20 mb-2 text-white" />
+            <span className="font-semibold text-lg text-white">Hobi i obrt</span>
+          </Link>
+          <Link to="/oglasi/djecji-kutak" className="bg-yellow-600 p-4 rounded shadow-md hover:bg-yellow-700 text-center flex flex-col items-center">
+            <FaLeaf className="h-20 w-20 mb-2 text-white" />
+            <span className="font-semibold text-lg text-white">Dječji kutak</span>
+          </Link>
+          <Link to="/oglasi/zdravlje-i-wellness" className="bg-rose-600 p-4 rounded shadow-md hover:bg-rose-700 text-center flex flex-col items-center">
+            <FaHeartbeat className="h-20 w-20 mb-2 text-white" />
+            <span className="font-semibold text-lg text-white">Zdravlje i wellness</span>
+          </Link>
+          <Link to="/oglasi/moda-i-ljepota" className="bg-pink-600 p-4 rounded shadow-md hover:bg-pink-700 text-center flex flex-col items-center">
+            <FaGem className="h-20 w-20 mb-2 text-white" />
+            <span className="font-semibold text-lg text-white">Moda i ljepota</span>
           </Link>
         </div>
         <div className="p-6 rounded-lg text-center text-white">
