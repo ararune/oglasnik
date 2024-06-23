@@ -42,6 +42,7 @@ const Admin = () => {
                 const page = parseInt(params.get('page')) || 1;
                 setCurrentPage(page);
             } catch (error) {
+                window.location.href = '/';
                 setError('Unauthorized or unable to fetch admin data');
             }
         };
@@ -235,6 +236,12 @@ const Admin = () => {
                             )}
                             <div className="flex flex-col justify-between p-4 flex-grow">
                                 <div>
+                                    {oglas.status === 'aktivan' && (
+                                        <span className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-md text-sm">Aktivan</span>
+                                    )}
+                                    {oglas.status === 'neaktivan' && (
+                                        <span className="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded-md text-sm">Neaktivan</span>
+                                    )}
                                     <Link to={`/oglas/${oglas.sifra}`} className="block">
                                         <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
                                     </Link>
@@ -252,7 +259,7 @@ const Admin = () => {
                                     {formatirajCijenu(oglas.cijena)}
                                 </p>
                                 <div className="flex justify-end mt-4">
-                                    <button onClick={() => potvrdiBrisanje(oglas.id)} className="text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
+                                    <button onClick={() => potvrdiBrisanje(oglas.id)} className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
                                         Izbriši
                                     </button>
                                 </div>

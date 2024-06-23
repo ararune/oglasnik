@@ -31,7 +31,8 @@ function Korisnik() {
             })
             .then(data => {
                 setUserData(data.korisnik);
-                setOglasi(data.oglasi);
+                const activeOglasi = data.oglasi.filter(oglas => oglas.status === 'aktivan');
+                setOglasi(activeOglasi);
             })
             .catch(error => {
                 setError(error.message);

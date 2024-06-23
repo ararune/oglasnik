@@ -57,6 +57,10 @@ class Oglas(models.Model):
         (7, '1 tjedan'),
         (30, '1 mjesec'),
     ]
+    STATUS_IZBORI = [
+        ('aktivan', 'Aktivan'),
+        ('neaktivan', 'Neaktivan'),
+    ]
     def generiraj_sifru():
         while True:
             sifra = str(uuid.uuid4().int)[:8]
@@ -73,7 +77,7 @@ class Oglas(models.Model):
     trajanje = models.IntegerField(choices=IZBOR_TRAJANJA)
     kategorija = models.ForeignKey(Kategorija, on_delete=models.CASCADE, null=True)
     datum = models.DateTimeField(auto_now_add=True)
-    
+    status = models.CharField(max_length=10, choices=STATUS_IZBORI, default='aktivan')
 
     class Meta:
         verbose_name = 'Oglas'

@@ -28,7 +28,8 @@ function Oglasi() {
         fetch(`http://localhost:8000/oglasi/${category}/?page=${page}&sort=${sortOption}`)
             .then(response => response.json())
             .then(data => {
-                setOglasi(data.oglasi);
+                const activeOglasi = data.oglasi.filter(oglas => oglas.status === 'aktivan');
+                setOglasi(activeOglasi);
                 setHijerarhija(data.hijerarhija);
                 setChildren(data.children);
                 const zupanijaCounts = data.oglasi.reduce((acc, oglas) => {
@@ -59,7 +60,21 @@ function Oglasi() {
         }
         return sortedOglasi;
     }, []);
+    const nextPage = () => {
+        const newPage = currentPage + 1;
+        handlePageChange(newPage);
+    };
 
+    const prevPage = () => {
+        const newPage = currentPage - 1;
+        handlePageChange(newPage);
+    };
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        const params = new URLSearchParams(window.location.search);
+        params.set('page', page);
+        window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
+    };
     const handleSortChange = (event) => {
         setSearchParams(prev => {
             const newParams = new URLSearchParams(prev);
@@ -282,29 +297,32 @@ function Oglasi() {
 
     const RenderPagination = () => (
         <div className="flex justify-center my-4">
-            <div className="flex">
-                <Link
-                    to={`?page=1&sort=${sortOption}&minCijena=${minCijena}&maxCijena=${maxCijena}${selectedZupanije.map(zupanija => `&zupanija=${zupanija}`).join('')}`}
-                    className={`px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-l-md shadow-md`}
+            <button
+                onClick={prevPage}
+                disabled={currentPage === 1}
+                className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer"
+            >
+                Prethodna
+            </button>
+
+            {[...Array(Math.ceil(sortedOglasi.length / itemsPerPage)).keys()].map((page) => (
+                <button
+                    key={page + 1}
+                    onClick={() => handlePageChange(page + 1)}
+                    disabled={currentPage === page + 1}
+                    className={`px-4 py-2 mx-2 border border-gray-600 ${currentPage === page + 1 ? 'bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white cursor-not-allowed' : 'bg-gray-800 text-white hover:bg-gradient-to-br'} rounded`}
                 >
-                    Prva
-                </Link>
-                {[...Array(Math.ceil(sortedOglasi.length / itemsPerPage)).keys()].map((number) => (
-                    <Link
-                        key={number + 1}
-                        to={`?page=${number + 1}&sort=${sortOption}&minCijena=${minCijena}&maxCijena=${maxCijena}${selectedZupanije.map(zupanija => `&zupanija=${zupanija}`).join('')}`}
-                        className={`px-3 py-2 bg-gray-800 hover:bg-gray-700 ${currentPage === number + 1 ? 'bg-gray-400' : ''}`}
-                    >
-                        {number + 1}
-                    </Link>
-                ))}
-                <Link
-                    to={`?page=${Math.ceil(sortedOglasi.length / itemsPerPage)}&sort=${sortOption}&minCijena=${minCijena}&maxCijena=${maxCijena}${selectedZupanije.map(zupanija => `&zupanija=${zupanija}`).join('')}`}
-                    className={`px-4 py-2 bg-gray-800 hover:bg-gray-700  rounded-r-md shadow-md`}
-                >
-                    Zadnja
-                </Link>
-            </div>
+                    {page + 1}
+                </button>
+            ))}
+
+            <button
+                onClick={nextPage}
+                disabled={currentPage === Math.ceil(sortedOglasi.length / itemsPerPage)}
+                className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer"
+            >
+                Sljedeća
+            </button>
         </div>
     );
 

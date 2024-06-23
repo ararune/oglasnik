@@ -27,7 +27,8 @@ function Pretraga() {
     fetch(`http://localhost:8000/api/pretraga?q=${searchQuery}&page=${page}&sort=${sortOption}`)
       .then(response => response.json())
       .then(data => {
-        setOglasi(data.oglasi);
+        const activeOglasi = data.oglasi.filter(oglas => oglas.status === 'aktivan');
+        setOglasi(activeOglasi);
         const zupanijaCounts = data.oglasi.reduce((acc, oglas) => {
           const zupanija = oglas.korisnik?.zupanija;
           if (zupanija) {
@@ -151,7 +152,7 @@ function Pretraga() {
 
   const sortedOglasi = sortOglasi(filteredOglasi, sortOption);
   const paginatedOglasi = sortedOglasi.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  
+
   function formatirajCijenu(cijena) {
     const parsedPrice = parseFloat(cijena);
 

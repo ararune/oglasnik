@@ -59,7 +59,7 @@ class OglasSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Oglas
-        fields = ['id', 'cijena', 'sifra', 'naziv', 'opis', 'korisnik', 'zupanija', 'grad', 'trajanje', 'kategorija', 'kategorija_naziv', 'datum', 'slike']
+        fields = ['id', 'cijena', 'sifra', 'naziv', 'opis', 'korisnik', 'zupanija', 'grad', 'trajanje', 'kategorija', 'kategorija_naziv', 'datum', 'slike', 'status']
 
 class FavoritSerializer(serializers.ModelSerializer):
     class Meta:

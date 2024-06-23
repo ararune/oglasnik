@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    'django_cron'
 ]
 AUTH_USER_MODEL = 'oglasnik.Korisnik'
 MIDDLEWARE = [
@@ -44,6 +45,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
+]
+DJANGO_CRON_CLASSES = [
+    'oglasnik.management.commands.check_oglas_status.CheckOglasStatusJob',
 ]
 
 ROOT_URLCONF = 'backend.urls'

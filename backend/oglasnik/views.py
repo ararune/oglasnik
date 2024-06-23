@@ -338,6 +338,7 @@ def oglasi_po_kategoriji(request, url):
             'sifra': oglas.sifra,
             'cijena': oglas.cijena,
             'kategorija': oglas.kategorija.naziv,
+            'status': oglas.status,
             'slike': slike_urls,
             'korisnik': korisnik_info,
             'favorited': favorited 
@@ -442,6 +443,7 @@ def pretraga_oglasi(request):
             'datum': oglas.datum,
             'sifra': oglas.sifra,
             'kategorija': oglas.kategorija.naziv,
+            'status': oglas.status,
             'cijena': oglas.cijena,
             'slike': slike_urls,
             'korisnik': korisnik_info
