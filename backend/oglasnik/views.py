@@ -223,22 +223,26 @@ def azuriraj_oglas(request, oglas_id):
     elif request.method == 'PUT':
         oglas_form = FormaZaIzraduOglasa(request.POST, instance=oglas)
         slike = request.FILES.getlist('slike')
+        slike_za_brisanje = request.data.get('slike_za_brisanje', [])
 
         if oglas_form.is_valid():
-            for stara_slika in oglas.slike.all():
-                if stara_slika.slika:
-                    file_path = os.path.join(settings.MEDIA_ROOT, stara_slika.slika.path)
-                    if os.path.isfile(file_path):
-                        os.remove(file_path)
-                stara_slika.delete() 
+            # Delete selected images
+            for slika_id in slike_za_brisanje:
+                try:
+                    slika = Slika.objects.get(id=slika_id, oglas=oglas)
+                    if slika.slika:
+                        file_path = os.path.join(settings.MEDIA_ROOT, slika.slika.path)
+                        if os.path.isfile(file_path):
+                            os.remove(file_path)
+                    slika.delete()
+                except Slika.DoesNotExist:
+                    continue
 
-            
+            # Add new images
             for nova_slika in slike:
                 Slika.objects.create(oglas=oglas, slika=nova_slika)
 
-            
             oglas = oglas_form.save()
-
             return Response(OglasSerializer(oglas).data, status=status.HTTP_200_OK)
         else:
             errors = {
@@ -246,6 +250,7 @@ def azuriraj_oglas(request, oglas_id):
                 'slike_errors': [{'slika': 'Obavezno polje.'}] if not slike else None
             }
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
 
         
     

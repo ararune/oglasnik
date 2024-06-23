@@ -25,6 +25,8 @@ const AzurirajOglas = () => {
     const [podkategorije, setPodkategorije] = useState([]);
     const [unukKategorije, setUnukKategorije] = useState([]);
     const [sveKategorije, setSveKategorije] = useState([]);
+    const [existingImages, setExistingImages] = useState([]);
+    const [imagesToDelete, setImagesToDelete] = useState([]);
     const navigate = useNavigate();
 
 
@@ -47,6 +49,7 @@ const AzurirajOglas = () => {
                         zupanija: user ? user.zupanija_id : '',
                         grad: user ? user.grad_id : '',
                     });
+                    setExistingImages(data.slike);
                     dohvatiKategorije();
                 } else {
                     console.error('Error fetching oglas:', await response.json());
@@ -55,7 +58,7 @@ const AzurirajOglas = () => {
                 console.error('Error fetching oglas:', error);
             }
         };
-    
+
         if (!loading) {
             fetchOglas();
         }
@@ -141,13 +144,15 @@ const AzurirajOglas = () => {
         }
         if (!podaciForme.opis) {
             newErrors.opis = 'Opis je obavezan.';
+        } else if (podaciForme.opis.length > 1000) {
+            newErrors.opis = 'Opis može imati najviše 1000 znakova.';
         }
         if (!podaciForme.kategorija) {
             newErrors.kategorija = 'Kategorija je obavezna.';
         }
-        if (podaciForme.slike.length === 0) {
+        if (podaciForme.slike.length + existingImages.length === 0) {
             newErrors.slike = 'Morate dodati barem jednu sliku.';
-        } else if (podaciForme.slike.length > MAX_BROJ_SLIKA) {
+        } else if (podaciForme.slike.length + existingImages.length > MAX_BROJ_SLIKA) {
             newErrors.slike = `Možete odabrati maksimalno ${MAX_BROJ_SLIKA} slike.`;
         }
 
@@ -182,8 +187,12 @@ const AzurirajOglas = () => {
             formData.append('kategorija', lastSelectedKategorija);
             formData.append('zupanija', podaciForme.zupanija);
             formData.append('grad', podaciForme.grad);
-            podaciForme.slike.forEach(file => {
-                formData.append('slike', file);
+            podaciForme.slike.forEach((slika) => {
+                formData.append('slike', slika);
+            });
+
+            imagesToDelete.forEach((slikaId) => {
+                formData.append('slike_za_brisanje', slikaId);
             });
 
 
@@ -211,20 +220,24 @@ const AzurirajOglas = () => {
         }
     };
 
-    
-    const removeImage = (index) => {
-        const newImages = [...podaciForme.slike];
-        newImages.splice(index, 1);
-        setPodaciForme((prevPodaci) => ({
-            ...prevPodaci,
-            slike: newImages,
-        }));
+
+    const removeExistingImage = (imageId) => {
+        setImagesToDelete((prevImagesToDelete) => [...prevImagesToDelete, imageId]);
+        setExistingImages((prevExistingImages) => prevExistingImages.filter((image) => image.id !== imageId));
+    };
+
+    const removeNewImage = (index) => {
+        setPodaciForme((prevPodaci) => {
+            const updatedSlike = [...prevPodaci.slike];
+            updatedSlike.splice(index, 1);
+            return { ...prevPodaci, slike: updatedSlike };
+        });
     };
 
     if (loading) {
         return <div>Loading...</div>;
     }
-    
+
 
     return (
         <div className="rounded border border-gray-600 bg-gray-800 p-6 rounded shadow-md max-w-3xl w-full mb-32 mx-auto">
@@ -346,47 +359,60 @@ const AzurirajOglas = () => {
                 </div>
 
                 <div className="mb-4">
-                    <label className="block text-gray-300 mb-2">Slike:</label>
-                    <div className="mb-2">
-                        <input
-                            type="file"
-                            name="slike"
-                            onChange={promjenaDatoteka}
-                            multiple
-                            className="hidden"
-                            id="fileInput"
-                            accept="image/*"
-                        />
-                        <label htmlFor="fileInput" className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:bg-gray-900 cursor-pointer">
-                            Odaberite slike
-                        </label>
-                    </div>
-                    {errors.slike && <span className="text-red-500">{errors.slike}</span>}
-                    <div className="flex flex-wrap -mx-2">
-                        {podaciForme.slike.map((image, index) => (
-                            <div key={index} className="relative w-24 h-24 mx-2 mb-2">
-                                <img
-                                    src={URL.createObjectURL(image)}
-                                    alt={`Slika ${index + 1}`}
-                                    className="w-full h-full object-cover rounded"
-                                />
+                    <label htmlFor="slike" className="block text-gray-700 font-bold mb-2">Slike</label>
+                    <input
+                        type="file"
+                        id="slike"
+                        name="slike"
+                        multiple
+                        accept="image/*"
+                        onChange={promjenaDatoteka}
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none ${errors.slike ? 'border-red-500' : 'border-gray-300'}`}
+                    />
+                    {errors.slike && <p className="text-red-500 mt-1">{errors.slike}</p>}
+                </div>
+
+
+                <div className="mb-4 col-span-2">
+                    <label className="block text-gray-700 font-bold mb-2 text-white">Postojeće slike</label>
+                    <div className="flex flex-wrap mb-4">
+                        {existingImages.map((image) => (
+                            <div key={image.id} className="relative mr-4 mb-4">
+                                <img src={image.slika} alt="Slika oglasa" className="w-32 h-32 object-cover rounded-md" />
                                 <button
                                     type="button"
-                                    className="absolute top-0 right-0 text-white p-1 rounded-full"
-                                    onClick={() => removeImage(index)}
+                                    onClick={() => removeExistingImage(image.id)}
+                                    className="absolute top-0 right-0 text-red-600"
                                 >
-                                   <RiCloseCircleFill className="text-red-800 w-8 h-8" />
+                                    <RiCloseCircleFill size={24} />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
 
+                <div className="mb-4 col-span-2">
+                    <label className="block text-gray-700 font-bold mb-2 text-white">Nove slike</label>
+                    <div className="flex flex-wrap mb-4">
+                        {podaciForme.slike.map((image, index) => (
+                            <div key={index} className="relative mr-4 mb-4">
+                                <img src={URL.createObjectURL(image)} alt="Slika oglasa" className="w-32 h-32 object-cover rounded-md" />
+                                <button
+                                    type="button"
+                                    onClick={() => removeNewImage(index)}
+                                    className="absolute top-0 right-0 text-red-600"
+                                >
+                                    <RiCloseCircleFill size={24} />
                                 </button>
                             </div>
                         ))}
                     </div>
                 </div>
                 <div className="col-span-2">
-                <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center">
-                    <FaEdit className="mr-2" />
-                    Ažuriraj Oglas
-                </button>
+                    <button type="submit" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center">
+                        <FaEdit className="mr-2" />
+                        Ažuriraj Oglas
+                    </button>
                 </div>
             </form>
         </div>
