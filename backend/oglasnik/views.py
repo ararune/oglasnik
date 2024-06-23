@@ -12,7 +12,7 @@ import base64
 from rest_framework import filters
 from rest_framework import viewsets
 from django.forms.models import model_to_dict
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -25,6 +25,7 @@ from django.contrib.auth import update_session_auth_hash
 from rest_framework.decorators import action
 from django.utils import timezone
 from datetime import timedelta
+
 class ZupanijaViewSet(viewsets.ModelViewSet):
     queryset = Zupanija.objects.all()
     serializer_class = ZupanijaSerializer
@@ -209,12 +210,12 @@ def kreiraj_oglas(request):
             return Response(errors, status=400)
 
 @api_view(['GET', 'PUT'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])  # You can remove IsAuthenticated if IsAdminUser is used
 def azuriraj_oglas(request, oglas_id):
-    try:
-        oglas = Oglas.objects.get(pk=oglas_id, korisnik=request.user)
-    except Oglas.DoesNotExist:
-        return Response({'error': 'Oglas nije pronađen ili nemate autorizaciju.'}, status=status.HTTP_404_NOT_FOUND)
+    oglas = get_object_or_404(Oglas, pk=oglas_id)
+    
+    if not request.user.is_superuser and oglas.korisnik != request.user:
+        return Response({'error': 'Nemate dozvolu za ažuriranje ovog oglasa.'}, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
         serializer = OglasSerializer(oglas)

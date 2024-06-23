@@ -262,6 +262,13 @@ const Admin = () => {
                                     <button onClick={() => potvrdiBrisanje(oglas.id)} className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center ml-2 mr-2">
                                         Izbriši
                                     </button>
+                                    <Link
+                                        to={`/api/azuriraj-oglas/${oglas.id}`}
+                                        className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded"
+                                    >
+                                        Ažuriraj
+                                    </Link>
+
                                 </div>
                             </div>
                         </div>
