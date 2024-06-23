@@ -22,6 +22,7 @@ const OglasDetalji = () => {
     const [brojPregleda, setBrojPregleda] = useState(0);
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -128,7 +129,7 @@ const OglasDetalji = () => {
     if (!oglas) {
         return <div>Loading...</div>;
     }
-
+    
     return (
         <div className="max-w-screen-xl mx-auto p-4">
             <Navigation hijerarhija={hijerarhija} />

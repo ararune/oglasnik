@@ -380,11 +380,9 @@ def oglas_detalji(request, sifra):
     
     ip_address = request.META.get('REMOTE_ADDR')
     
-    # Calculate 24 hours ago from now
     now = timezone.now()
     twenty_four_hours_ago = now - timedelta(hours=24)
     
-    # Check if the same IP has viewed this ad in the past 24 hours
     pregled_exists = Pregled.objects.filter(
         oglas=oglas,
         ip_address=ip_address,
@@ -474,19 +472,15 @@ def dohvati_korisnika(request, username):
 def admin_view(request):
     user = request.user
     
-    # Ensure only admin (superuser) can access this view
     if not user.is_superuser:
         return JsonResponse({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
     
-    # Fetch all Korisnik instances
     korisnici = Korisnik.objects.all()
     korisnici_serializer = KorisnikSerializer(korisnici, many=True)
     
-    # Fetch all Oglas instances
     oglasi = Oglas.objects.all()
     oglasi_serializer = OglasSerializer(oglasi, many=True)
     
-    # Return serialized data
     return JsonResponse({'korisnici': korisnici_serializer.data, 'oglasi': oglasi_serializer.data})
 
 @api_view(['PUT'])

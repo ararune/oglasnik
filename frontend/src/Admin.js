@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import useAuth from './useAuth';
-import { AiOutlineEnvironment, AiOutlineCalendar, AiOutlineIdcard, AiOutlineEuroCircle, AiOutlinePhone, AiOutlineMail } from 'react-icons/ai';
+import { AiOutlineEnvironment, AiOutlineCalendar, AiOutlineIdcard, AiOutlineEuroCircle, AiOutlinePhone, AiOutlineMail, AiOutlineSearch } from 'react-icons/ai';
 import { FaUserShield, FaUser, FaEdit } from 'react-icons/fa';
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart,
@@ -10,6 +10,8 @@ import {
     Cell,
 } from 'recharts';
 import moment from 'moment';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 const Admin = () => {
     const { user, loading } = useAuth();
@@ -21,6 +23,8 @@ const Admin = () => {
     const [oglasToDelete, setOglasToDelete] = useState(null);
     const [period, setPeriod] = useState('day');
     const [totalPregledi, setTotalPregledi] = useState(0);
+    const [searchQuery, setSearchQuery] = useState('');
+    
     useEffect(() => {
         const fetchAdminData = async () => {
             try {
@@ -121,13 +125,64 @@ const Admin = () => {
 
     const renderOglasi = () => {
         const aggregatedData = aggregateOglasiByKategorija(oglasi);
-
+        const filtriraniOglasi = oglasi.filter(oglas =>
+            oglas.naziv.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            oglas.sifra.toLowerCase().includes(searchQuery.toLowerCase())
+        );
         return (
             <div>
-                {renderOglasiGraf()}
-                {renderOglasiByKategorijaChart(aggregatedData)}
+                <div className="carousel-container relative">
+                    <Carousel
+                        showThumbs={false}
+                        infiniteLoop
+                        useKeyboardArrows
+                        showStatus={false}
+                        showIndicators={false}
+                        renderArrowPrev={(onClickHandler, hasPrev, label) =>
+                            hasPrev && (
+                                <button
+                                    type="button"
+                                    onClick={onClickHandler}
+                                    title={label}
+                                    className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-3 text-white z-10 focus:outline-none h-12 w-12 flex items-center justify-center"
+                                >
+                                    &#10094;
+                                </button>
+                            )
+                        }
+                        renderArrowNext={(onClickHandler, hasNext, label) =>
+                            hasNext && (
+                                <button
+                                    type="button"
+                                    onClick={onClickHandler}
+                                    title={label}
+                                    className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-3 text-white z-10 focus:outline-none h-12 w-12 flex items-center justify-center"
+                                >
+                                    &#10095;
+                                </button>
+                            )
+                        }
+                    >
+                        <div>{renderOglasiGraf()}</div>
+                        <div>{renderOglasiPoKategorijiGraf(aggregatedData)}</div>
+                    </Carousel>
+                </div>
+                <div className="relative mb-6 mt-4 sm:w-full md:w-2/5">
+                    <div className="relative">
+                        <input
+                            type="search"
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
+                            placeholder="Pretraži oglase po nazivu ili šifri..."
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <button type="submit" className="absolute right-0 top-0 mt-3 mr-4">
+                            <AiOutlineSearch className="h-4 w-4 text-gray-600" />
+                        </button>
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                    {oglasi.map((oglas) => (
+                    {filtriraniOglasi.map((oglas) => (
                         <div key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">
                             {oglas.slike && oglas.slike.length > 0 && (
                                 <Link to={`/oglas/${oglas.sifra}`} className="block h-full">
@@ -206,7 +261,6 @@ const Admin = () => {
                 registrirani: registrations[date]
             }))
             .sort((a, b) => {
-                // Custom sorting function to handle different date formats
                 return moment(a.date, getMomentFormat(period)).unix() - moment(b.date, getMomentFormat(period)).unix();
             });
 
@@ -214,7 +268,7 @@ const Admin = () => {
     };
     const aggregateOglasiByKategorija = (oglasi) => {
         return oglasi.reduce((acc, oglas) => {
-            const kategorija = oglas.kategorija_naziv; // Assuming kategorija has a naziv field
+            const kategorija = oglas.kategorija_naziv;
             if (!acc[kategorija]) {
                 acc[kategorija] = 0;
             }
@@ -222,7 +276,7 @@ const Admin = () => {
             return acc;
         }, {});
     };
-    const renderOglasiByKategorijaChart = (data) => {
+    const renderOglasiPoKategorijiGraf = (data) => {
         const formattedData = Object.keys(data).map((key) => ({
             kategorija: key,
             count: data[key],
@@ -400,15 +454,32 @@ const Admin = () => {
         );
     };
 
-
-
+    const filtriraniKorisnici = korisnici.filter(korisnik =>
+        korisnik.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        `${korisnik.first_name.toLowerCase()} ${korisnik.last_name.toLowerCase()}`.includes(searchQuery.toLowerCase()) ||
+        korisnik.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        korisnik.telefon.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
 
     const renderKorisnici = () => (
         <div>
             {renderKorisniciGraf()}
+            <div className="relative mb-6 mt-4 sm:w-full md:w-2/5">
+                <div className="relative">
+                    <input
+                        type="search"
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
+                        placeholder="Pretraži korisnike po korisničkim informacijama..."
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <button type="submit" className="absolute right-0 top-0 mt-3 mr-4">
+                        <AiOutlineSearch className="h-4 w-4 text-gray-600" />
+                    </button>
+                </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
-                {korisnici.map((korisnik) => (
+                {filtriraniKorisnici.map((korisnik) => (
                     <div key={korisnik.id} className="rounded border border-gray-600 bg-gray-800 p-4 rounded-lg shadow-md relative">
                         <Link to={`/korisnik/${korisnik.username}`} className="text-white flex items-center mb-4">
                             {korisnik.uloga === 'Admin' ? (
@@ -453,6 +524,7 @@ const Admin = () => {
             </div>
         </div>
     );
+
 
     return (
         <div className="w-full max-w-6xl mx-auto mb-32">
