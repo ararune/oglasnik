@@ -24,7 +24,9 @@ const Admin = () => {
     const [period, setPeriod] = useState('day');
     const [totalPregledi, setTotalPregledi] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
-    
+    const [currentPage, setCurrentPage] = useState(1);
+    const [perPage] = useState(4);
+
     useEffect(() => {
         const fetchAdminData = async () => {
             try {
@@ -36,6 +38,9 @@ const Admin = () => {
                 const response = await axios.get('/admin-panel/', { headers });
                 setOglasi(response.data.oglasi);
                 setKorisnici(response.data.korisnici);
+                const params = new URLSearchParams(window.location.search);
+                const page = parseInt(params.get('page')) || 1;
+                setCurrentPage(page);
             } catch (error) {
                 setError('Unauthorized or unable to fetch admin data');
             }
@@ -75,6 +80,21 @@ const Admin = () => {
         setAktivniTab(tab);
         const params = new URLSearchParams(window.location.search);
         params.set('tab', tab);
+        window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
+    };
+    const nextPage = () => {
+        const newPage = currentPage + 1;
+        handlePageChange(newPage);
+    };
+
+    const prevPage = () => {
+        const newPage = currentPage - 1;
+        handlePageChange(newPage);
+    };
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        const params = new URLSearchParams(window.location.search);
+        params.set('page', page);
         window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
     };
     const izbrisiOglas = async () => {
@@ -129,6 +149,9 @@ const Admin = () => {
             oglas.naziv.toLowerCase().includes(searchQuery.toLowerCase()) ||
             oglas.sifra.toLowerCase().includes(searchQuery.toLowerCase())
         );
+        const indexOfLastItem = currentPage * perPage;
+        const indexOfFirstItem = indexOfLastItem - perPage;
+        const currentItems = filtriraniOglasi.slice(indexOfFirstItem, indexOfLastItem);
         return (
             <div>
                 <div className="carousel-container relative">
@@ -180,9 +203,30 @@ const Admin = () => {
                         </button>
                     </div>
                 </div>
+                <div className="flex justify-center my-4">
+                    <button onClick={prevPage} disabled={currentPage === 1} className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer">
+                        Prethodna
+                    </button>
+
+                    {[...Array(Math.ceil(filtriraniOglasi.length / perPage)).keys()].map((page) => (
+                        <button
+                            key={page + 1}
+                            onClick={() => handlePageChange(page + 1)}
+                            disabled={currentPage === page + 1}
+                            className={`px-4 py-2 mx-2 border border-gray-600 ${currentPage === page + 1 ? 'className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center cursor-not-allowed' : 'px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer'} rounded`}
+                        >
+                            {page + 1}
+                        </button>
+                    ))}
+
+                    <button onClick={nextPage} disabled={currentPage === Math.ceil(filtriraniOglasi.length / perPage)} className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer">
+                        Sljedeća
+                    </button>
+                </div>
+
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                    {filtriraniOglasi.map((oglas) => (
+                    {currentItems.map((oglas) => (
                         <div key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">
                             {oglas.slike && oglas.slike.length > 0 && (
                                 <Link to={`/oglas/${oglas.sifra}`} className="block h-full">
@@ -461,7 +505,9 @@ const Admin = () => {
         korisnik.telefon.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-
+    const indexOfLastItem = currentPage * perPage;
+    const indexOfFirstItem = indexOfLastItem - perPage;
+    const paginiraniKorisnici = filtriraniKorisnici.slice(indexOfFirstItem, indexOfLastItem);
     const renderKorisnici = () => (
         <div>
             {renderKorisniciGraf()}
@@ -478,8 +524,30 @@ const Admin = () => {
                     </button>
                 </div>
             </div>
+            <div className="flex justify-center my-4">
+                <button onClick={prevPage} disabled={currentPage === 1} className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer">
+                    Previous
+                </button>
+
+                {[...Array(Math.ceil(filtriraniKorisnici.length / perPage)).keys()].map((page) => (
+                    <button
+                        key={page + 1}
+                        onClick={() => handlePageChange(page + 1)}
+                        disabled={currentPage === page + 1}
+                        className={`px-4 py-2 mx-2 border border-gray-600 ${currentPage === page + 1 ? 'className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center cursor-not-allowed' : 'px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer'} rounded`}
+                    >
+                        {page + 1}
+                    </button>
+                ))}
+
+                <button onClick={nextPage} disabled={currentPage === Math.ceil(filtriraniKorisnici.length / perPage)} className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer">
+                    Next
+                </button>
+            </div>
+
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
-                {filtriraniKorisnici.map((korisnik) => (
+                {paginiraniKorisnici.map((korisnik) => (
                     <div key={korisnik.id} className="rounded border border-gray-600 bg-gray-800 p-4 rounded-lg shadow-md relative">
                         <Link to={`/korisnik/${korisnik.username}`} className="text-white flex items-center mb-4">
                             {korisnik.uloga === 'Admin' ? (
