@@ -60,6 +60,7 @@ class Oglas(models.Model):
     STATUS_IZBORI = [
         ('aktivan', 'Aktivan'),
         ('neaktivan', 'Neaktivan'),
+        ('arhiviran', 'Arhiviran')
     ]
     def generiraj_sifru():
         while True:

@@ -5,7 +5,7 @@ from .models import Korisnik, Zupanija, Grad, Kategorija, Oglas, Slika, Favorit,
 
 class KorisnikAdmin(UserAdmin):
     model = Korisnik
-    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'is_superuser', 'grad')
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'is_superuser', 'grad', 'is_active')
 
 class KategorijaAdmin(admin.ModelAdmin):
     list_display = ('naziv', 'roditelj', 'url')

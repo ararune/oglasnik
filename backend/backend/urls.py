@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from oglasnik.views import ZupanijaViewSet, GradViewSet, KorisnikViewSet, KategorijaViewSet, OglasViewSet, SlikaViewSet, FavoritViewSet
-from oglasnik.views import registracija, trenutni_korisnik, profil, kreiraj_oglas, moji_oglasi, izbrisi_oglas, uredi_oglas, dohvati_korisnika, admin_view
+from oglasnik.views import registracija, trenutni_korisnik, profil, kreiraj_oglas, moji_oglasi, izbrisi_oglas, uredi_oglas, dohvati_korisnika, admin_view, arhiviraj_oglas
 from oglasnik.views import oglasi_po_kategoriji, oglas_detalji, odjavi_korisnika, pretraga_oglasi, azuriraj_oglas, azuriraj_korisnika, promjena_lozinke, azuriraj_korisnika_admin
 from django.contrib.auth import views as auth_views
 from rest_framework_simplejwt import views as jwt_views
@@ -36,6 +36,7 @@ urlpatterns = [
     path('api/azuriraj_oglas/<int:oglas_id>/', azuriraj_oglas, name='azuriraj_oglas'),
     path('api/moji_oglasi/', moji_oglasi, name='moji_oglasi'),
     path('api/oglas/<int:pk>/izbrisi/', izbrisi_oglas, name='izbrisi_oglas'),
+    path('api/oglas/<int:pk>/arhiviraj/', arhiviraj_oglas, name='arhiviraj_oglas'),
     path('api/odjava/', odjavi_korisnika, name='logout_user'),
     path('registracija/', registracija, name='registracija'),
     path('azuriraj-korisnika/', azuriraj_korisnika, name='azuriraj_korisnika'),

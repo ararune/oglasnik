@@ -22,7 +22,8 @@ class KorisnikSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Korisnik
-        fields = ['id', 'username', 'oib', 'zupanija', 'zupanija_naziv', 'grad', 'grad_naziv', 'first_name', 'last_name', 'email', 'telefon', 'date_joined', 'uloga']
+        fields = ['id', 'username', 'oib', 'zupanija', 'zupanija_naziv', 'grad', 'grad_naziv', 'first_name', 'last_name', 
+                  'email', 'telefon', 'date_joined', 'uloga', 'is_active']
 
     def get_uloga(self, obj):
         if obj.is_superuser:

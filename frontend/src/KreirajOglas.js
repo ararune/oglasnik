@@ -22,6 +22,8 @@ const KreirajOglas = () => {
     const [podkategorije, setPodkategorije] = useState([]);
     const [unukKategorije, setUnukKategorije] = useState([]);
     const [sveKategorije, setSveKategorije] = useState([]);
+    const [opisCount, setOpisCount] = useState(0);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -49,10 +51,22 @@ const KreirajOglas = () => {
 
     const promjenaUnosa = (e) => {
         const { name, value } = e.target;
-        setPodaciForme((prevPodaci) => ({
-            ...prevPodaci,
-            [name]: value,
-        }));
+
+        if (name === 'opis') {
+            if (value.length <= 1000) {
+                setPodaciForme((prevPodaci) => ({
+                    ...prevPodaci,
+                    [name]: value,
+                }));
+                setOpisCount(value.length);
+            }
+        } else {
+            setPodaciForme((prevPodaci) => ({
+                ...prevPodaci,
+                [name]: value,
+            }));
+        }
+
         setErrors((prevErrors) => ({
             ...prevErrors,
             [name]: ''
@@ -322,11 +336,13 @@ const KreirajOglas = () => {
                         onChange={promjenaUnosa}
                         className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                         rows="10"
+                        maxLength="1000"
                         required
                     ></textarea>
-
+                    <div className="text-gray-300 text-right">{opisCount}/1000</div>
                     {errors.opis && <span className="text-red-500">{errors.opis}</span>}
                 </div>
+
 
                 <div className="mb-4">
                     <div className="mb-2">

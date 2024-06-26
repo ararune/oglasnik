@@ -37,7 +37,9 @@ function MojiOglasi() {
             });
             if (response.ok) {
                 const data = await response.json();
-                setOglasi(data.oglasi);
+                // Filter out 'arhiviran' oglasi
+                const activeOglasi = data.oglasi.filter(oglas => oglas.status !== 'arhiviran');
+                setOglasi(activeOglasi);
             } else {
                 if (response.status === 401) {
                     setError('Korisnik nije prijavljen');
@@ -51,6 +53,7 @@ function MojiOglasi() {
             setLoading(false);
         }
     };
+
 
     const dohvatiFavoriziraneOglase = async () => {
         try {
@@ -105,25 +108,31 @@ function MojiOglasi() {
     const izbrisiOglas = async () => {
         try {
             const accessToken = localStorage.getItem('access_token');
-            const response = await fetch(`http://localhost:8000/api/oglas/${oglasToDelete}/izbrisi/`, {
-                method: 'DELETE',
+            const response = await fetch(`http://localhost:8000/api/oglas/${oglasToDelete}/arhiviraj/`, {
+                method: 'POST',
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
                 },
                 credentials: 'include',
             });
             if (response.ok) {
-                setOglasi(oglasi.filter(oglas => oglas.id !== oglasToDelete));
+                setOglasi(
+                    oglasi.map((oglas) =>
+                        oglas.id === oglasToDelete ? { ...oglas, status: 'arhiviran' } : oglas
+                    )
+                );
             } else {
-                console.error('Greška prilikom brisanja oglasa: HTTP status', response.status);
+                console.error('Greška prilikom arhiviranja oglasa: HTTP status', response.status);
             }
         } catch (error) {
-            console.error('Greška prilikom brisanja oglasa:', error);
+            console.error('Greška prilikom arhiviranja oglasa:', error);
         } finally {
             setPokaziModal(false);
             setOglasZaBrisanje(null);
         }
     };
+
     const handleTabChange = (tab) => {
         setAktivniTab(tab);
         const params = new URLSearchParams(window.location.search);
@@ -206,15 +215,21 @@ function MojiOglasi() {
                 return <span className="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-md text-sm">Aktivan</span>;
             } else if (oglas.status === 'neaktivan') {
                 return <span className="absolute top-2 right-2 bg-yellow-600 text-white px-2 py-1 rounded-md text-sm">Neaktivan</span>;
+            } else if (oglas.status === 'arhiviran') {
+                return <span className="absolute top-2 right-2 bg-gray-600 text-white px-2 py-1 rounded-md text-sm">Arhiviran</span>;
             } else {
                 return null;
             }
         };
 
+        if (oglas.status === 'arhiviran') {
+            return null; // Skip rendering if status is 'arhiviran'
+        }
+
         return (
             <li key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">
                 {oglas.slike && oglas.slike.length > 0 && (
-                    <Link to={`/oglas/${oglas.sifra}`} className="block"><img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-48 object-cover" /></Link>
+                    <Link to={`/oglas/${oglas.sifra}`} className="block h-full"><img src={`http://localhost:8000${oglas.slike[0]}`} alt={oglas.naziv} className="w-48 h-full object-cover" /></Link>
                 )}
                 <div className="flex flex-col justify-between p-4 flex-grow relative">
                     <div>
@@ -238,6 +253,7 @@ function MojiOglasi() {
             </li>
         );
     };
+
 
     const FavoriziraniOglasItem = ({ oglas, ukloniIzFavorita }) => (
         <li key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">

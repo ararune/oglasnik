@@ -170,6 +170,7 @@ def trenutni_korisnik(request):
         'zupanija_id': user.zupanija.id if user.zupanija else None,
         'is_superuser': user.is_superuser,
         'is_staff': user.is_staff,
+        'is_active': user.is_active,
         'uloga': 'Admin' if user.is_superuser else 'Staff' if user.is_staff else 'Korisnik'
     }
     return JsonResponse(user_info)
@@ -310,6 +311,18 @@ def izbrisi_oglas(request, pk):
 
     oglas.delete()
     return Response({'success': 'Oglas izbrisan'}, status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def arhiviraj_oglas(request, pk):
+    try:
+        oglas = Oglas.objects.get(pk=pk, korisnik=request.user)
+    except Oglas.DoesNotExist:
+        return Response({'error': 'Oglas nije pronaden ili nije autoriziran'}, status=status.HTTP_404_NOT_FOUND)
+
+    oglas.status = 'arhiviran'
+    oglas.save()
+
+    return Response({'success': 'Oglas arhiviran'}, status=status.HTTP_200_OK)
 
 def dohvati_podkategorije(kategorija):
     potkategorije = [kategorija]

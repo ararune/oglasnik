@@ -27,6 +27,8 @@ const AzurirajOglas = () => {
     const [sveKategorije, setSveKategorije] = useState([]);
     const [existingImages, setExistingImages] = useState([]);
     const [imagesToDelete, setImagesToDelete] = useState([]);
+    const [opisCount, setOpisCount] = useState(0);
+
     const navigate = useNavigate();
 
 
@@ -49,6 +51,7 @@ const AzurirajOglas = () => {
                         zupanija: user ? user.zupanija_id : '',
                         grad: user ? user.grad_id : '',
                     });
+                    setOpisCount(data.opis.length);
                     setExistingImages(data.slike);
                     dohvatiKategorije();
                 } else {
@@ -85,15 +88,28 @@ const AzurirajOglas = () => {
     };
     const promjenaUnosa = (e) => {
         const { name, value } = e.target;
-        setPodaciForme((prevPodaci) => ({
-            ...prevPodaci,
-            [name]: value,
-        }));
+
+        if (name === 'opis') {
+            if (value.length <= 1000) {
+                setPodaciForme((prevPodaci) => ({
+                    ...prevPodaci,
+                    [name]: value,
+                }));
+                setOpisCount(value.length);
+            }
+        } else {
+            setPodaciForme((prevPodaci) => ({
+                ...prevPodaci,
+                [name]: value,
+            }));
+        }
+
         setErrors((prevErrors) => ({
             ...prevErrors,
             [name]: ''
         }));
     };
+
 
 
     const promjenaKategorije = (e) => {
@@ -350,13 +366,15 @@ const AzurirajOglas = () => {
                         value={podaciForme.opis}
                         placeholder="Unesite opis..."
                         onChange={promjenaUnosa}
-                        className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
                         rows="10"
+                        maxLength="1000"
                         required
                     ></textarea>
-
+                    <div className="text-gray-300 text-right">{opisCount}/1000</div>
                     {errors.opis && <span className="text-red-500">{errors.opis}</span>}
                 </div>
+
 
                 <div className="mb-4">
                     <label htmlFor="slike" className="block text-gray-700 font-bold mb-2">Slike</label>

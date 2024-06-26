@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import useAuth from './useAuth';
-import { AiOutlineEnvironment, AiOutlineCalendar, AiOutlineIdcard, AiOutlineEuroCircle, AiOutlinePhone, AiOutlineMail, AiOutlineSearch } from 'react-icons/ai';
+import {
+    AiOutlineEnvironment, AiOutlineCalendar, AiOutlineIdcard, AiOutlineEuroCircle,
+    AiOutlinePhone, AiOutlineMail, AiOutlineSearch, AiOutlineCheckCircle, AiOutlineCloseCircle
+} from 'react-icons/ai';
 import { FaUserShield, FaUser, FaEdit } from 'react-icons/fa';
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart,
@@ -241,6 +244,9 @@ const Admin = () => {
                                     )}
                                     {oglas.status === 'neaktivan' && (
                                         <span className="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded-md text-sm">Neaktivan</span>
+                                    )}
+                                    {oglas.status === 'arhiviran' && (
+                                        <span className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md text-sm">Arhiviran</span>
                                     )}
                                     <Link to={`/oglas/${oglas.sifra}`} className="block">
                                         <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
@@ -522,6 +528,26 @@ const Admin = () => {
     const indexOfLastItem = currentPage * perPage;
     const indexOfFirstItem = indexOfLastItem - perPage;
     const paginiraniKorisnici = filtriraniKorisnici.slice(indexOfFirstItem, indexOfLastItem);
+    const toggleIsActive = async (korisnikId, currentStatus) => {
+        try {
+            const accessToken = localStorage.getItem('access_token');
+            const headers = {
+                Authorization: `Bearer ${accessToken}`,
+            };
+
+            await axios.patch(`/api/korisnici/${korisnikId}/`, {
+                is_active: !currentStatus
+            }, { headers });
+
+            const updatedKorisnici = korisnici.map(korisnik =>
+                korisnik.id === korisnikId ? { ...korisnik, is_active: !currentStatus } : korisnik
+            );
+            setKorisnici(updatedKorisnici);
+        } catch (error) {
+            console.error('Error updating status:', error);
+        }
+    };
+
     const renderKorisnici = () => (
         <div>
             {renderKorisniciGraf()}
@@ -548,7 +574,7 @@ const Admin = () => {
                         key={page + 1}
                         onClick={() => handlePageChange(page + 1)}
                         disabled={currentPage === page + 1}
-                        className={`px-4 py-2 mx-2 border border-gray-600 ${currentPage === page + 1 ? 'className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center cursor-not-allowed' : 'px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer'} rounded`}
+                        className={`px-4 py-2 mx-2 border border-gray-600 ${currentPage === page + 1 ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center cursor-not-allowed' : 'bg-gray-800 text-white rounded cursor-pointer'}`}
                     >
                         {page + 1}
                     </button>
@@ -558,7 +584,6 @@ const Admin = () => {
                     Next
                 </button>
             </div>
-
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
                 {paginiraniKorisnici.map((korisnik) => (
@@ -581,6 +606,14 @@ const Admin = () => {
                             <FaEdit className="mr-2" />
                             Ažuriraj Korisnika
                         </Link>
+                        <div className="flex items-center text-gray-400 text-sm mb-2">
+                            {korisnik.is_active ? (
+                                <AiOutlineCheckCircle className="mr-2 text-green-500 cursor-pointer" onClick={() => toggleIsActive(korisnik.id, korisnik.is_active)} />
+                            ) : (
+                                <AiOutlineCloseCircle className="mr-2 text-red-500 cursor-pointer" onClick={() => toggleIsActive(korisnik.id, korisnik.is_active)} />
+                            )}
+                            {korisnik.is_active ? 'Aktivan' : 'Neaktivan'}
+                        </div>
                         <div className="flex items-center text-gray-400 text-sm mb-2">
                             <AiOutlineIdcard className="mr-2" />
                             Ime i prezime: {korisnik.first_name} {korisnik.last_name}
