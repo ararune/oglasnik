@@ -77,7 +77,7 @@ class Oglas(models.Model):
     grad = models.ForeignKey(Grad, on_delete=models.CASCADE)
     trajanje = models.IntegerField(choices=IZBOR_TRAJANJA)
     kategorija = models.ForeignKey(Kategorija, on_delete=models.CASCADE, null=True)
-    datum = models.DateTimeField(auto_now_add=True)
+    datum = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=10, choices=STATUS_IZBORI, default='aktivan')
 
     class Meta:

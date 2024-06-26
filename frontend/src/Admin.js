@@ -29,7 +29,8 @@ const Admin = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage] = useState(4);
-
+    const [selectedStatuses, setSelectedStatuses] = useState('');
+    
     useEffect(() => {
         const fetchAdminData = async () => {
             try {
@@ -110,7 +111,6 @@ const Admin = () => {
                 },
             });
             if (response.status === 204) {
-                // Remove the deleted item from the state
                 setOglasi(oglasi.filter(oglas => oglas.id !== oglasToDelete));
             } else {
                 console.error('Greška prilikom brisanja oglasa: HTTP status', response.status);
@@ -153,9 +153,29 @@ const Admin = () => {
             oglas.naziv.toLowerCase().includes(searchQuery.toLowerCase()) ||
             oglas.sifra.toLowerCase().includes(searchQuery.toLowerCase())
         );
+
+        const toggleStatus = (status) => {
+            if (selectedStatuses.includes(status)) {
+                setSelectedStatuses(selectedStatuses.filter(s => s !== status));
+            } else {
+                setSelectedStatuses([...selectedStatuses, status]);
+            }
+        };
+
+        const filteredByStatus = selectedStatuses.length > 0
+            ? filtriraniOglasi.filter(oglas => selectedStatuses.includes(oglas.status))
+            : filtriraniOglasi;
+
         const indexOfLastItem = currentPage * perPage;
         const indexOfFirstItem = indexOfLastItem - perPage;
-        const currentItems = filtriraniOglasi.slice(indexOfFirstItem, indexOfLastItem);
+        const currentItems = filteredByStatus.slice(indexOfFirstItem, indexOfLastItem);
+
+        const totalPages = Math.ceil(filteredByStatus.length / perPage);
+
+        const handlePageChange = (page) => setCurrentPage(page);
+        const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
+        const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
+
         return (
             <div>
                 <div className="carousel-container relative">
@@ -207,27 +227,50 @@ const Admin = () => {
                         </button>
                     </div>
                 </div>
+
+                <div className="flex mb-6">
+                    <div className="space-x-2">
+                        <button
+                            className={`px-4 py-2 border border-gray-600 ${selectedStatuses.includes('aktivan') ? 'bg-green-500 text-white' : 'bg-gray-800 text-white'} rounded`}
+                            onClick={() => toggleStatus('aktivan')}
+                        >
+                            Aktivni
+                        </button>
+                        <button
+                            className={`px-4 py-2 border border-gray-600 ${selectedStatuses.includes('neaktivan') ? 'bg-yellow-500 text-white' : 'bg-gray-800 text-white'} rounded`}
+                            onClick={() => toggleStatus('neaktivan')}
+                        >
+                            Neaktivni
+                        </button>
+                        <button
+                            className={`px-4 py-2 border border-gray-600 ${selectedStatuses.includes('arhiviran') ? 'bg-red-500 text-white' : 'bg-gray-800 text-white'} rounded`}
+                            onClick={() => toggleStatus('arhiviran')}
+                        >
+                            Arhivirani
+                        </button>
+                    </div>
+                </div>
+
                 <div className="flex justify-center my-4">
                     <button onClick={prevPage} disabled={currentPage === 1} className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer">
                         Prethodna
                     </button>
 
-                    {[...Array(Math.ceil(filtriraniOglasi.length / perPage)).keys()].map((page) => (
+                    {[...Array(totalPages).keys()].map((page) => (
                         <button
                             key={page + 1}
                             onClick={() => handlePageChange(page + 1)}
                             disabled={currentPage === page + 1}
-                            className={`px-4 py-2 mx-2 border border-gray-600 ${currentPage === page + 1 ? 'className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center cursor-not-allowed' : 'px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer'} rounded`}
+                            className={`px-4 py-2 mx-2 border border-gray-600 ${currentPage === page + 1 ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg px-4 py-2 text-center cursor-not-allowed' : 'px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer'} rounded`}
                         >
                             {page + 1}
                         </button>
                     ))}
 
-                    <button onClick={nextPage} disabled={currentPage === Math.ceil(filtriraniOglasi.length / perPage)} className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer">
+                    <button onClick={nextPage} disabled={currentPage === totalPages} className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer">
                         Sljedeća
                     </button>
                 </div>
-
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                     {currentItems.map((oglas) => (
@@ -274,7 +317,6 @@ const Admin = () => {
                                     >
                                         Ažuriraj
                                     </Link>
-
                                 </div>
                             </div>
                         </div>

@@ -129,3 +129,5 @@ class PromjenaLozinkeForma(PasswordChangeForm):
     class Meta:
         fields = ['old_password', 'new_password1', 'new_password2']
         
+
+        

@@ -52,12 +52,14 @@ class SlikaSerializer(serializers.ModelSerializer):
         model = Slika
         fields = ['id', 'oglas', 'slika']
 
+
 class OglasSerializer(serializers.ModelSerializer):
     zupanija = ZupanijaSerializer()
     grad = GradSerializer()
     slike = SlikaSerializer(many=True)
     kategorija_naziv = serializers.CharField(source='kategorija.naziv', read_only=True)
-
+    datum = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S")
+    
     class Meta:
         model = Oglas
         fields = ['id', 'cijena', 'sifra', 'naziv', 'opis', 'korisnik', 'zupanija', 'grad', 'trajanje', 'kategorija', 'kategorija_naziv', 'datum', 'slike', 'status']

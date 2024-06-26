@@ -14,7 +14,7 @@ class GradAdmin(admin.ModelAdmin):
     list_display = ('naziv', 'zupanija')
     
 class OglasAdmin(admin.ModelAdmin):
-    list_display = ('naziv', 'kategorija', 'cijena', 'sifra', 'korisnik', 'zupanija', 'grad', 'trajanje', 'status')
+    list_display = ('naziv', 'kategorija', 'cijena', 'sifra', 'korisnik', 'zupanija', 'grad', 'trajanje', 'status', 'datum')
     
 class SlikaAdmin(admin.ModelAdmin):
     list_display = ('oglas', 'slika')

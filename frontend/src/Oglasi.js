@@ -32,7 +32,7 @@ function Oglasi() {
                 setOglasi(activeOglasi);
                 setHijerarhija(data.hijerarhija);
                 setChildren(data.children);
-                const zupanijaCounts = data.oglasi.reduce((acc, oglas) => {
+                const zupanijaCounts = activeOglasi.reduce((acc, oglas) => {
                     const zupanija = oglas.korisnik?.zupanija;
                     if (zupanija) {
                         if (!acc[zupanija]) {
@@ -221,79 +221,7 @@ function Oglasi() {
             </div>
         );
     };
-    const RenderFilters = () => (
-        <div className="p-4 rounded text-white mb-4 mt-2">
-            <h3 className="text-xl font-bold mb-2">Filtriraj rezultate</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div>
-                    <label className="block mb-1">Sortiraj po:</label>
-                    <select
-                        value={sortOption}
-                        onChange={handleSortChange}
-                        className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
-                    >
-                        <option value="">Odaberi opciju</option>
-                        <option value="cijena-uzlazno">Cijena uzlazno</option>
-                        <option value="cijena-silazno">Cijena silazno</option>
-                        <option value="datum-najstariji">Datum najstariji</option>
-                        <option value="datum-najnoviji">Datum najnoviji</option>
-                    </select>
-                </div>
-                <div>
-                    <label className="block mb-1">Cijena raspon:</label>
-                    <div className="flex">
-                        <input
-                            type="text"
-                            placeholder="Min cijena"
-                            value={minCijena}
-                            onChange={handleMinCijenaChange}
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
-                        />
-                        <p>do</p>
-                        <input
-                            type="text"
-                            placeholder="Max cijena"
-                            value={maxCijena}
-                            onChange={handleMaxCijenaChange}
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            className="ml-2 w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
-                        />
-                    </div>
-                </div>
-                <div>
-                    <label className="block mb-1">Filter po županiji:</label>
-                    <div className="relative">
-                        <select
-                            value=""
-                            onChange={handleZupanijaChange}
-                            className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
-                        >
-                            <option value="">Odaberi županiju</option>
-                            {Object.entries(zupanijeCount).map(([zupanija, count], index) => (
-                                <option key={index} value={zupanija}>{zupanija} ({count})</option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div className="flex items-center pr-3 mt-4">
-                {selectedZupanije.map((zupanija, index) => (
-                    <div key={index} className="flex items-center mr-2 text-white text-sm bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-2.5 py-1 text-center">
-                        <span>{zupanija}</span>
-                        <button
-                            onClick={() => setSelectedZupanije(prev => prev.filter(z => z !== zupanija))}
-                            className="ml-1 focus:outline-none"
-                        >
-                            &times;
-                        </button>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
+
 
     const RenderPagination = () => (
         <div className="flex justify-center my-4">
@@ -380,9 +308,78 @@ function Oglasi() {
         <div className="container mx-auto p-4">
             <RenderHierarchyLinks />
             <RenderCategoryInfo />
-            <RenderFilters />
-            <RenderPagination />
+            <div className="rounded border border-gray-600 bg-gray-800 p-6 text-white mb-4 mt-2 lg:w-1/3">
+                <h3 className="text-xl font-bold mb-2">Filtriraj rezultate</h3>
+                <div className="grid grid-cols-1 gap-4">
+                    <div>
+                        <label className="block mb-1">Sortiraj po:</label>
+                        <select
+                            value={sortOption}
+                            onChange={handleSortChange}
+                            className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
+                        >
+                            <option value="">Odaberi opciju</option>
+                            <option value="cijena-uzlazno">Cijena uzlazno</option>
+                            <option value="cijena-silazno">Cijena silazno</option>
+                            <option value="datum-najstariji">Datum najstariji</option>
+                            <option value="datum-najnoviji">Datum najnoviji</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block mb-1">Cijena raspon:</label>
+                        <div className="flex">
+                            <input
+                                type="text"
+                                placeholder="Min cijena"
+                                value={minCijena}
+                                onChange={handleMinCijenaChange}
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Max cijena"
+                                value={maxCijena}
+                                onChange={handleMaxCijenaChange}
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                className="ml-2 w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block mb-1">Filter po županiji:</label>
+                        <div className="relative">
+                            <select
+                                value=""
+                                onChange={handleZupanijaChange}
+                                className="w-full px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
+                            >
+                                <option value="">Odaberi županiju</option>
+                                {Object.entries(zupanijeCount).map(([zupanija, count], index) => (
+                                    <option key={index} value={zupanija}>{zupanija} ({count})</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex items-center pr-3 mt-4">
+                    {selectedZupanije.map((zupanija, index) => (
+                        <div key={index} className="flex items-center mr-2 text-white text-sm bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-2.5 py-1 text-center">
+                            <span>{zupanija}</span>
+                            <button
+                                onClick={() => setSelectedZupanije(prev => prev.filter(z => z !== zupanija))}
+                                className="ml-1 focus:outline-none"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            </div>
             <RenderOglasiList />
+            <RenderPagination />
         </div>
     );
 }
