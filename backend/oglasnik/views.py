@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
-from .models import Zupanija, Grad, Korisnik, Kategorija, Oglas, Slika, Favorit, Pregled
-from .serializers import ZupanijaSerializer, GradSerializer, KorisnikSerializer, KategorijaSerializer, OglasSerializer, SlikaSerializer, FavoritSerializer
+from .models import Zupanija, Grad, Korisnik, Kategorija, Oglas, Slika, Favorit, Pregled, Komentar
+from .serializers import ZupanijaSerializer, GradSerializer, KorisnikSerializer, KategorijaSerializer, OglasSerializer, SlikaSerializer, FavoritSerializer, KomentarSerializer
 from .forms import FormaZaRegistraciju, FormaZaIzraduOglasa, SlikaForma, AzuriranjeKorisnikaForma, PromjenaLozinkeForma
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.decorators import api_view
@@ -26,6 +26,20 @@ from rest_framework.decorators import action
 from django.utils import timezone
 from datetime import timedelta
 
+class KomentarViewSet(viewsets.ModelViewSet):
+    queryset = Komentar.objects.all()
+    serializer_class = KomentarSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(autor=self.request.user)
+
+    def get_queryset(self):
+        username = self.kwargs.get('username')
+        if username:
+            return Komentar.objects.filter(korisnik__username=username)
+        return Komentar.objects.all()
+        
 class ZupanijaViewSet(viewsets.ModelViewSet):
     queryset = Zupanija.objects.all()
     serializer_class = ZupanijaSerializer
@@ -46,6 +60,7 @@ class GradViewSet(viewsets.ModelViewSet):
 class KorisnikViewSet(viewsets.ModelViewSet):
     queryset = Korisnik.objects.all()
     serializer_class = KorisnikSerializer
+    
 
 class KategorijaViewSet(viewsets.ModelViewSet):
     queryset = Kategorija.objects.all()

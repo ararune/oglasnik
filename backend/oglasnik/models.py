@@ -120,3 +120,16 @@ class Favorit(models.Model):
     def __str__(self):
         return f"{self.korisnik.username} - {self.oglas.naziv}"
     
+class Komentar(models.Model):
+    korisnik = models.ForeignKey(Korisnik, related_name='komentari', on_delete=models.CASCADE)
+    autor = models.ForeignKey(Korisnik, related_name='napisani_komentari', on_delete=models.CASCADE)
+    tekst = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Komentar'
+        verbose_name_plural = 'Komentari'
+        ordering = ['-timestamp']
+
+    def __str__(self):
+        return f'Komentar od {self.autor.username} za {self.korisnik.username}'

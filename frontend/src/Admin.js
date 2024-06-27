@@ -30,7 +30,8 @@ const Admin = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage] = useState(4);
     const [selectedStatuses, setSelectedStatuses] = useState('');
-    
+
+
     useEffect(() => {
         const fetchAdminData = async () => {
             try {
@@ -160,7 +161,14 @@ const Admin = () => {
             } else {
                 setSelectedStatuses([...selectedStatuses, status]);
             }
+
+            setCurrentPage(1);
+
+            const params = new URLSearchParams(window.location.search);
+            params.set('page', '1');
+            window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
         };
+
 
         const filteredByStatus = selectedStatuses.length > 0
             ? filtriraniOglasi.filter(oglas => selectedStatuses.includes(oglas.status))
@@ -172,9 +180,20 @@ const Admin = () => {
 
         const totalPages = Math.ceil(filteredByStatus.length / perPage);
 
-        const handlePageChange = (page) => setCurrentPage(page);
-        const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
-        const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
+        const handlePageChange = (page) => {
+            setCurrentPage(page);
+            const params = new URLSearchParams(window.location.search);
+            params.set('page', page);
+            window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
+        };
+
+        const prevPage = () => {
+            setCurrentPage(prev => Math.max(prev - 1, 1));
+        };
+
+        const nextPage = () => {
+            setCurrentPage(prev => Math.min(prev + 1, totalPages));
+        };
 
         return (
             <div>
@@ -685,7 +704,7 @@ const Admin = () => {
 
     return (
         <div className="w-full max-w-6xl mx-auto mb-32">
-            <div className="max-w-lg mx-auto bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-6">
+            <div className="max-w-lg bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-6">
                 <div className="p-6">
                     <div className="flex items-center mb-4">
                         <FaUserShield className="w-16 h-16 text-yellow-500 rounded-full mr-4" />
@@ -720,7 +739,7 @@ const Admin = () => {
                 </div>
             </div>
 
-            <div className="flex justify-center mb-6">
+            <div className="flex mb-6">
                 <button
                     className={`px-4 py-2 mx-2 border border-gray-600 ${aktivniTab === 'oglasi' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg text-center' : 'bg-gray-800'} text-white rounded`}
                     onClick={() => handleTabChange('oglasi')}

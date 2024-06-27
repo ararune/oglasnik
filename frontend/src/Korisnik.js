@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { AiOutlineEnvironment, AiOutlineCalendar, AiOutlineEuroCircle, AiOutlineFileSearch } from 'react-icons/ai';
+import { AiOutlineEnvironment, AiOutlineCalendar, AiOutlineEuroCircle, AiOutlineFileSearch, AiOutlineDelete } from 'react-icons/ai';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import useAuth from './useAuth'
 import { AiOutlineMail, AiOutlinePhone, AiOutlineIdcard, AiOutlineUser } from 'react-icons/ai';
@@ -13,6 +13,10 @@ function Korisnik() {
     const { user } = useAuth();
     const navigate = useNavigate();
     const [sortOpcija, setSortOpcija] = useState('');
+    const [commentText, setCommentText] = useState('');
+    const [commentAdded, setCommentAdded] = useState(false);
+    const [comments, setComments] = useState([]);
+
     useEffect(() => {
         setLoading(true);
         setError(null);
@@ -33,6 +37,8 @@ function Korisnik() {
                 setUserData(data.korisnik);
                 const activeOglasi = data.oglasi.filter(oglas => oglas.status === 'aktivan');
                 setOglasi(activeOglasi);
+                setComments(data.korisnik.komentari);
+
             })
             .catch(error => {
                 setError(error.message);
@@ -42,6 +48,75 @@ function Korisnik() {
             });
     }, [username]);
 
+    const handleSubmitComment = async (event) => {
+        event.preventDefault();
+
+        if (!user) {
+            navigate('/prijava');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8000/api/komentari/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                },
+                body: JSON.stringify({
+                    korisnik: userData.id,
+                    autor: user.id,
+                    tekst: commentText,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add comment');
+            }
+
+            setCommentText('');
+
+            fetch(`http://localhost:8000/korisnik/${username}/`)
+                .then(response => response.json())
+                .then(data => {
+                    setComments(data.korisnik.komentari); // Update comments after successfully adding a comment
+                    setCommentAdded(true);
+                })
+                .catch(error => console.error('Error fetching comments:', error));
+
+        } catch (error) {
+            console.error('Error adding comment:', error);
+        }
+    };
+    const handleDeleteComment = async (commentId) => {
+        if (!user) {
+            navigate('/prijava');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8000/api/komentari/${commentId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete comment');
+            }
+
+            // Remove the deleted comment from the state
+            setComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
+
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+            // Handle error state or show a notification to the user
+        }
+    };
+    const deleteButtonVisible = (comment) => {
+        return user && (user.uloga === 'Admin' || user.id === comment.autor);
+    };
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -157,7 +232,51 @@ function Korisnik() {
                     </div>
                 </div>
             </div>
-            <h2 className="text-white text-3xl font-bold mb-4">Oglasi korisnika {userData.username}</h2>
+            {/* Comment Form */}
+            <form onSubmit={handleSubmitComment} className="max-w-lg mx-auto bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-6 p-6">
+                <textarea
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="Unesite komentar..."
+                    required
+                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
+                />
+                <button
+                    type="submit"
+                    className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center mt-2"
+                >
+                    Dodaj komentar
+                </button>
+                {commentAdded && (
+                    <p className="text-green-500 mt-2">Komentar je uspješno dodan!</p>
+                )}
+            </form>
+
+            <div className="max-w-lg mx-auto">
+                {comments.length === 0 && <p className="text-gray-400">Nema komentara za prikaz.</p>}
+                {comments.map(comment => (
+                    <div key={comment.id} className="bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-4 p-4 relative">
+                        <div className="flex items-center mb-2">
+                            <AiOutlineUser className="text-gray-500 text-sm mr-2" />
+                            <Link to={`/korisnik/${comment.autor_username}`} className="text-gray-500 text-xs font-bold hover:underline">{comment.autor_username}</Link>
+                            <span className="text-gray-500 text-xs ml-auto"><AiOutlineCalendar className="inline-block mr-1" />{formatDatum(comment.timestamp)}</span>
+                            {deleteButtonVisible(comment) && (
+                                <button
+                                    onClick={() => handleDeleteComment(comment.id)}
+                                    className="absolute bottom-4 right-6 text-xs text-gray-400 hover:text-red-500 focus:outline-none"
+                                >
+                                    <AiOutlineDelete className="inline-block mr-1" />
+                                    Delete
+                                </button>
+                            )}
+                        </div>
+                        <p className="text-gray-400">{comment.tekst}</p>
+                    </div>
+                ))}
+            </div>
+
+
+            <h2 className="text-white text-3xl font-bold mt-4 mb-4">Aktivni oglasi korisnika {userData.username}</h2>
             <div className="flex justify-end mb-4">
                 <select id="sortCriteria" value={sortOpcija} onChange={handleSortChange} className="px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500">
                     <option value="">Sortiraj po</option>

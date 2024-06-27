@@ -223,7 +223,7 @@ function MojiOglasi() {
         };
 
         if (oglas.status === 'arhiviran') {
-            return null; // Skip rendering if status is 'arhiviran'
+            return null;
         }
 
         return (

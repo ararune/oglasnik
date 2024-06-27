@@ -308,7 +308,7 @@ function Oglasi() {
         <div className="container mx-auto p-4">
             <RenderHierarchyLinks />
             <RenderCategoryInfo />
-            <div className="rounded border border-gray-600 bg-gray-800 p-6 text-white mb-4 mt-2 lg:w-1/3">
+            <div className="p-4 rounded text-white mb-4 mt-2 lg:w-1/3">
                 <h3 className="text-xl font-bold mb-2">Filtriraj rezultate</h3>
                 <div className="grid grid-cols-1 gap-4">
                     <div>
@@ -378,8 +378,8 @@ function Oglasi() {
                     ))}
                 </div>
             </div>
-            <RenderOglasiList />
             <RenderPagination />
+            <RenderOglasiList />
         </div>
     );
 }

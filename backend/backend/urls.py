@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from oglasnik.views import ZupanijaViewSet, GradViewSet, KorisnikViewSet, KategorijaViewSet, OglasViewSet, SlikaViewSet, FavoritViewSet
+from oglasnik.views import ZupanijaViewSet, GradViewSet, KorisnikViewSet, KategorijaViewSet, OglasViewSet, SlikaViewSet, FavoritViewSet, KomentarViewSet
 from oglasnik.views import registracija, trenutni_korisnik, profil, kreiraj_oglas, moji_oglasi, izbrisi_oglas, uredi_oglas, dohvati_korisnika, admin_view, arhiviraj_oglas
 from oglasnik.views import oglasi_po_kategoriji, oglas_detalji, odjavi_korisnika, pretraga_oglasi, azuriraj_oglas, azuriraj_korisnika, promjena_lozinke, azuriraj_korisnika_admin
 from django.contrib.auth import views as auth_views
@@ -22,6 +22,7 @@ router.register(r'kategorije', KategorijaViewSet)
 router.register(r'oglasi', OglasViewSet)
 router.register(r'slike', SlikaViewSet)
 router.register(r'favoriti', FavoritViewSet)
+router.register(r'komentari', KomentarViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -52,6 +53,7 @@ urlpatterns = [
     path('admin-panel/azuriraj-korisnika/<int:user_id>/', azuriraj_korisnika_admin, name='azuriraj_korisnika_admin'),
     path('<str:kategorija_url>/uredi/<str:oglas_naziv>-oglas-<str:sifra>/', uredi_oglas, name='uredi_oglas'),
     path('izbrisi_oglas/<int:oglas_id>/', izbrisi_oglas, name='izbrisi_oglas'),  
+    
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
