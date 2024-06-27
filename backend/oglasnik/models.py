@@ -123,7 +123,7 @@ class Favorit(models.Model):
 class Komentar(models.Model):
     korisnik = models.ForeignKey(Korisnik, related_name='komentari', on_delete=models.CASCADE)
     autor = models.ForeignKey(Korisnik, related_name='napisani_komentari', on_delete=models.CASCADE)
-    tekst = models.TextField()
+    tekst = models.CharField(max_length=150)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:

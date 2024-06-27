@@ -16,6 +16,7 @@ function Korisnik() {
     const [commentText, setCommentText] = useState('');
     const [commentAdded, setCommentAdded] = useState(false);
     const [comments, setComments] = useState([]);
+    const [charCount, setCharCount] = useState(0);
 
     useEffect(() => {
         setLoading(true);
@@ -116,6 +117,13 @@ function Korisnik() {
     };
     const deleteButtonVisible = (comment) => {
         return user && (user.uloga === 'Admin' || user.id === comment.autor);
+    };
+    const handleCommentChange = (event) => {
+        const inputText = event.target.value;
+        if (inputText.length <= 150) {
+            setCommentText(inputText);
+            setCharCount(inputText.length);
+        }
     };
     if (loading) {
         return <div>Loading...</div>;
@@ -233,32 +241,38 @@ function Korisnik() {
                 </div>
             </div>
             {/* Comment Form */}
-            <form onSubmit={handleSubmitComment} className="max-w-lg mx-auto bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-6 p-6">
-                <textarea
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
-                    placeholder="Unesite komentar..."
-                    required
-                    className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
-                />
-                <button
-                    type="submit"
-                    className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center mt-2"
-                >
-                    Dodaj komentar
-                </button>
-                {commentAdded && (
-                    <p className="text-green-500 mt-2">Komentar je uspješno dodan!</p>
-                )}
-            </form>
+            {user && (
+                <form onSubmit={handleSubmitComment} className="max-w-lg mx-auto bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-6 p-6">
+                    <textarea
+                        value={commentText}
+                        onChange={handleCommentChange} // Updated to call handleCommentChange
+                        placeholder="Unesite komentar..."
+                        maxLength={150} // Restrict to 150 characters
+                        required
+                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
+                    />
+                    <div className="flex justify-between items-center mt-2">
+                        <span className="text-gray-400">{charCount}/150 znakova</span>
+                        <button
+                            type="submit"
+                            className="mt-4 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center"
+                        >
+                            Dodaj komentar
+                        </button>
+                    </div>
+                    {commentAdded && (
+                        <p className="text-green-500 mt-2">Komentar je uspješno dodan!</p>
+                    )}
+                </form>
+            )}
 
             <div className="max-w-lg mx-auto">
                 {comments.length === 0 && <p className="text-gray-400">Nema komentara za prikaz.</p>}
                 {comments.map(comment => (
                     <div key={comment.id} className="bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-4 p-4 relative">
                         <div className="flex items-center mb-2">
-                            <AiOutlineUser className="text-gray-500 text-sm mr-2" />
-                            <Link to={`/korisnik/${comment.autor_username}`} className="text-gray-500 text-xs font-bold hover:underline">{comment.autor_username}</Link>
+                            <AiOutlineUser className="text-blue-500 text-sm mr-2" />
+                            <Link to={`/korisnik/${comment.autor_username}`} className="text-blue-500 text-xs font-bold hover:underline">{comment.autor_username}</Link>
                             <span className="text-gray-500 text-xs ml-auto"><AiOutlineCalendar className="inline-block mr-1" />{formatDatum(comment.timestamp)}</span>
                             {deleteButtonVisible(comment) && (
                                 <button

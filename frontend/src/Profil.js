@@ -17,8 +17,10 @@ function Profil() {
                 <div className="max-w-lg mx-auto bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-6">
                     <div className="p-6">
                         <div className="flex items-center mb-4">
-                            <AiOutlineUser className="w-16 h-16 text-gray-400 rounded-full mr-4" />
-                            <h2 className="text-white text-3xl font-bold">{user.korisnicko_ime}</h2>
+                            <AiOutlineUser className="w-16 h-16 text-blue-500 rounded-full mr-4" />
+                            <Link to={`/korisnik/${user.korisnicko_ime}`}>
+                                <h2 className="text-blue-500 text-3xl font-bold">{user.korisnicko_ime}</h2>
+                            </Link>
                         </div>
                         <div className="space-y-2">
                             <div className="text-gray-400 flex items-center">
@@ -48,12 +50,12 @@ function Profil() {
                         </div>
                     </div>
                 </div>
-           ) : (
-            <div className="flex items-center justify-center text-gray-400">
-                <AiOutlineWarning className="text-xl mr-2" />
-                <span>Nema dostupnih informacija o korisniku</span>
-            </div>
-        )}
+            ) : (
+                <div className="flex items-center justify-center text-gray-400">
+                    <AiOutlineWarning className="text-xl mr-2" />
+                    <span>Nema dostupnih informacija o korisniku</span>
+                </div>
+            )}
             <div className="flex justify-between max-w-lg mx-auto">
                 <Link to="/azuriraj-korisnika" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center mb-2">
                     <FaEdit className="mr-2" />
