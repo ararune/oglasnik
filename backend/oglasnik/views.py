@@ -31,6 +31,12 @@ class KomentarViewSet(viewsets.ModelViewSet):
     serializer_class = KomentarSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def can_user_comment_today(user):
+        today = timezone.now().date()
+        comments_today = Komentar.objects.filter(autor=user, timestamp__date=today).count()
+        max_comments_per_day = 5 
+        return comments_today < max_comments_per_day
+    
     def perform_create(self, serializer):
         serializer.save(autor=self.request.user)
 

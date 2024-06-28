@@ -14,10 +14,10 @@ function Korisnik() {
     const navigate = useNavigate();
     const [sortOpcija, setSortOpcija] = useState('');
     const [commentText, setCommentText] = useState('');
-    const [commentAdded, setCommentAdded] = useState(false);
     const [comments, setComments] = useState([]);
     const [charCount, setCharCount] = useState(0);
-
+    const [commentSortOption, setCommentSortOption] = useState('');
+    const [aktivniTab, setAktivniTab] = useState('komentari');
     useEffect(() => {
         setLoading(true);
         setError(null);
@@ -26,7 +26,10 @@ function Korisnik() {
         if (sortiranjeOpcija) {
             setSortOpcija(sortiranjeOpcija);
         }
-
+        const tabOption = params.get('tab');
+        if (tabOption) {
+            setAktivniTab(tabOption);
+        }
         fetch(`http://localhost:8000/korisnik/${username}/`)
             .then(response => {
                 if (!response.ok) {
@@ -80,8 +83,7 @@ function Korisnik() {
             fetch(`http://localhost:8000/korisnik/${username}/`)
                 .then(response => response.json())
                 .then(data => {
-                    setComments(data.korisnik.komentari); // Update comments after successfully adding a comment
-                    setCommentAdded(true);
+                    setComments(data.korisnik.komentari);
                 })
                 .catch(error => console.error('Error fetching comments:', error));
 
@@ -204,6 +206,39 @@ function Korisnik() {
         }
     }
     const sortiraniOglasi = sortOglasi(oglasi, sortOpcija);
+
+    const sortComments = (comments, option) => {
+        let sortedComments = [...comments];
+        if (option === 'datum-najnoviji') {
+            sortedComments.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        } else if (option === 'datum-najstariji') {
+            sortedComments.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        }
+        return sortedComments;
+    };
+    const sortedComments = sortComments(comments, commentSortOption);
+    const handleTabChange = (tab) => {
+        setAktivniTab(tab);
+        const params = new URLSearchParams(window.location.search);
+        params.set('tab', tab);
+        window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
+    };
+    const TabButtons = ({ aktivniTab, handleTabChange }) => (
+        <div className="flex justify-center mb-6">
+            <button
+                className={`px-4 py-2 mx-2 border border-gray-600 ${aktivniTab === 'komentari' ?  'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg text-center' : 'bg-gray-800'} text-white rounded`}
+                onClick={() => handleTabChange('komentari')}
+            >
+                Komentari
+            </button>
+            <button
+                className={`px-4 py-2 mx-2 border border-gray-600 ${aktivniTab === 'oglasi' ? 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg text-center' : 'bg-gray-800'} text-white rounded`}
+                onClick={() => handleTabChange('oglasi')}
+            >
+                Oglasi
+            </button>
+        </div>
+    );
     return (
         <div className="container mx-auto p-4">
             <div className="max-w-lg mx-auto bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-6">
@@ -240,110 +275,129 @@ function Korisnik() {
                     </div>
                 </div>
             </div>
-            {/* Comment Form */}
-            {user && (
-                <form onSubmit={handleSubmitComment} className="max-w-lg mx-auto bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-6 p-6">
-                    <textarea
-                        value={commentText}
-                        onChange={handleCommentChange} // Updated to call handleCommentChange
-                        placeholder="Unesite komentar..."
-                        maxLength={150} // Restrict to 150 characters
-                        required
-                        className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
-                    />
-                    <div className="flex justify-between items-center mt-2">
-                        <span className="text-gray-400">{charCount}/150 znakova</span>
-                        <button
-                            type="submit"
-                            className="mt-4 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center"
-                        >
-                            Dodaj komentar
-                        </button>
-                    </div>
-                    {commentAdded && (
-                        <p className="text-green-500 mt-2">Komentar je uspješno dodan!</p>
+            <TabButtons aktivniTab={aktivniTab} handleTabChange={handleTabChange} />
+            {aktivniTab === 'komentari' && (
+                <>
+                    {/* Comment Form */}
+                    {user && (
+                        <form onSubmit={handleSubmitComment} className="max-w-lg mx-auto bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-6 p-6">
+                            <textarea
+                                value={commentText}
+                                onChange={handleCommentChange} // Updated to call handleCommentChange
+                                placeholder="Unesite komentar..."
+                                maxLength={150} // Restrict to 150 characters
+                                required
+                                className="w-full px-4 py-2 rounded border border-gray-600 bg-gray-800 text-white focus:outline-none focus:border-blue-500"
+                            />
+                            <div className="flex justify-between items-center mt-2">
+                                <button
+                                    type="submit"
+                                    className="mt-4 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg px-4 py-2 flex items-center"
+                                >
+                                    Dodaj komentar
+                                </button>
+                                <span className="text-gray-400">{charCount}/150 znakova</span>
+                            </div>
+                        </form>
                     )}
-                </form>
+
+                    <div className="max-w-lg mx-auto">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-white text-3xl font-bold">Komentari</h2>
+                            <select
+                                id="commentSortCriteria"
+                                value={commentSortOption}
+                                onChange={(e) => setCommentSortOption(e.target.value)}
+                                className="px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500"
+                            >
+                                <option value="">Sortiraj komentare po</option>
+                                <option value="datum-najnoviji">Datum najnoviji</option>
+                                <option value="datum-najstariji">Datum najstariji</option>
+                            </select>
+                        </div>
+
+                        {sortedComments.length === 0 && <p className="text-gray-400">Nema komentara za prikaz.</p>}
+                        {sortedComments.map(comment => (
+                            <div key={comment.id} className="bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-4 p-4 relative">
+                                <div className="flex items-center mb-2">
+                                    <AiOutlineUser className="text-blue-500 text-md mr-2" />
+                                    <Link to={`/korisnik/${comment.autor_username}`} className="text-blue-500 text-sm font-bold hover:underline">{comment.autor_username}</Link>
+                                    <span className="text-gray-500 text-sm ml-auto"><AiOutlineCalendar className="inline-block mr-1" />{formatDatum(comment.timestamp)}</span>
+                                    {deleteButtonVisible(comment) && (
+                                        <button
+                                            onClick={() => handleDeleteComment(comment.id)}
+                                            className="absolute bottom-4 right-6 text-sm text-gray-400 hover:text-red-500 focus:outline-none"
+                                        >
+                                            <AiOutlineDelete className="inline-block mr-1" />
+                                            Izbriši
+                                        </button>
+                                    )}
+                                </div>
+                                <p className="text-gray-400">{comment.tekst}</p>
+                            </div>
+                        ))}
+                    </div>
+                </>
             )}
 
-            <div className="max-w-lg mx-auto">
-                {comments.length === 0 && <p className="text-gray-400">Nema komentara za prikaz.</p>}
-                {comments.map(comment => (
-                    <div key={comment.id} className="bg-gray-800 rounded-lg border border-gray-600 overflow-hidden shadow-lg mb-4 p-4 relative">
-                        <div className="flex items-center mb-2">
-                            <AiOutlineUser className="text-blue-500 text-sm mr-2" />
-                            <Link to={`/korisnik/${comment.autor_username}`} className="text-blue-500 text-xs font-bold hover:underline">{comment.autor_username}</Link>
-                            <span className="text-gray-500 text-xs ml-auto"><AiOutlineCalendar className="inline-block mr-1" />{formatDatum(comment.timestamp)}</span>
-                            {deleteButtonVisible(comment) && (
-                                <button
-                                    onClick={() => handleDeleteComment(comment.id)}
-                                    className="absolute bottom-4 right-6 text-xs text-gray-400 hover:text-red-500 focus:outline-none"
-                                >
-                                    <AiOutlineDelete className="inline-block mr-1" />
-                                    Delete
-                                </button>
-                            )}
-                        </div>
-                        <p className="text-gray-400">{comment.tekst}</p>
+            {aktivniTab === 'oglasi' && (
+                <>
+                    <h2 className="text-white text-3xl font-bold mt-4 mb-4">Aktivni oglasi korisnika {userData.username}</h2>
+                    <div className="flex mb-4">
+                        <select id="sortCriteria" value={sortOpcija} onChange={handleSortChange} className="px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500">
+                            <option value="">Sortiraj po</option>
+                            <option value="cijena-uzlazno">Cijena uzlazno</option>
+                            <option value="cijena-silazno">Cijena silazno</option>
+                            <option value="datum-najstariji">Datum najstariji</option>
+                            <option value="datum-najnoviji">Datum najnoviji</option>
+                        </select>
                     </div>
-                ))}
-            </div>
-
-
-            <h2 className="text-white text-3xl font-bold mt-4 mb-4">Aktivni oglasi korisnika {userData.username}</h2>
-            <div className="flex justify-end mb-4">
-                <select id="sortCriteria" value={sortOpcija} onChange={handleSortChange} className="px-4 py-2 rounded border border-gray-600 bg-zinc-900 text-white focus:outline-none focus:border-blue-500">
-                    <option value="">Sortiraj po</option>
-                    <option value="cijena-uzlazno">Cijena uzlazno</option>
-                    <option value="cijena-silazno">Cijena silazno</option>
-                    <option value="datum-najstariji">Datum najstariji</option>
-                    <option value="datum-najnoviji">Datum najnoviji</option>
-                </select>
-            </div>
-            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                {oglasi.length === 0 ? (
-                    <div className="text-center mt-10">
-                        <p className="text-white text-xl mb-4">Ovaj korisnik nema oglasa</p>
-                        <AiOutlineFileSearch className="mx-auto w-48 h-48 text-gray-400" />
-                    </div>
-                ) : (
-                    sortiraniOglasi.map(oglas => (
-                        <li key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">
-                            {oglas.slike.length > 0 && (
-                                <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block h-full">
-                                    <img src={`http://localhost:8000${oglas.slike[0].slika}`} alt={oglas.naziv} className="w-48 h-full object-cover" />
-                                </Link>
-                            )}
-                            <div className="flex flex-col justify-between p-4 flex-grow">
-                                <div>
-                                    <p className="inline-flex items-center bg-blue-600 text-white font-semibold py-2 px-4 rounded">{oglas.kategorija_naziv}</p>
-                                    <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block">
-                                        <h4 className="text-white text-xl font-bold mb-2 white-space: nowrap;">{oglas.naziv}</h4>
-                                    </Link>
-                                    <div className="text-gray-400 text-sm mb-1 flex items-center">
-                                        <AiOutlineEnvironment className="inline-block mr-2" />
-                                        <p>{oglas.zupanija.naziv}, {oglas.grad.naziv}</p>
-                                    </div>
-                                    <div className="text-gray-400 text-sm mb-2 flex items-center">
-                                        <AiOutlineCalendar className="inline-block mr-2" />
-                                        <p>{formatDatum(oglas.datum)}</p>
-                                    </div>
-                                </div>
-                                <p className="text-yellow-500 text-lg font-bold flex items-center">
-                                    <AiOutlineEuroCircle className="inline-block mr-2" />
-                                    {formatirajCijenu(oglas.cijena)}
-                                </p>
-                                <button
-                                    onClick={() => toggleFavorite(oglas.id, oglas.favorited)}
-                                    className="text-gray-400 hover:text-red-500 focus:outline-none"
-                                >
-                                    {oglas.favorited ? <FaHeart /> : <FaRegHeart />}
-                                </button>
+                    <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                        {oglasi.length === 0 ? (
+                            <div className="text-center mt-10">
+                                <p className="text-white text-xl mb-4">Ovaj korisnik nema oglasa</p>
+                                <AiOutlineFileSearch className="mx-auto w-48 h-48 text-gray-400" />
                             </div>
-                        </li>
-                    ))
-                )}
-            </ul>
+                        ) : (
+                            sortiraniOglasi.map(oglas => (
+                                <li key={oglas.id} className="relative rounded border border-gray-600 bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden shadow-md flex flex-row items-start">
+                                    {oglas.slike.length > 0 && (
+                                        <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block h-full">
+                                            <img src={`http://localhost:8000${oglas.slike[0].slika}`} alt={oglas.naziv} className="w-48 h-full object-cover" />
+                                        </Link>
+                                    )}
+                                    <div className="flex flex-col justify-between p-4 flex-grow">
+                                        <div>
+                                            <p className="inline-flex items-center bg-blue-600 text-white font-semibold py-2 px-4 rounded">{oglas.kategorija_naziv}</p>
+                                            <Link to={`/oglas/${oglas.sifra}`} key={oglas.sifra} className="block">
+                                                <h4 className="text-white text-xl font-bold mb-2">{oglas.naziv}</h4>
+                                            </Link>
+                                            <div className="text-gray-400 text-sm mb-1 flex items-center">
+                                                <AiOutlineEnvironment className="inline-block mr-2" />
+                                                <p>{oglas.zupanija.naziv}, {oglas.grad.naziv}</p>
+                                            </div>
+                                            <div className="text-gray-400 text-sm mb-2 flex items-center">
+                                                <AiOutlineCalendar className="inline-block mr-2" />
+                                                <p>{formatDatum(oglas.datum)}</p>
+                                            </div>
+                                        </div>
+                                        <p className="text-yellow-500 text-lg font-bold flex items-center">
+                                            <AiOutlineEuroCircle className="inline-block mr-2" />
+                                            {formatirajCijenu(oglas.cijena)}
+                                        </p>
+                                        <button
+                                            onClick={() => toggleFavorite(oglas.id, oglas.favorited)}
+                                            className="text-gray-400 hover:text-red-500 focus:outline-none"
+                                        >
+                                            {oglas.favorited ? <FaHeart /> : <FaRegHeart />}
+                                        </button>
+                                    </div>
+                                </li>
+                            ))
+                        )}
+                    </ul>
+                </>
+            )}
         </div>
     );
 }

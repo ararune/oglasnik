@@ -1,7 +1,7 @@
 # admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Korisnik, Zupanija, Grad, Kategorija, Oglas, Slika, Favorit, Pregled
+from .models import Korisnik, Zupanija, Grad, Kategorija, Oglas, Slika, Favorit, Pregled, Komentar
 
 class KorisnikAdmin(UserAdmin):
     model = Korisnik
@@ -25,6 +25,9 @@ class FavoritAdmin(admin.ModelAdmin):
 class PregledAdmin(admin.ModelAdmin):
     list_display = ('oglas', 'ip_address', 'timestamp')
 
+class KomentarAdmin(admin.ModelAdmin):
+    list_display = ('id', 'autor', 'korisnik', 'tekst', 'timestamp')
+    
 admin.site.register(Korisnik, KorisnikAdmin)
 admin.site.register(Zupanija)
 admin.site.register(Grad, GradAdmin)
@@ -33,3 +36,4 @@ admin.site.register(Oglas, OglasAdmin)
 admin.site.register(Slika, SlikaAdmin)
 admin.site.register(Favorit, FavoritAdmin)
 admin.site.register(Pregled, PregledAdmin)
+admin.site.register(Komentar, KomentarAdmin)

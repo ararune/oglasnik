@@ -308,9 +308,9 @@ function Oglasi() {
         <div className="container mx-auto p-4">
             <RenderHierarchyLinks />
             <RenderCategoryInfo />
-            <div className="p-4 rounded text-white mb-4 mt-2 lg:w-1/3">
+            <div className="p-4 rounded text-white mb-4 mt-2">
                 <h3 className="text-xl font-bold mb-2">Filtriraj rezultate</h3>
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
                         <label className="block mb-1">Sortiraj po:</label>
                         <select
