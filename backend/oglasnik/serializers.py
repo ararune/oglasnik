@@ -8,7 +8,7 @@ class ZupanijaSerializer(serializers.ModelSerializer):
         fields = ['id', 'naziv']
 
 class GradSerializer(serializers.ModelSerializer):
-    zupanija = ZupanijaSerializer()  # Nested serializer for Zupanija
+    zupanija = ZupanijaSerializer()
 
     class Meta:
         model = Grad

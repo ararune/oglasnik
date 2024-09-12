@@ -232,7 +232,7 @@ def kreiraj_oglas(request):
             return Response(errors, status=400)
 
 @api_view(['GET', 'PUT'])
-@permission_classes([IsAuthenticated])  # You can remove IsAuthenticated if IsAdminUser is used
+@permission_classes([IsAuthenticated])
 def azuriraj_oglas(request, oglas_id):
     oglas = get_object_or_404(Oglas, pk=oglas_id)
     
@@ -246,10 +246,9 @@ def azuriraj_oglas(request, oglas_id):
     elif request.method == 'PUT':
         oglas_form = FormaZaIzraduOglasa(request.POST, instance=oglas)
         slike = request.FILES.getlist('slike')
-        slike_za_brisanje = request.data.get('slike_za_brisanje', [])
+        slike_za_brisanje = request.data.getlist('delete_slike[]')
 
         if oglas_form.is_valid():
-            # Delete selected images
             for slika_id in slike_za_brisanje:
                 try:
                     slika = Slika.objects.get(id=slika_id, oglas=oglas)
@@ -257,7 +256,7 @@ def azuriraj_oglas(request, oglas_id):
                         file_path = os.path.join(settings.MEDIA_ROOT, slika.slika.path)
                         if os.path.isfile(file_path):
                             os.remove(file_path)
-                    slika.delete()
+                    slika.delete() 
                 except Slika.DoesNotExist:
                     continue
 

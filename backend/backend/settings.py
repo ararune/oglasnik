@@ -33,7 +33,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-    'django_cron'
+    'django_cron',
+    'django_extensions'
 ]
 AUTH_USER_MODEL = 'oglasnik.Korisnik'
 MIDDLEWARE = [

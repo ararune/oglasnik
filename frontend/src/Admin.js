@@ -627,7 +627,7 @@ const Admin = () => {
             </div>
             <div className="flex justify-center my-4">
                 <button onClick={prevPage} disabled={currentPage === 1} className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer">
-                    Previous
+                    Prethodna
                 </button>
 
                 {[...Array(Math.ceil(filtriraniKorisnici.length / perPage)).keys()].map((page) => (
@@ -642,7 +642,7 @@ const Admin = () => {
                 ))}
 
                 <button onClick={nextPage} disabled={currentPage === Math.ceil(filtriraniKorisnici.length / perPage)} className="px-4 py-2 mx-2 border border-gray-600 bg-gray-800 text-white rounded cursor-pointer">
-                    Next
+                    Sljedeća
                 </button>
             </div>
 

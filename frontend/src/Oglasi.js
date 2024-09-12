@@ -32,20 +32,32 @@ function Oglasi() {
                 setOglasi(activeOglasi);
                 setHijerarhija(data.hijerarhija);
                 setChildren(data.children);
-                const zupanijaCounts = activeOglasi.reduce((acc, oglas) => {
+                const filteredOglasi = activeOglasi.filter(oglas => {
+                    let cijena = oglas.cijena;
+                    if (minCijena !== '' && parseInt(minCijena) > cijena) return false;
+                    if (maxCijena !== '' && parseInt(maxCijena) < cijena) return false;
+                    return true;
+                });
+
+                const availableZupanije = filteredOglasi.reduce((acc, oglas) => {
                     const zupanija = oglas.korisnik?.zupanija;
                     if (zupanija) {
-                        if (!acc[zupanija]) {
-                            acc[zupanija] = 0;
-                        }
+                        if (!acc[zupanija]) acc[zupanija] = 0;
                         acc[zupanija]++;
                     }
                     return acc;
                 }, {});
-                setZupanijeCount(zupanijaCounts);
+                setZupanijeCount(availableZupanije);
+                const finalFilteredOglasi = filteredOglasi.filter(oglas => {
+                    let zupanija = oglas.korisnik?.zupanija;
+                    if (selectedZupanije.length > 0 && !selectedZupanije.includes(zupanija)) return false;
+                    return true;
+                });
+
+                setOglasi(finalFilteredOglasi);
             })
             .catch(error => console.error('Error fetching ads:', error));
-    }, [category, searchParams, sortOption]);
+    }, [category, searchParams, sortOption, minCijena, maxCijena, selectedZupanije]);
 
     const sortOglasi = useCallback((ads, option) => {
         let sortedOglasi = [...ads];

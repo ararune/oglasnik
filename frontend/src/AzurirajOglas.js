@@ -208,8 +208,10 @@ const AzurirajOglas = () => {
             });
 
             imagesToDelete.forEach((slikaId) => {
-                formData.append('slike_za_brisanje', slikaId);
+                formData.append('delete_slike[]', slikaId);
             });
+            
+            
 
 
             const response = await fetch(`http://localhost:8000/api/azuriraj_oglas/${oglasId}/`, {

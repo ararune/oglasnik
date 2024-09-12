@@ -15,7 +15,6 @@ class Command(BaseCommand):
             data = json.load(file)
 
         for entry in data:
-            # Remove the "Županija" suffix from the name and create Zupanija instance
             zupanija_name = entry['zupanija'].replace(' Županija', '')
             zupanija, created = Zupanija.objects.get_or_create(naziv=zupanija_name)
             if created:

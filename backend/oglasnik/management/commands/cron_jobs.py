@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.core.management import call_command
 
 class CheckOglasStatusJob(CronJobBase):
-    RUN_EVERY_MINS = 1440  # svako 24 sata run-a
+    RUN_EVERY_MINS = 1440 
 
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'oglasnik.management.commands.check_oglas_status'
