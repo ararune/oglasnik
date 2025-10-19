@@ -119,14 +119,7 @@ For custom setup or debugging:
    - Populate database:
      ```bash
      python manage.py kategorije
-     ```
-     For `lokacije` on Windows:
-     ```bash
      set PYTHONIOENCODING=utf-8
-     python manage.py lokacije
-     ```
-     On macOS/Linux:
-     ```bash
      python manage.py lokacije
      ```
    - Start Django server:
