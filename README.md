@@ -3,7 +3,6 @@
 [![Django](https://img.shields.io/badge/Django-5.0.6-blue.svg)](https://www.djangoproject.com/)
 [![React](https://img.shields.io/badge/React-18.x-green.svg)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC.svg)](https://tailwindcss.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 This is a full-stack web application for classified ads, built with a **Django** backend (RESTful API) and a **React** frontend styled with **Tailwind CSS**. It supports user authentication, categories, locations, images, and more.
 
