@@ -1,119 +1,219 @@
-# Oglasnik Project
+# Oglasnik Project 🚀
 
-Welcome to the Oglasnik project! This is a web application built with a **Django** backend (serving as an API) and a **React** frontend styled with **Tailwind CSS**. This README provides step-by-step instructions to set up and run the project locally.
+[![Django](https://img.shields.io/badge/Django-5.0.6-blue.svg)](https://www.djangoproject.com/)
+[![React](https://img.shields.io/badge/React-18.x-green.svg)](https://reactjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC.svg)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Prerequisites
+Welcome to the **Oglasnik project**! This is a full-stack web application for classified ads, built with a **Django** backend (serving as a RESTful API) and a **React** frontend styled with **Tailwind CSS**. It supports features like user authentication, categories, locations, images, and more.
+
+This README provides clear, step-by-step instructions to set up and run the project locally—either using an automated script or manually.
+
+## 📋 Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Project Structure](#project-structure)
+- [Quick Setup (Automated)](#quick-setup-automated)
+- [Manual Setup](#manual-setup)
+  - [1. Clone the Repository](#1-clone-the-repository)
+  - [2. Set Up the Django Backend](#2-set-up-the-django-backend)
+  - [3. Set Up the React Frontend](#3-set-up-the-react-frontend)
+  - [4. Access the Application](#4-access-the-application)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Prerequisites {#prerequisites}
 
 Before you begin, ensure you have the following installed:
-- **Python (check with `python --version` or `python3 --version`)
-- **Node.js and npm** (check with `node -v` and `npm -v`; download from [nodejs.org](https://nodejs.org))
-- **Git** (to clone the repository)
-- A code editor (e.g., VS Code)
 
-## Project Structure
-- `backend/`: Contains the Django backend (API, models, database scripts).
-- `frontend/`: Contains the React frontend with Tailwind CSS.
+| Tool              | Minimum Version | Check Command                  | Download Link (if needed)                  |
+|-------------------|-----------------|-------------------------------|--------------------------------------------|
+| **Python**        | 3.8+           | `python --version`            | [python.org](https://www.python.org)       |
+| **Node.js & npm** | 16+            | `node -v` & `npm -v`          | [nodejs.org](https://nodejs.org)           |
+| **Git**           | Latest         | `git --version`               | [git-scm.com](https://git-scm.com)         |
 
-## Setup and Installation
+- A code editor (e.g., [VS Code](https://code.visualstudio.com/)) is recommended.
 
-Follow these steps to get the project running locally.
+## Project Structure {#project-structure}
 
-### 1. Clone the Repository
-Clone the project from GitHub to your local machine:
-```bash
-git clone https://github.com/ararune/oglasnik.git
-cd oglasnik-main
+The cloned repository creates a nested folder structure:
+
+```
+oglasnik-main/          # Outer folder from GitHub zip/clone
+└── oglasnik-main/      # Inner project root (cd here for setup)
+    ├── backend/        # Django backend (API, models, database scripts)
+    ├── frontend/       # React frontend with Tailwind CSS
+    ├── setup_oglasnik.py # Automation script
+    └── README.md
 ```
 
-### 2. Set Up the Django Backend
-The backend is a Django application located in the `backend` directory.
+## Quick Setup (Automated) 🛠️ {#quick-setup-automated}
 
-#### a. Navigate to the Backend Directory
+The easiest way to set up and run the project is with the `setup_oglasnik.py` script, which automates all steps: prerequisite checks, virtual environment setup, dependency installation, database migrations, superuser creation, database population, and starting both servers.
+
+### Steps
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/ararune/oglasnik.git
+   cd oglasnik-main/oglasnik-main
+   ```
+
+2. **Run the Automation Script**:
+   ```bash
+   python setup_oglasnik.py
+   ```
+   - The script will:
+     - Check for **Python**, **Node.js**, **npm**, and **Git**.
+     - Set up the Django backend (virtual environment, dependencies like `django-extensions`, migrations, superuser, database population).
+     - Start the Django server at `http://127.0.0.1:8000/`.
+     - Set up and start the React frontend at `http://localhost:3000/`.
+   - **Interactive Step**: When prompted for superuser credentials, enter:
+     - Username (e.g., `admin`)
+     - Email (optional: press Enter to skip)
+     - Password (twice, hidden input)
+   - The script provides feedback for each step and stops if critical errors occur (e.g., missing `django-extensions`).
+
+3. **Access the Application**:
+   - **Frontend**: Auto-opens at `http://localhost:3000/`.
+   - **Django Admin**: Visit `http://127.0.0.1:8000/admin/` (use superuser credentials).
+   - **API**: Test endpoints at `http://127.0.0.1:8000/api/` (see `backend/urls.py` for routes).
+
+4. **Stop Servers**:
+   - Press `Ctrl+C` in the terminal to stop both servers.
+
+If issues arise, check [Troubleshooting](#troubleshooting) or try the [Manual Setup](#manual-setup).
+
+## Manual Setup 🔧 {#manual-setup}
+
+For custom control or debugging, follow these steps.
+
+### 1. Clone the Repository {#1-clone-the-repository}
+
+```bash
+git clone https://github.com/ararune/oglasnik.git
+cd oglasnik-main/oglasnik-main
+```
+
+### 2. Set Up the Django Backend {#2-set-up-the-django-backend}
+
+#### a. Navigate to Backend
 ```bash
 cd backend
 ```
 
-#### b. Create and Activate a Virtual Environment
-Create a Python virtual environment to isolate dependencies:
-- On **Windows**:
+#### b. Create & Activate Virtual Environment
+- **Windows**:
   ```bash
   python -m venv venv
   .\venv\Scripts\activate
   ```
-- On **macOS/Linux**:
+- **macOS/Linux**:
   ```bash
   python3 -m venv venv
   source venv/bin/activate
   ```
-You should see `(venv)` in your terminal prompt.
+You’ll see `(venv)` in the terminal prompt.
 
-#### c. Install Backend Dependencies
-Install the required Python packages listed in `requirements.txt`:
+#### c. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
-If you encounter a `ModuleNotFoundError` for `django-extensions` or other packages, install them manually (e.g., `pip install django-extensions`) and update `requirements.txt` with `pip freeze > requirements.txt`.
+- If you see `ModuleNotFoundError: No module named 'django_extensions'`:
+  ```bash
+  pip install django-extensions
+  pip freeze > requirements.txt  # Update requirements
+  ```
 
-#### d. Apply Database Migrations
-Set up the database by running migrations:
+#### d. Apply Migrations
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-#### e. Create a Superuser
-Create an admin account to access the Django admin interface:
+#### e. Create Superuser
 ```bash
 python manage.py createsuperuser
 ```
-Follow the prompts to set a username, email (optional), and password. This account will allow you to log in at `http://127.0.0.1:8000/admin/`.
+Follow prompts: username → email (optional) → password (twice).
 
-#### f. Populate the Database
-The project includes two scripts (`kategorije.py` and `lokacije.py`) to populate the database with initial data (categories and locations).
-
-Run:
+#### f. Populate Database
 ```bash
 python manage.py kategorije
+```
+For `lokacije` on Windows, set UTF-8 encoding to avoid errors:
+```bash
+set PYTHONIOENCODING=utf-8
 python manage.py lokacije
 ```
-#### g. Start the Django Development Server
-Launch the backend server:
+On macOS/Linux:
+```bash
+python manage.py lokacije
+```
+
+#### g. Start Django Server
 ```bash
 python manage.py runserver
 ```
-The server will run at `http://127.0.0.1:8000/`. Keep this terminal running.
+Server runs at `http://127.0.0.1:8000/`. Keep terminal open.
 
-### 3. Set Up the React Frontend
-The frontend is a React application located in the `frontend` directory.
+### 3. Set Up the React Frontend {#3-set-up-the-react-frontend}
 
-#### a. Open a New Terminal
-Leave the Django server running and open a new terminal window.
+#### a. New Terminal
+Open a new terminal (keep Django server running).
 
-#### b. Navigate to the Frontend Directory
+#### b. Navigate to Frontend
 ```bash
-cd frontend
+cd frontend  # From project root (oglasnik-main/oglasnik-main)
 ```
 
-#### c. Install Frontend Dependencies
-Install the required Node.js packages (including React and Tailwind CSS dependencies):
+#### c. Install Dependencies
 ```bash
 npm install
 ```
 
-#### d. Start the React Development Server
-Launch the frontend server:
+#### d. Start React Server
 ```bash
 npm start
 ```
-The React app will run at `http://localhost:3000/`. It should automatically open in your default browser. The frontend will communicate with the Django backend (e.g., via API calls to `http://127.0.0.1:8000/`).
+Auto-opens at `http://localhost:3000/`.
 
-### 4. Access the Application
-- **Frontend**: Visit `http://localhost:3000/` to interact with the React app.
-- **Django Admin**: Visit `http://127.0.0.1:8000/admin/` and log in with your superuser credentials to manage data (e.g., view categories and locations).
-- **API**: The project exposes API endpoints, test them at `http://127.0.0.1:8000/api/` (check `urls.py` for specific routes).
+### 4. Access the Application {#4-access-the-application}
 
+| Component       | URL                          | Notes                              |
+|-----------------|------------------------------|------------------------------------|
+| **Frontend**   | `http://localhost:3000/`    | Main app interface                 |
+| **Admin**      | `http://127.0.0.1:8000/admin/` | Manage data (superuser login)     |
+| **API**        | `http://127.0.0.1:8000/api/` | REST endpoints (check `urls.py`)  |
 
+## Troubleshooting 🐛 {#troubleshooting}
 
+| Issue                          | Solution                                                                 |
+|--------------------------------|--------------------------------------------------------------------------|
+| **Prerequisites not found**    | Add to PATH; restart terminal. Reinstall Node.js/Git with "Add to PATH". |
+| **django-extensions missing**  | `pip install django-extensions` in venv; add to `requirements.txt`.     |
+| **Superuser prompts unclear**  | Interactive: Enter username → email → password (hidden, twice).          |
+| **lokacije UnicodeEncodeError**| Windows: `set PYTHONIOENCODING=utf-8 && python manage.py lokacije`.      |
+| **Migrations fail**            | Check `INSTALLED_APPS` in `backend/settings.py` for apps/`django_extensions`. |
+| **npm vulnerabilities**        | `npm audit fix` (or `--force`); update browserslist: `npx update-browserslist-db@latest`. |
+| **Frontend can't connect**     | Verify CORS in `settings.py`; proxy in `frontend/package.json`: `"proxy": "http://127.0.0.1:8000"`. |
+| **npm install fails**          | Delete `node_modules/` & `package-lock.json`; retry.                     |
 
+- **Database Scripts**: Ensure `kategorije` and `lokacije` are in `backend/oglasnik/management/commands/` and `oglasnik` is in `INSTALLED_APPS`.
+- **Pip Upgrade**: If you see a pip upgrade notice, run:
+  ```bash
+  .\backend\venv\Scripts\python.exe -m pip install --upgrade pip
+  ```
 
+## Contributing 🤝 {#contributing}
 
+1. Fork the repo.
+2. Create a feature branch (`git checkout -b feature/amazing-feature`).
+3. Commit changes (`git commit -m 'Add amazing feature'`).
+4. Push to branch (`git push origin feature/amazing-feature`).
+5. Open a Pull Request.
+
+## License 📄 {#license}
+
+This project is licensed under the [MIT License](LICENSE).
