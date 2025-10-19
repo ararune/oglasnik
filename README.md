@@ -3,7 +3,7 @@
 [![Django](https://img.shields.io/badge/Django-5.0.6-blue.svg)](https://www.djangoproject.com/)
 [![React](https://img.shields.io/badge/React-18.x-green.svg)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC.svg)](https://tailwindcss.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 
 Welcome to the **Oglasnik project**! This is a full-stack web application for classified ads, built with a **Django** backend (serving as a RESTful API) and a **React** frontend styled with **Tailwind CSS**. It supports features like user authentication, categories, locations, images, and more.
 
@@ -200,20 +200,3 @@ Auto-opens at `http://localhost:3000/`.
 | **Frontend can't connect**     | Verify CORS in `settings.py`; proxy in `frontend/package.json`: `"proxy": "http://127.0.0.1:8000"`. |
 | **npm install fails**          | Delete `node_modules/` & `package-lock.json`; retry.                     |
 
-- **Database Scripts**: Ensure `kategorije` and `lokacije` are in `backend/oglasnik/management/commands/` and `oglasnik` is in `INSTALLED_APPS`.
-- **Pip Upgrade**: If you see a pip upgrade notice, run:
-  ```bash
-  .\backend\venv\Scripts\python.exe -m pip install --upgrade pip
-  ```
-
-## Contributing 🤝 {#contributing}
-
-1. Fork the repo.
-2. Create a feature branch (`git checkout -b feature/amazing-feature`).
-3. Commit changes (`git commit -m 'Add amazing feature'`).
-4. Push to branch (`git push origin feature/amazing-feature`).
-5. Open a Pull Request.
-
-## License 📄 {#license}
-
-This project is licensed under the [MIT License](LICENSE).
