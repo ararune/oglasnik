@@ -13,19 +13,17 @@ This is a full-stack web application for classified ads, built with a **Django**
 - [Project Structure](#project-structure)
 - [Installation](#installation)
 - [Manual Setup](#manual-setup)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
+
 
 ## Prerequisites
 
 Ensure you have the following installed:
 
-| Tool              | Minimum Version | Check Command                  | Download Link                             |
-|-------------------|-----------------|-------------------------------|--------------------------------------------|
-| **Python**        | 3.8+           | `python --version`            | [python.org](https://www.python.org)       |
-| **Node.js & npm** | 16+            | `node -v` & `npm -v`          | [nodejs.org](https://nodejs.org)           |
-| **Git**           | Latest         | `git --version`               | [git-scm.com](https://git-scm.com)         |
+| Tool              | Check Command                  | Download Link                             |
+|-------------------|-------------------------------|--------------------------------------------|
+| **Python**        | `python --version`            | [python.org](https://www.python.org)       |
+| **Node.js & npm** | `node -v` & `npm -v`          | [nodejs.org](https://nodejs.org)           |
+| **Git**           | `git --version`               | [git-scm.com](https://git-scm.com)         |
 
 - A code editor (e.g., [VS Code](https://code.visualstudio.com/)) is recommended.
 
@@ -156,33 +154,4 @@ For custom setup or debugging:
    | **Admin**      | `http://127.0.0.1:8000/admin/` | Superuser login                    |
    | **API**        | `http://127.0.0.1:8000/api/` | REST endpoints (check `urls.py`)  |
 
-## Troubleshooting
 
-| Issue                          | Solution                                                                 |
-|--------------------------------|--------------------------------------------------------------------------|
-| **Prerequisites not found**    | Add to PATH; restart terminal. Reinstall Node.js/Git with "Add to PATH". |
-| **django-extensions missing**  | `pip install django-extensions` in venv; update `requirements.txt`.     |
-| **Superuser prompts unclear**  | Enter username → email (optional) → password (twice, hidden).            |
-| **lokacije UnicodeEncodeError**| Windows: `set PYTHONIOENCODING=utf-8 && python manage.py lokacije`.      |
-| **Migrations fail**            | Check `INSTALLED_APPS` in `backend/settings.py`.                        |
-| **npm vulnerabilities**        | Run `npm audit fix` (or `--force`); update browserslist: `npx update-browserslist-db@latest`. |
-| **Frontend can't connect**     | Check CORS in `settings.py`; proxy in `package.json`: `"proxy": "http://127.0.0.1:8000"`. |
-| **npm install fails**          | Delete `node_modules/` & `package-lock.json`; retry.                     |
-
-- **Database Scripts**: Ensure `kategorije`/`lokacije` are in `backend/oglasnik/management/commands/` and `oglasnik` is in `INSTALLED_APPS`.
-- **Pip Upgrade**:
-  ```bash
-  .\backend\venv\Scripts\python.exe -m pip install --upgrade pip
-  ```
-
-## Contributing
-
-1. Fork the repo.
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push: `git push origin feature/amazing-feature`
-5. Open a Pull Request.
-
-## License
-
-[MIT License](LICENSE)
