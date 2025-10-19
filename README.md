@@ -6,7 +6,7 @@
 
 This is a full-stack web application for classified ads, built with a **Django** backend (RESTful API) and a **React** frontend styled with **Tailwind CSS**. It supports user authentication, categories, locations, images, and more.
 
-<img src="/slika.png" alt="Oglasnik App Screenshot" width="250"/>
+<img src="/slika.png" alt="Oglasnik App Screenshot" width="500"/>
 
 ## Table of Contents
 
