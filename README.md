@@ -3,7 +3,7 @@
 [![Django](https://img.shields.io/badge/Django-5.0.6-blue.svg)](https://www.djangoproject.com/)
 [![React](https://img.shields.io/badge/React-18.x-green.svg)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC.svg)](https://tailwindcss.com/)
-
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Welcome to the **Oglasnik project**! This is a full-stack web application for classified ads, built with a **Django** backend (serving as a RESTful API) and a **React** frontend styled with **Tailwind CSS**. It supports features like user authentication, categories, locations, images, and more.
 
@@ -23,7 +23,7 @@ This README provides clear, step-by-step instructions to set up and run the proj
 - [Contributing](#contributing)
 - [License](#license)
 
-## Prerequisites {#prerequisites}
+## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
@@ -35,7 +35,7 @@ Before you begin, ensure you have the following installed:
 
 - A code editor (e.g., [VS Code](https://code.visualstudio.com/)) is recommended.
 
-## Project Structure {#project-structure}
+## Project Structure
 
 The cloned repository creates a nested folder structure:
 
@@ -48,7 +48,7 @@ oglasnik-main/          # Outer folder from GitHub zip/clone
     └── README.md
 ```
 
-## Quick Setup (Automated) 🛠️ {#quick-setup-automated}
+## Quick Setup (Automated) 🛠️
 
 The easiest way to set up and run the project is with the `setup_oglasnik.py` script, which automates all steps: prerequisite checks, virtual environment setup, dependency installation, database migrations, superuser creation, database population, and starting both servers.
 
@@ -85,18 +85,18 @@ The easiest way to set up and run the project is with the `setup_oglasnik.py` sc
 
 If issues arise, check [Troubleshooting](#troubleshooting) or try the [Manual Setup](#manual-setup).
 
-## Manual Setup 🔧 {#manual-setup}
+## Manual Setup 🔧
 
 For custom control or debugging, follow these steps.
 
-### 1. Clone the Repository {#1-clone-the-repository}
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/ararune/oglasnik.git
 cd oglasnik-main/oglasnik-main
 ```
 
-### 2. Set Up the Django Backend {#2-set-up-the-django-backend}
+### 2. Set Up the Django Backend
 
 #### a. Navigate to Backend
 ```bash
@@ -158,7 +158,7 @@ python manage.py runserver
 ```
 Server runs at `http://127.0.0.1:8000/`. Keep terminal open.
 
-### 3. Set Up the React Frontend {#3-set-up-the-react-frontend}
+### 3. Set Up the React Frontend
 
 #### a. New Terminal
 Open a new terminal (keep Django server running).
@@ -179,7 +179,7 @@ npm start
 ```
 Auto-opens at `http://localhost:3000/`.
 
-### 4. Access the Application {#4-access-the-application}
+### 4. Access the Application
 
 | Component       | URL                          | Notes                              |
 |-----------------|------------------------------|------------------------------------|
@@ -187,7 +187,7 @@ Auto-opens at `http://localhost:3000/`.
 | **Admin**      | `http://127.0.0.1:8000/admin/` | Manage data (superuser login)     |
 | **API**        | `http://127.0.0.1:8000/api/` | REST endpoints (check `urls.py`)  |
 
-## Troubleshooting 🐛 {#troubleshooting}
+## Troubleshooting 🐛
 
 | Issue                          | Solution                                                                 |
 |--------------------------------|--------------------------------------------------------------------------|
@@ -200,3 +200,20 @@ Auto-opens at `http://localhost:3000/`.
 | **Frontend can't connect**     | Verify CORS in `settings.py`; proxy in `frontend/package.json`: `"proxy": "http://127.0.0.1:8000"`. |
 | **npm install fails**          | Delete `node_modules/` & `package-lock.json`; retry.                     |
 
+- **Database Scripts**: Ensure `kategorije` and `lokacije` are in `backend/oglasnik/management/commands/` and `oglasnik` is in `INSTALLED_APPS`.
+- **Pip Upgrade**: If you see a pip upgrade notice, run:
+  ```bash
+  .\backend\venv\Scripts\python.exe -m pip install --upgrade pip
+  ```
+
+## Contributing 🤝
+
+1. Fork the repo.
+2. Create a feature branch (`git checkout -b feature/amazing-feature`).
+3. Commit changes (`git commit -m 'Add amazing feature'`).
+4. Push to branch (`git push origin feature/amazing-feature`).
+5. Open a Pull Request.
+
+## License 📄
+
+This project is licensed under the [MIT License](LICENSE).
